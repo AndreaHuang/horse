@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+    <osx>
+    <driver id="googlechrome">
+        <version id="2.37">
+            <bitrate sixtyfourbit="true">
+                <filelocation>https://chromedriver.storage.googleapis.com/2.37/chromedriver_mac64.zip</filelocation>
+                <hash>714e7abb1a7aeea9a8997b64a356a44fb48f5ef4</hash>
+                <hashtype>sha1</hashtype>
+            </bitrate>
+        </version>
+    </driver>
+    </osx>
+</root>
