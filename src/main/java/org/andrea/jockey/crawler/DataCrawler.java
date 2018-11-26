@@ -38,7 +38,7 @@ public class DataCrawler {
 
     public void getNewRaceCard(){
 
-
+        dao.deleteNewRace();
         List<String> allNewUrls = listLinksOfNewRaces(jockeyWebsiteConfig.getUrlForNewRace());
 
         for (String urlOfARace : allNewUrls) {
@@ -57,7 +57,8 @@ public class DataCrawler {
     }
     private List<String> listLinksOfNewRaces(String url) {
         List<String> results = new ArrayList<String>();
-       // results.add(url + "/1");
+        //System.out.println(url);
+        results.add(url);
         getDriver().get(url);
         List<WebElement> allLinksElements = getDriver().findElements(By.xpath("//*[@id=\"racecard\"]/div[3]/table/tbody/tr/td/a"));
 
@@ -71,8 +72,11 @@ public class DataCrawler {
     }
     public void getRecord() {
 
+        int maxDateOfExistingRecords = dao.getMaxDate();
+        System.out.println("Max Date of Existing Records: "+maxDateOfExistingRecords);
+        String endDate ="99999999";// jockeyWebsiteConfig.getEndDate()
         List<String> links = listLinksOfRaceDaysInDateRange(jockeyWebsiteConfig.getUrl(),
-                jockeyWebsiteConfig.getStartDate(), jockeyWebsiteConfig.getEndDate());
+                Integer.toString(maxDateOfExistingRecords), endDate);
 
         for (String urlOfARaceDay : links) {
             getRecordsByUrlOfDay(urlOfARaceDay);
@@ -149,6 +153,7 @@ public class DataCrawler {
             }
         }
         return results;
+
     }
 
 
@@ -467,7 +472,12 @@ public class DataCrawler {
 
             item.setHorseId(tdList.get(i * columns + 4).getAttribute("innerHTML").trim());
             /* Actual Weight.*/
-            item.setAddedWeight(Integer.parseInt(tdList.get(i * columns + 5).getText().trim()));
+            try {
+                item.setAddedWeight(Integer.parseInt(tdList.get(i * columns + 5).getText().trim()));
+            }catch(Exception e){
+                /*  skip this row */
+                continue;
+            }
             /* Jockey.*/
             item.setJockey(tdList.get(i * columns + 6).getText().trim());
             /* Draw */
@@ -482,7 +492,11 @@ public class DataCrawler {
 
             /*Rating*/
             item.setRating(Integer.parseInt(tdList.get(i * columns + 10).getText().trim()));
-            item.setRatingDelta(Integer.parseInt(tdList.get(i * columns + 11).getText().trim()));
+            try {
+                item.setRatingDelta(Integer.parseInt(tdList.get(i * columns + 11).getText().trim()));
+            }catch(Exception e){
+                item.setRatingDelta(0);
+            }
 
             /* Declare Horse Weight */
             item.setDeclaredHorseWeight(Integer.parseInt(tdList.get(i * columns + 12).getText().trim()));

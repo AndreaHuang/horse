@@ -9,8 +9,8 @@ public class JockeyWebsiteConfig {
 
     private final String URL="http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/";
     private final String HOMEURL="http://racing.hkjc.com";
-    private final String DATE_AFTER="20181112";
-    private final String DATE_BEFORE="20181107";
+    private final String DATE_AFTER="20181110";
+    private final String DATE_BEFORE="20181127";
     //，20181018
     public String getUrlForNewRace(){
         return this.NEWRACE_URL;

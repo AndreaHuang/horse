@@ -2,6 +2,7 @@ package org.andrea.jockey.jdbc;
 
 
 
+import org.andrea.jockey.model.RaceCardAnalysis;
 import org.andrea.jockey.model.RaceCardItem;
 import org.andrea.jockey.model.RaceCardResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,6 +222,26 @@ public class RecordCardDAO {
                         return raceCardList.size();
                     }
                 });
+    }
+
+    public List<RaceCardAnalysis> query(String SQL){
+
+        return jdbc.query(SQL, new RaceCardRowMapper());
+    }
+    public int getMaxDate(){
+        return jdbc.queryForObject("select max(rateDate) from racecard", Integer.class);
+    }
+    public double queryForDouble(String sql){
+       return jdbc.queryForObject(sql,Double.class);
+    }
+    public int getNewRaceDate() {
+        return jdbc.queryForObject("select racedate from newrace limit 1", Integer.class);
+    }
+    public int getNewRaceNumber() {
+        return jdbc.queryForObject("select max(raceSeqOfDay) from newrace", Integer.class);
+    }
+    public void deleteNewRace(){
+        jdbc.execute("delete select from newrace where 1=1");
     }
 
 }
