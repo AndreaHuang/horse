@@ -68,3 +68,6 @@ Create table newRace(
 	winOdds FLOAT
 	
 );
+
+ALTER TABLE newrace RENAME column hourseNo to horseNo
+ALTER TABLE racecard RENAME column ratedate to raceDate

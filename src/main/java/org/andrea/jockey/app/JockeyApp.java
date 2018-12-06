@@ -25,14 +25,14 @@ public class JockeyApp {
 
 
         DataCrawler crawler = context.getBean(DataCrawler.class);
-       // crawler.getRecord();
+        crawler.getRecord();
 
-       // crawler.getNewRaceCard();
+        crawler.getNewRaceCard();
 
 
-     // url= "https://racing.hkjc.com/racing/info/meeting/Results/English/Local/20180905/HV";
-      //  crawler.getRecordsByUrlOfDay(url);
-      // crawler.getRecordOfARace(url);
+      //String url= "https://racing.hkjc.com/racing/info/meeting/Results/English/Local/20170627/HV";
+     // crawler.getRecordsByUrlOfDay(url);
+      //crawler.getRecordOfARace(url);
       //  crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/ST/9");
       //  crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/ST/10");
 

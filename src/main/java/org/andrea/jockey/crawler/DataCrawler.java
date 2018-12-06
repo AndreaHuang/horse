@@ -74,9 +74,9 @@ public class DataCrawler {
 
         int maxDateOfExistingRecords = dao.getMaxDate();
         System.out.println("Max Date of Existing Records: "+maxDateOfExistingRecords);
-        String endDate ="99999999";// jockeyWebsiteConfig.getEndDate()
+      //
         List<String> links = listLinksOfRaceDaysInDateRange(jockeyWebsiteConfig.getUrl(),
-                Integer.toString(maxDateOfExistingRecords), endDate);
+                Integer.toString(maxDateOfExistingRecords)  , jockeyWebsiteConfig.getEndDate());
 
         for (String urlOfARaceDay : links) {
             getRecordsByUrlOfDay(urlOfARaceDay);
@@ -127,7 +127,7 @@ public class DataCrawler {
             int length = "Local".length();
             if (path.startsWith("Local")) {
                 String date = path.split("/")[1];
-                if (date.compareTo(startDate) >= 0 && date.compareTo(endDate) <= 0) {
+                if (date.compareTo(startDate) > 0 && date.compareTo(endDate) < 0) {
                     String urlOfARaceDay = url + path.substring(length);
 
                     result.add(urlOfARaceDay);
@@ -209,7 +209,7 @@ public class DataCrawler {
 
         try {
             String raceDate = SDF_Update.format(SDF_Original.parse(info.split(":")[1].trim().split(" ")[0]));
-            raceInfo.setRateDate(raceDate);
+            raceInfo.setRaceDate(raceDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -378,6 +378,7 @@ public class DataCrawler {
         String info = getDriver().findElement(By.xpath("//*[@id=\"racecard\"]/div[4]/div/table/tbody/tr/td")).getText().trim();
 
         String[] infoArray = info.split("\n");
+        String[] array =null;
         /*race seq*/
         raceInfo.setRaceSeqOfDay(Integer.parseInt(infoArray[0].split(" ")[1]));
         /*race date*/
@@ -385,7 +386,7 @@ public class DataCrawler {
 
         try {
             String raceDate = SDF_Update.format(SDF_Original_NewRace.parse(raceDateOrigin.trim()));
-            raceInfo.setRateDate(raceDate);
+            raceInfo.setRaceDate(raceDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -398,10 +399,22 @@ public class DataCrawler {
         }
 
         /* Course */
-        String course = infoArray[2].split(",")[0]+" -"+infoArray[2].split(",")[1];
+        array = infoArray[2].split(",");
+        String course =null;
+        if(array.length >2) {
+            course = array[0] + " -" + array[1];
+        } else{
+            course = array[0];
+        }
         raceInfo.setCourse(course.toUpperCase());
         /*Distance*/
-        String distance = infoArray[2].split(",")[2];
+        String distance =null;
+        if(array.length >2){
+            distance = array[2];
+        } else{
+            distance = array[1];
+        }
+
         distance = distance.toUpperCase().replace("M","");
         raceInfo.setDistance(Integer.parseInt(distance.trim()));
         /*Going*/
@@ -409,8 +422,14 @@ public class DataCrawler {
             raceInfo.setGoing(infoArray[2].split(",")[3].toUpperCase().trim());
         }
         /*Class*/
-        String classString = infoArray[3].trim().substring(infoArray[3].trim().lastIndexOf(" "));
+        //System.out.println(infoArray[3].trim());
+        array = infoArray[3].split(",");
+        String classString = array[array.length-1].trim();
+        classString = classString.substring("CLASS".length()).trim();
 
+        if(classString.contains(" ")){//Class 4 (Restricted)
+            classString = classString.substring(0, classString.indexOf("("));
+        }
         try {
             int classInt = Integer.parseInt(classString.trim());
             raceInfo.setRaceClass(classInt);

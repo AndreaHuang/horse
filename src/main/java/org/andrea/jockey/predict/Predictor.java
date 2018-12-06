@@ -3,6 +3,8 @@ package org.andrea.jockey.predict;
 import org.andrea.jockey.jdbc.RecordCardDAO;
 import org.andrea.jockey.model.RaceCardAnalysis;
 
+import org.andrea.jockey.model.RaceCardItem;
+import org.andrea.jockey.model.RaceCardResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +40,15 @@ public class Predictor {
             " where raceCard.place=1 and newrace.raceSeqOfDay={0}" +
             " group by racecard.raceClass,racecard.course,racecard.distance  ";
 
+    private static final String SQL_HISTORICAL_OF_NEWRACE="select racecard.* " +
+            " from newrace inner join racecard " +
+            " on newrace.horseid = racecard.horseid "+
+            " and newrace.raceSeqOfDay= {0}";
+
+    private static final String SQL_NEWRACE="select * " +
+            " from newrace  " +
+            " where newrace.raceSeqOfDay= {0}";
+
     @Autowired
     RecordCardDAO dao;
 
@@ -45,7 +56,7 @@ public class Predictor {
         int raceDate = dao.getNewRaceDate();
         int raceNumber = dao.getNewRaceNumber();
         for(int i=1; i<=raceNumber;i++){
-            this.predictARace(raceDate,i);
+            this.predictARace2(raceDate,i);
         }
     }
     private void predictARace(int date, int seqOfDay) {
@@ -90,6 +101,54 @@ public class Predictor {
             }
         }
     }
+    private void predictARace2(int date, int seqOfDay) {
+        System.out.println("Race :" + seqOfDay);
+         /* same course same distance*/
+        List<RaceCardResult> raceCard = null;
+        List<RaceCardItem> newRace = null;
+        FileWriter writer = null;
+        try {
+            newRace = dao.queryNewRace(getSQL_NewRace(seqOfDay));
+            File f = new File(date+"_"+seqOfDay + "_predict.csv");
+            writer = new FileWriter(f);
+
+
+            this.printNewRaceHeader(writer);
+            for (RaceCardItem a : newRace) {
+                this.printNewRace(writer, a);
+            }
+            raceCard = dao.queryRaceResult(getSQL_History_of_NewRace(seqOfDay));
+            writer.close();
+
+            f = new File(date+"_"+seqOfDay + "_history.csv");
+            writer = new FileWriter(f);
+            this.printRaceCardHeader(writer);
+            for (RaceCardResult a : raceCard) {
+                this.printRaceCard(writer, a);
+            }
+            writer.close();
+            writer= null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
+            if(writer!=null){
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                writer = null;
+            }
+        }
+    }
+    private String getSQL_NewRace(int seqOfDay){
+        String s = SQL_NEWRACE.replace("{0}",Integer.toString(seqOfDay));
+        return s;
+    }
+    private String getSQL_History_of_NewRace(int seqOfDay){
+        String s = SQL_HISTORICAL_OF_NEWRACE.replace("{0}",Integer.toString(seqOfDay));
+        return s;
+    }
     private String getSQL_DifferentCourseDifferentDistance(int seqOfDay){
         String s = SQL_DIFFERENT_COURSE_DIFFERENT_DISTANCT.replace("{0}",Integer.toString(seqOfDay));
        // System.out.println(s);
@@ -105,29 +164,63 @@ public class Predictor {
         return SQL_FINISH_TIME.replace("{0}",Integer.toString(seqOfDay));
     }
 
+    private void printRaceCardHeader(FileWriter writer) throws IOException {
+        writer.write("raceMeeting,horseId,horseName,rateDate,draw," +
+                "distance,course,raceClass,rating,jockey,going,addedWeight,declaredHorseWeight," +
+                "finishTime,place,lbw,winOdds");
+        writer.write("\r\n");
+    }
+    private void printNewRaceHeader(FileWriter writer) throws IOException {
+        writer.write("raceMeeting,horseNo,horseId,horseName,rateDate,draw," +
+                "distance,course,raceClass,rating,jockey,going,addedWeight,declaredHorseWeight");
+        writer.write("\r\n");
+    }
+    private void printRaceCard(FileWriter writer, RaceCardResult r) throws IOException {
+        writer.write(String.join(",",r.getRacePlace(),r.getHorseId(),r.getHorseName(),r.getRaceDate(),
+                Integer.toString(r.getDraw()), Integer.toString(r.getDistance()),r.getCourse(),
+                Integer.toString(r.getRaceClass()),
+                Integer.toString(r.getRating()),r.getJockey(),r.getGoing(),
+                Integer.toString(r.getAddedWeight()),Integer.toString(r.getDeclaredHorseWeight()),
+                Double.toString(r.getFinishTime()),
+                Integer.toString(r.getPlace()),Double.toString(r.getLbw()),
+                Double.toString(r.getWinOdds())));
+        writer.write("\r\n");
+    }
+    private void printNewRace(FileWriter writer, RaceCardItem r) throws IOException {
+        writer.write(String.join(",",r.getRacePlace(),r.getHorseNo(),r.getHorseId(),r.getHorseName(),r.getRaceDate(),
+                Integer.toString(r.getDraw()), Integer.toString(r.getDistance()),r.getCourse(),
+                Integer.toString(r.getRaceClass()),
+                Integer.toString(r.getRating()),r.getJockey(),r.getGoing(),
+                Integer.toString(r.getAddedWeight()),Integer.toString(r.getDeclaredHorseWeight())));
+        writer.write("\r\n");
+    }
+
     private void printHeader(FileWriter writer) throws IOException{
         writer.write("horseNo,horseName,rateDate,draw,standardFinishTime,finishTime," +
-                "place,lbw,winOdds,rating,ratingDelta\r\n");
+                "place,lbw,winOdds,distance,course,raceClass,rating,ratingDelta,jockey,going");
+        writer.write("\r\n");
 
     }
     private void printAnalysis(FileWriter writer, RaceCardAnalysis r) throws IOException {
-        writer.write((String.join(",",r.getHorseNo(),r.getHorseName(),r.getRateDate(),
+        writer.write(String.join(",",r.getHorseNo(),r.getHorseName(),r.getRaceDate(),
                 Integer.toString(r.getDraw()),Double.toString(r.getStandardFinishTime()),
                 Double.toString(r.getFinishTime()),
                 Integer.toString(r.getPlace()),Double.toString(r.getLbw()),Double.toString(r.getWinOdds()),
-                Integer.toString(r.getRating()),Integer.toString(r.getRatingDelta()),"\r\n")
-               ));
+                Integer.toString(r.getDistance()),r.getCourse(),Integer.toString(r.getRaceClass()),
+                Integer.toString(r.getRating()),Integer.toString(r.getRatingDelta()),r.getJockey(),r.getGoing()));
+        writer.write("\r\n");
     }
 
 
     private void printAnalysis_DifferentCourse_DifferentDistance(FileWriter writer,RaceCardAnalysis r)
              throws IOException{
-        writer.write((String.join(",",r.getHorseNo(),r.getHorseName(),r.getRateDate(),
+        writer.write(String.join(",",r.getHorseNo(),r.getHorseName(),r.getRaceDate(),
                 Integer.toString(r.getDraw()),Double.toString(r.getStandardFinishTime()),
                 Double.toString(r.getFinishTime()),
                 Integer.toString(r.getPlace()),Double.toString(r.getLbw()),Double.toString(r.getWinOdds()),
                 Integer.toString(r.getDistance()),r.getCourse(), Integer.toString(r.getRaceClass()),
-                Integer.toString(r.getRating()),Integer.toString(r.getRatingDelta()),"\r\n")));
+                Integer.toString(r.getRating()),Integer.toString(r.getRatingDelta()),r.getJockey(),r.getGoing()));
+        writer.write("\r\n");
     }
 
 }

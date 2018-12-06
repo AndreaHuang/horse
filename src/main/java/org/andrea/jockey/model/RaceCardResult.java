@@ -20,7 +20,7 @@ public class RaceCardResult extends RaceCardItem {
         this.raceId =info.getRaceId();
         this.racePlace = info.getRacePlace();
         this.raceSeqOfDay = info.getRaceSeqOfDay();
-        this.rateDate = info.getRateDate();
+        this.raceDate = info.getRaceDate();
         this.going = info.getGoing();
         this.course=info.getCourse();
         this.distance = info.getDistance();
@@ -46,7 +46,7 @@ public class RaceCardResult extends RaceCardItem {
                 ", lbwString='" + lbwString + '\'' +
                 ", lbw=" + lbw +
                 ", winOdds=" + winOdds +
-                ", rateDate='" + rateDate + '\'' +
+                ", raceDate='" + raceDate + '\'' +
                 ", racePlace='" + racePlace + '\'' +
                 ", raceId='" + raceId + '\'' +
                 ", raceSeqOfDay=" + raceSeqOfDay +

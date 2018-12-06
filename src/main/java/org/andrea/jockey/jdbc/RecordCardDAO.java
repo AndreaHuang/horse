@@ -2,7 +2,6 @@ package org.andrea.jockey.jdbc;
 
 
 
-import org.andrea.jockey.model.RaceCardAnalysis;
 import org.andrea.jockey.model.RaceCardItem;
 import org.andrea.jockey.model.RaceCardResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class RecordCardDAO {
 
 
     private final String SQL_INSERT="INSERT INTO racecard " +
-            "(rateDate," +
+            "(raceDate," +
             "raceMeeting," +
             "raceId," +
             "raceSeqOfDay," +
@@ -92,7 +91,7 @@ public class RecordCardDAO {
             "draw," +
             "horseId," +
             "horseName," +
-            "hourseNo," +
+            "horseNo," +
             "rating," +
 
             "jockey," +
@@ -153,7 +152,7 @@ public class RecordCardDAO {
                             throws SQLException {
                         RaceCardResult race = raceResultList.get(i);
                         //System.out.println(race);
-                        ps.setString(1,race.getRateDate());
+                        ps.setString(1,race.getRaceDate());
                         ps.setString(2,race.getRacePlace());
                         ps.setString(3, race.getRaceId());
                         ps.setInt(4,race.getRaceSeqOfDay());
@@ -196,7 +195,7 @@ public class RecordCardDAO {
                         RaceCardItem race = raceCardList.get(i);
                         //System.out.println(race);
                         int idx =0;
-                        ps.setString(++idx,race.getRateDate());
+                        ps.setString(++idx,race.getRaceDate());
                         ps.setString(++idx,race.getRacePlace());
 
                         ps.setInt(++idx,race.getRaceSeqOfDay());
@@ -224,14 +223,23 @@ public class RecordCardDAO {
                 });
     }
 
-    public List<RaceCardAnalysis> query(String SQL){
+    public List<org.andrea.jockey.model.RaceCardAnalysis> query(String SQL){
+
+        return jdbc.query(SQL, new RaceCardAnalysisRowMapper());
+    }
+    public List<RaceCardResult> queryRaceResult(String SQL){
 
         return jdbc.query(SQL, new RaceCardRowMapper());
     }
+    public List<RaceCardItem> queryNewRace(String SQL){
+
+        return jdbc.query(SQL, new NewRaceRowMapper());
+    }
     public int getMaxDate(){
-        return jdbc.queryForObject("select max(rateDate) from racecard", Integer.class);
+        return jdbc.queryForObject("select max(raceDate) from racecard", Integer.class);
     }
     public double queryForDouble(String sql){
+        System.out.println(sql);
        return jdbc.queryForObject(sql,Double.class);
     }
     public int getNewRaceDate() {
@@ -241,7 +249,7 @@ public class RecordCardDAO {
         return jdbc.queryForObject("select max(raceSeqOfDay) from newrace", Integer.class);
     }
     public void deleteNewRace(){
-        jdbc.execute("delete select from newrace where 1=1");
+        jdbc.execute("delete from newrace where 1=1");
     }
 
 }

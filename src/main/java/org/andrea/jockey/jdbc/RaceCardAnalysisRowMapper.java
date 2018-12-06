@@ -1,18 +1,17 @@
 package org.andrea.jockey.jdbc;
 
 import org.andrea.jockey.model.RaceCardAnalysis;
-import org.andrea.jockey.model.RaceCardResult;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RaceCardRowMapper implements RowMapper<RaceCardResult> {
+public class RaceCardAnalysisRowMapper implements RowMapper<org.andrea.jockey.model.RaceCardAnalysis> {
     @Override
-    public RaceCardResult mapRow(ResultSet resultSet, int i) throws SQLException {
-        RaceCardResult r = new RaceCardResult();
+    public org.andrea.jockey.model.RaceCardAnalysis mapRow(ResultSet resultSet, int i) throws SQLException {
+        org.andrea.jockey.model.RaceCardAnalysis r = new org.andrea.jockey.model.RaceCardAnalysis();
 
-        r.setRaceDate(resultSet.getString("raceDate"));
+        r.setRaceDate(resultSet.getString("rateDate"));
         r.setRacePlace(resultSet.getString("raceMeeting"));
         r.setRaceId(resultSet.getString("raceId"));
         r.setRaceSeqOfDay(resultSet.getInt("raceSeqOfDay"));
@@ -23,6 +22,7 @@ public class RaceCardRowMapper implements RowMapper<RaceCardResult> {
         r.setDraw(resultSet.getInt("draw"));
         r.setHorseId(resultSet.getString("horseId"));
         r.setHorseName(resultSet.getString("horseName"));
+        r.setHorseNo(resultSet.getString("newHorseNo"));
         r.setJockey(resultSet.getString("jockey"));
         r.setTrainer(resultSet.getString("trainer"));
         r.setAddedWeight(resultSet.getInt("addedWeight"));
@@ -32,8 +32,8 @@ public class RaceCardRowMapper implements RowMapper<RaceCardResult> {
         r.setPlace(resultSet.getInt("place"));
         r.setRunningPosition(resultSet.getString("runningPosition"));
         r.setFinishTime(resultSet.getDouble("finishTime"));
-        r.setRating(resultSet.getInt("rating"));
-
+        r.setRating(resultSet.getInt("newRating"));
+        r.setRatingDelta(resultSet.getInt("ratingDelta"));
 
         return r;
     }

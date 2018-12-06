@@ -33,7 +33,7 @@ public class RaceCardItem extends RaceInfo{
         this.raceId =info.getRaceId();
         this.racePlace = info.getRacePlace();
         this.raceSeqOfDay = info.getRaceSeqOfDay();
-        this.rateDate = info.getRateDate();
+        this.raceDate = info.getRaceDate();
         this.going = info.getGoing();
         this.course=info.getCourse();
         this.distance = info.getDistance();

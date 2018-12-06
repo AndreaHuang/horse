@@ -6,7 +6,7 @@ import lombok.Setter;
 @Data
 public class RaceInfo {
 
-    @Getter @Setter String  rateDate;//YYYYMMDD
+    @Getter @Setter String  raceDate;//YYYYMMDD
     @Getter @Setter String racePlace;
     @Getter @Setter String raceId;
     @Getter @Setter int raceSeqOfDay;
@@ -74,7 +74,7 @@ public class RaceInfo {
     @Override
     public String toString() {
         return "RaceInfo{" +
-                "rateDate='" + rateDate + '\'' +
+                "rateDate='" + raceDate + '\'' +
                 ", racePlace='" + racePlace + '\'' +
                 ", raceId='" + raceId + '\'' +
                 ", raceSeqOfDay=" + raceSeqOfDay +
@@ -85,11 +85,11 @@ public class RaceInfo {
                 '}';
     }
 
-    public String getRateDate() {
-        return rateDate;
+    public String getRaceDate() {
+        return raceDate;
     }
 
-    public void setRateDate(String rateDate) {
-        this.rateDate = rateDate;
+    public void setRaceDate(String rateDate) {
+        this.raceDate = rateDate;
     }
 }
