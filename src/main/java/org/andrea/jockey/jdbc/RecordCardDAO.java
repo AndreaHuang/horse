@@ -2,6 +2,8 @@ package org.andrea.jockey.jdbc;
 
 
 
+import org.andrea.jockey.model.HorseStatistics;
+import org.andrea.jockey.model.JockeyStatistics;
 import org.andrea.jockey.model.RaceCardItem;
 import org.andrea.jockey.model.RaceCardResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,11 +139,16 @@ public class RecordCardDAO {
             "?"+//<{ratingDelta }>," +
             ")";
 
-    public void insertUrls(final String url){
+    private static final String SQL_UPDATE_RACECARD_STATISTIC="update racecard set "+
+            " horse_winPer = ?, horse_winCount=?,horse_newDistance=?, " +
+            " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?" +
+            " where raceDate = ?  and RaceSeqOfDay =? and horseNo =?";
 
-        this.jdbc.update("insert into test(test) values('"+url+"')");
+    private static final String SQL_UPDATE_NEWRACE_STATISTIC="update newrace set "+
+            " horse_winPer = ?, horse_winCount=?,horse_newDistance=?, " +
+            " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?" +
+            " where raceDate = ?  and RaceSeqOfDay =? and horseNo =?";
 
-    }
 
     public void batchInsertResults(final List<RaceCardResult> raceResultList){
 
@@ -223,6 +230,37 @@ public class RecordCardDAO {
                 });
     }
 
+    public void batchUpdateRaceStatistic(final List<RaceCardItem> raceCardList,
+                                                   boolean isNewRace){
+
+        String sql = isNewRace ?SQL_UPDATE_NEWRACE_STATISTIC: SQL_UPDATE_RACECARD_STATISTIC;
+        this.jdbc.batchUpdate(sql,
+                new BatchPreparedStatementSetter(){
+
+                    public void setValues(PreparedStatement ps, int i)
+                            throws SQLException {
+                        RaceCardItem race = raceCardList.get(i);
+                        //System.out.println(race);
+                        int idx =0;
+                        ps.setDouble(++idx,race.getHorse_winPer());
+                        ps.setInt(++idx,race.getHorse_winCount());
+
+                        ps.setInt(++idx,race.getHorse_newDistance());
+                        ps.setInt(++idx,race.getHorse_newHorse());
+                        ps.setDouble(++idx,race.getJockey_winPer());
+                        ps.setInt(++idx,race.getJockey_winCount());
+
+                        ps.setString(++idx,race.getRaceDate());
+                        ps.setInt(++idx,race.getRaceSeqOfDay());
+                        ps.setString(++idx,race.getHorseNo());
+                    }
+
+                    public int getBatchSize() {
+                        return raceCardList.size();
+                    }
+                });
+    }
+
     public List<org.andrea.jockey.model.RaceCardAnalysis> query(String SQL){
 
         return jdbc.query(SQL, new RaceCardAnalysisRowMapper());
@@ -234,6 +272,14 @@ public class RecordCardDAO {
     public List<RaceCardItem> queryNewRace(String SQL){
 
         return jdbc.query(SQL, new NewRaceRowMapper());
+    }
+    public List<HorseStatistics> queryHorseStatistics(String SQL){
+
+        return jdbc.query(SQL, new StatisticsRowMapper.HorseRowMapper());
+    }
+    public List<JockeyStatistics> queryJockeyStatistics(String SQL){
+
+        return jdbc.query(SQL, new StatisticsRowMapper.JockeyRowMapper());
     }
     public int getMaxDate(){
         return jdbc.queryForObject("select max(raceDate) from racecard", Integer.class);

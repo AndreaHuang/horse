@@ -12,6 +12,7 @@ public class RaceCardResult extends RaceCardItem {
     private String finishTimeString;
     private double finishTime;
     private String comment;
+
     public RaceCardResult(){
 
     }

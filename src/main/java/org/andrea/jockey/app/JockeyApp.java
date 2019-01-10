@@ -5,6 +5,7 @@ package org.andrea.jockey.app;
 import org.andrea.jockey.predict.Predictor;
 import org.andrea.jockey.crawler.DataCrawler;
 import org.andrea.jockey.jdbc.RecordCardDAO;
+import org.andrea.jockey.statistics.Statistics;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,11 +24,11 @@ public class JockeyApp {
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-
-        DataCrawler crawler = context.getBean(DataCrawler.class);
-        crawler.getRecord();
-
-        crawler.getNewRaceCard();
+//
+//        DataCrawler crawler = context.getBean(DataCrawler.class);
+//        crawler.getRecord();
+//
+//        crawler.getNewRaceCard();
 
 
       //String url= "https://racing.hkjc.com/racing/info/meeting/Results/English/Local/20170627/HV";
@@ -37,8 +38,13 @@ public class JockeyApp {
       //  crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/ST/10");
 
 
-        Predictor predictor = context.getBean(Predictor.class);
-        predictor.predictAll();
+
+
+        Statistics stat = context.getBean(Statistics.class);
+        stat.statisticAllNewRace();
+
+//        Predictor predictor = context.getBean(Predictor.class);
+//        predictor.predictAll();
 
     }
 

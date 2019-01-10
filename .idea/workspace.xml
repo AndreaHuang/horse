@@ -2,18 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ca15c6df-8282-4da1-96e5-aa22cfea9e47" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/NewRaceRowMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardAnalysisRowMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/StatisticsRowMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/HorseStatistics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/JockeyStatistics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/statistics/Statistics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/usedSQL" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/RacesFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/AppConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/AppConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyWebsiteConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyWebsiteConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/crawler/DataCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/crawler/DataCrawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardRowMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RecordCardDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RecordCardDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/predict/Predictor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/andrea/jockey/predict/Predictor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/SQL/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/SQL/schema.sql" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -28,59 +29,64 @@
     <session id="-811515772">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="7" />
           <entry key="project.open.time.13" value="3" />
-          <entry key="project.open.time.15" value="1" />
+          <entry key="project.open.time.15" value="2" />
           <entry key="project.open.time.16" value="1" />
+          <entry key="project.open.time.21" value="1" />
           <entry key="project.open.time.23" value="1" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="class" value="7" />
-          <entry key="java" value="33" />
+          <entry key="class" value="10" />
+          <entry key="java" value="54" />
           <entry key="properties" value="2" />
-          <entry key="sql" value="1" />
+          <entry key="sql" value="2" />
+          <entry key="usedSQL" value="1" />
           <entry key="xml" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CLASS" value="7" />
-          <entry key="JAVA" value="33" />
+          <entry key="CLASS" value="10" />
+          <entry key="JAVA" value="54" />
           <entry key="Properties" value="2" />
-          <entry key="SQL" value="1" />
+          <entry key="SQL" value="3" />
           <entry key="XML" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="dummy" value="12" />
-          <entry key="java" value="19296" />
-          <entry key="sql" value="2" />
+          <entry key="dummy" value="26" />
+          <entry key="java" value="22637" />
+          <entry key="sql" value="139" />
           <entry key="txt" value="14" />
           <entry key="xml" value="34" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="19296" />
-          <entry key="PLAIN_TEXT" value="26" />
-          <entry key="SQL" value="2" />
+          <entry key="JAVA" value="22637" />
+          <entry key="PLAIN_TEXT" value="40" />
+          <entry key="SQL" value="139" />
           <entry key="XML" value="34" />
         </counts>
       </usages-collector>
     </session>
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="jockey" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyApp.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="40" column="8" selection-start-line="40" selection-start-column="8" selection-end-line="40" selection-end-column="8" />
+            <state relative-caret-position="359">
+              <caret line="43" column="35" lean-forward="true" selection-start-line="43" selection-start-column="35" selection-end-line="43" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -88,15 +94,29 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/crawler/DataCrawler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="415" column="9" lean-forward="true" selection-start-line="415" selection-start-column="9" selection-end-line="415" selection-end-column="9" />
+            <state relative-caret-position="121">
+              <caret line="101" selection-start-line="101" selection-end-line="101" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#18007#18008#0" expanded="true" />
-                <element signature="e#18056#18057#0" expanded="true" />
+                <element signature="method#getNewRaceCard#0;class#DataCrawler#0" />
+                <element signature="method#listLinksOfNewRaces#0;class#DataCrawler#0" />
+                <element signature="e#18143#18144#0" expanded="true" />
+                <element signature="e#18192#18193#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/statistics/Statistics.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="108">
+              <caret line="116" column="35" selection-start-line="116" selection-start-column="16" selection-end-line="116" selection-end-column="35" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -105,8 +125,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/predict/Predictor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="398">
-              <caret line="213" lean-forward="true" selection-start-line="213" selection-end-line="213" />
+            <state relative-caret-position="136">
+              <caret line="177" column="17" selection-start-line="177" selection-start-column="17" selection-end-line="177" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#predictARace#0;class#Predictor#0" />
@@ -116,36 +136,47 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardRowMapper.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardItem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="48">
-              <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+            <state relative-caret-position="153">
+              <caret line="17" selection-start-line="17" selection-end-line="23" selection-end-column="32" />
+              <folding>
+                <element signature="e#709#710#0" expanded="true" />
+                <element signature="e#746#747#0" expanded="true" />
+                <element signature="e#803#804#0" expanded="true" />
+                <element signature="e#855#856#0" expanded="true" />
+                <element signature="e#2697#2698#0" expanded="true" />
+                <element signature="e#2732#2733#0" expanded="true" />
+                <element signature="e#2788#2789#0" expanded="true" />
+                <element signature="e#2836#2837#0" expanded="true" />
+                <element signature="e#2874#2875#0" expanded="true" />
+                <element signature="e#2911#2912#0" expanded="true" />
+                <element signature="e#2968#2969#0" expanded="true" />
+                <element signature="e#3020#3021#0" expanded="true" />
+                <element signature="e#3061#3062#0" expanded="true" />
+                <element signature="e#3101#3102#0" expanded="true" />
+                <element signature="e#3164#3165#0" expanded="true" />
+                <element signature="e#3222#3223#0" expanded="true" />
+                <element signature="e#3262#3263#0" expanded="true" />
+                <element signature="e#3298#3299#0" expanded="true" />
+                <element signature="e#3356#3357#0" expanded="true" />
+                <element signature="e#3406#3407#0" expanded="true" />
+                <element signature="e#3445#3446#0" expanded="true" />
+                <element signature="e#3483#3484#0" expanded="true" />
+                <element signature="e#3542#3543#0" expanded="true" />
+                <element signature="e#3596#3597#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/NewRaceRowMapper.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/HorseStatistics.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RecordCardDAO.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="106">
-              <caret line="240" column="45" lean-forward="true" selection-start-line="240" selection-start-column="45" selection-end-line="240" selection-end-column="45" />
+            <state relative-caret-position="150">
+              <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="30" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#8430#8431#0" expanded="true" />
-                <element signature="e#8525#8526#0" expanded="true" />
-                <element signature="e#8664#8665#0" expanded="true" />
-                <element signature="e#8761#8762#0" expanded="true" />
-                <element signature="e#8928#8929#0" expanded="true" />
-                <element signature="e#8996#8997#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -154,79 +185,44 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardResult.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="5" lean-forward="true" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+            <state relative-caret-position="181">
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
               <folding>
-                <element signature="e#3166#3167#0" expanded="true" />
-                <element signature="e#3196#3197#0" expanded="true" />
+                <element signature="e#3167#3168#0" expanded="true" />
+                <element signature="e#3197#3198#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardAnalysisRowMapper.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RecordCardDAO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="49" lean-forward="true" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
+            <state relative-caret-position="12">
+              <caret line="149" column="65" selection-start-line="149" selection-start-column="65" selection-end-line="149" selection-end-column="65" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#batchInsertResults#0;class#RecordCardDAO#0" />
+                <element signature="method#batchInsertNewRace#0;class#RecordCardDAO#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceInfo.java">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/SQL/schema.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="82" column="44" lean-forward="true" selection-start-line="82" selection-start-column="44" selection-end-line="82" selection-end-column="44" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#460#461#0" expanded="true" />
-                <element signature="e#492#493#0" expanded="true" />
-                <element signature="e#542#543#0" expanded="true" />
-                <element signature="e#584#585#0" expanded="true" />
-                <element signature="e#617#618#0" expanded="true" />
-                <element signature="e#646#647#0" expanded="true" />
-                <element signature="e#690#691#0" expanded="true" />
-                <element signature="e#726#727#0" expanded="true" />
-                <element signature="e#762#763#0" expanded="true" />
-                <element signature="e#797#798#0" expanded="true" />
-                <element signature="e#850#851#0" expanded="true" />
-                <element signature="e#898#899#0" expanded="true" />
-                <element signature="e#931#932#0" expanded="true" />
-                <element signature="e#963#964#0" expanded="true" />
-                <element signature="e#1010#1011#0" expanded="true" />
-                <element signature="e#1052#1053#0" expanded="true" />
-                <element signature="e#1084#1085#0" expanded="true" />
-                <element signature="e#1115#1116#0" expanded="true" />
-                <element signature="e#1160#1161#0" expanded="true" />
-                <element signature="e#1200#1201#0" expanded="true" />
-                <element signature="e#1232#1233#0" expanded="true" />
-                <element signature="e#1260#1261#0" expanded="true" />
-                <element signature="e#1302#1303#0" expanded="true" />
-                <element signature="e#1336#1337#0" expanded="true" />
-                <element signature="e#1369#1370#0" expanded="true" />
-                <element signature="e#1398#1399#0" expanded="true" />
-                <element signature="e#1442#1443#0" expanded="true" />
-                <element signature="e#1478#1479#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="185">
+              <caret line="73" column="54" selection-start-line="73" selection-start-column="47" selection-end-line="73" selection-end-column="54" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardItem.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/SeleniumConfig.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="30" column="28" lean-forward="true" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
-              <folding>
-                <element signature="e#312#313#0" expanded="true" />
-                <element signature="e#346#347#0" expanded="true" />
-                <element signature="e#397#398#0" expanded="true" />
-                <element signature="e#443#444#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="75">
+              <caret line="12" column="10" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -245,6 +241,7 @@
       <find>\n</find>
       <find>RecordCardDAO</find>
       <find>ratedate</find>
+      <find>SQL_UPDATE_RACECARD_STATISTIC</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -260,24 +257,32 @@
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/JockeyApp.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/JockeyWebsiteConfig.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/SeleniumConfig.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/andrea/jockey/predictor/Predictor.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/org/andrea/jockey/predict/Predictor.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardAnalysis.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/AppConfig.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyWebsiteConfig.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardAnalysis.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/SQL/schema.sql" />
-        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardItem.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceInfo.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardResult.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/NewRaceRowMapper.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardRowMapper.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardAnalysisRowMapper.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/predict/Predictor.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RecordCardDAO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/RacesFilter.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/usedSQL" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceInfo.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceStatistics.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/HorseStatistics.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/JockeyStatistic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/HorseStatisticsRowMapper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/StatisticsRowMapper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardResult.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardItem.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/AppConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/SeleniumConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/statistics/Statistics.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyApp.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/crawler/DataCrawler.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/SQL/schema.sql" />
+        <option value="$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RecordCardDAO.java" />
       </list>
     </option>
   </component>
@@ -297,7 +302,7 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds">
     <option name="y" value="23" />
     <option name="width" value="1109" />
     <option name="height" value="708" />
@@ -307,7 +312,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -392,6 +396,15 @@
               <item name="jockey" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="jockey" type="462c0819:PsiDirectoryNode" />
+              <item name="statistics" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jockey" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jockey" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -404,18 +417,13 @@
             </path>
             <path>
               <item name="jockey" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jockey" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="jockey" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -524,17 +532,17 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="23" width="1109" height="708" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.717608" visible="true" weight="0.2584814" />
-      <window_info id="Structure" order="1" sideWeight="0.28333333" side_tool="true" weight="0.29990628" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7122807" visible="true" weight="0.29428303" />
+      <window_info id="Structure" order="1" sideWeight="0.2849315" side_tool="true" weight="0.3069467" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
-      <window_info id="Favorites" order="4" side_tool="true" />
+      <window_info id="Favorites" order="4" sideWeight="0.2877193" side_tool="true" visible="true" weight="0.29428303" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32901135" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3808219" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32792208" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.53733766" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3987034" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -542,7 +550,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.33561644" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.33279222" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -551,14 +559,14 @@
       <window_info anchor="right" id="Maven Projects" order="5" weight="0.033739455" />
     </layout>
     <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.717608" visible="true" weight="0.29990628" />
-      <window_info id="Structure" order="1" sideWeight="0.28333333" side_tool="true" visible="true" weight="0.29990628" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.717608" visible="true" weight="0.30740392" />
+      <window_info id="Structure" order="1" sideWeight="0.28333333" side_tool="true" weight="0.29990628" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
       <window_info id="Favorites" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32901135" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.5113636" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32792208" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.42857143" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3987034" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -566,13 +574,13 @@
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.121753246" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.33279222" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Palette&#9;" order="4" />
-      <window_info anchor="right" id="Maven Projects" order="5" visible="true" weight="0.033739455" />
+      <window_info anchor="right" id="Maven Projects" order="5" weight="0.033739455" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -619,60 +627,6 @@
     <entry file="file://$PROJECT_DIR$/src/main/resources/database.properties">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/SeleniumConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="33" column="24" selection-start-line="33" selection-start-column="24" selection-end-line="33" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/RacesFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/5.1.1.RELEASE/spring-jdbc-5.1.1.RELEASE.jar!/org/springframework/jdbc/core/JdbcTemplate.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2790">
-          <caret line="250" selection-start-line="250" selection-end-line="250" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/AppConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardAnalysis.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
-          <folding>
-            <element signature="e#201#202#0" expanded="true" />
-            <element signature="e#240#241#0" expanded="true" />
-            <element signature="e#301#302#0" expanded="true" />
-            <element signature="e#357#358#0" expanded="true" />
-            <element signature="e#443#444#0" expanded="true" />
-            <element signature="e#511#512#0" expanded="true" />
-            <element signature="e#571#572#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyWebsiteConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/5.1.1.RELEASE/spring-tx-5.1.1.RELEASE.jar!/org/springframework/dao/support/DataAccessUtils.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
@@ -687,93 +641,185 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/SQL/schema.sql">
+    <entry file="jar://$MAVEN_REPOSITORY$/mysql/mysql-connector-java/8.0.12/mysql-connector-java-8.0.12.jar!/com/mysql/cj/jdbc/exceptions/SQLExceptionsMapping.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
+        <state relative-caret-position="780">
           <caret line="73" selection-start-line="73" selection-end-line="73" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardItem.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/mysql/mysql-connector-java/8.0.12/mysql-connector-java-8.0.12.jar!/com/mysql/cj/jdbc/ClientPreparedStatement.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="30" column="28" lean-forward="true" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
-          <folding>
-            <element signature="e#312#313#0" expanded="true" />
-            <element signature="e#346#347#0" expanded="true" />
-            <element signature="e#397#398#0" expanded="true" />
-            <element signature="e#443#444#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="8715">
+          <caret line="650" selection-start-line="650" selection-end-line="650" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceInfo.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/5.1.1.RELEASE/spring-jdbc-5.1.1.RELEASE.jar!/org/springframework/jdbc/core/JdbcTemplate.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="82" column="44" lean-forward="true" selection-start-line="82" selection-start-column="44" selection-end-line="82" selection-end-column="44" />
+        <state relative-caret-position="4785">
+          <caret line="387" selection-start-line="387" selection-end-line="387" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardAnalysisRowMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="19" column="49" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#460#461#0" expanded="true" />
-            <element signature="e#492#493#0" expanded="true" />
-            <element signature="e#542#543#0" expanded="true" />
-            <element signature="e#584#585#0" expanded="true" />
-            <element signature="e#617#618#0" expanded="true" />
-            <element signature="e#646#647#0" expanded="true" />
-            <element signature="e#690#691#0" expanded="true" />
-            <element signature="e#726#727#0" expanded="true" />
-            <element signature="e#762#763#0" expanded="true" />
-            <element signature="e#797#798#0" expanded="true" />
-            <element signature="e#850#851#0" expanded="true" />
-            <element signature="e#898#899#0" expanded="true" />
-            <element signature="e#931#932#0" expanded="true" />
-            <element signature="e#963#964#0" expanded="true" />
-            <element signature="e#1010#1011#0" expanded="true" />
-            <element signature="e#1052#1053#0" expanded="true" />
-            <element signature="e#1084#1085#0" expanded="true" />
-            <element signature="e#1115#1116#0" expanded="true" />
-            <element signature="e#1160#1161#0" expanded="true" />
-            <element signature="e#1200#1201#0" expanded="true" />
-            <element signature="e#1232#1233#0" expanded="true" />
-            <element signature="e#1260#1261#0" expanded="true" />
-            <element signature="e#1302#1303#0" expanded="true" />
-            <element signature="e#1336#1337#0" expanded="true" />
-            <element signature="e#1369#1370#0" expanded="true" />
-            <element signature="e#1398#1399#0" expanded="true" />
-            <element signature="e#1442#1443#0" expanded="true" />
-            <element signature="e#1478#1479#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardResult.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/statistics.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="5" lean-forward="true" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-          <folding>
-            <element signature="e#3166#3167#0" expanded="true" />
-            <element signature="e#3196#3197#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="30">
+          <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/RacesFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/usedSQL">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="51" selection-start-line="21" selection-start-column="51" selection-end-line="21" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/NewRaceRowMapper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
+        <state relative-caret-position="360">
           <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardRowMapper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+        <state relative-caret-position="435">
+          <caret line="34" column="48" lean-forward="true" selection-start-line="12" selection-start-column="7" selection-end-line="34" selection-end-column="48" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RaceCardAnalysisRowMapper.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/JockeyStatistics.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="49" lean-forward="true" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
+        <state relative-caret-position="165">
+          <caret line="11" column="33" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#279#280#0" expanded="true" />
+            <element signature="e#327#328#0" expanded="true" />
+            <element signature="e#367#368#0" expanded="true" />
+            <element signature="e#396#397#0" expanded="true" />
+            <element signature="e#424#425#0" expanded="true" />
+            <element signature="e#463#464#0" expanded="true" />
+            <element signature="e#497#498#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/StatisticsRowMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-69">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardAnalysis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+          <folding>
+            <element signature="e#443#444#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyWebsiteConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/AppConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="34" column="9" lean-forward="true" selection-start-line="34" selection-start-column="9" selection-end-line="34" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/SeleniumConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="12" column="10" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#3167#3168#0" expanded="true" />
+            <element signature="e#3197#3198#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/RaceCardItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="17" selection-start-line="17" selection-end-line="23" selection-end-column="32" />
+          <folding>
+            <element signature="e#709#710#0" expanded="true" />
+            <element signature="e#746#747#0" expanded="true" />
+            <element signature="e#803#804#0" expanded="true" />
+            <element signature="e#855#856#0" expanded="true" />
+            <element signature="e#2697#2698#0" expanded="true" />
+            <element signature="e#2732#2733#0" expanded="true" />
+            <element signature="e#2788#2789#0" expanded="true" />
+            <element signature="e#2836#2837#0" expanded="true" />
+            <element signature="e#2874#2875#0" expanded="true" />
+            <element signature="e#2911#2912#0" expanded="true" />
+            <element signature="e#2968#2969#0" expanded="true" />
+            <element signature="e#3020#3021#0" expanded="true" />
+            <element signature="e#3061#3062#0" expanded="true" />
+            <element signature="e#3101#3102#0" expanded="true" />
+            <element signature="e#3164#3165#0" expanded="true" />
+            <element signature="e#3222#3223#0" expanded="true" />
+            <element signature="e#3262#3263#0" expanded="true" />
+            <element signature="e#3298#3299#0" expanded="true" />
+            <element signature="e#3356#3357#0" expanded="true" />
+            <element signature="e#3406#3407#0" expanded="true" />
+            <element signature="e#3445#3446#0" expanded="true" />
+            <element signature="e#3483#3484#0" expanded="true" />
+            <element signature="e#3542#3543#0" expanded="true" />
+            <element signature="e#3596#3597#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/model/HorseStatistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -782,8 +828,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/predict/Predictor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="398">
-          <caret line="213" lean-forward="true" selection-start-line="213" selection-end-line="213" />
+        <state relative-caret-position="136">
+          <caret line="177" column="17" selection-start-line="177" selection-start-column="17" selection-end-line="177" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#predictARace#0;class#Predictor#0" />
@@ -791,26 +837,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RecordCardDAO.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/statistics/Statistics.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="240" column="45" lean-forward="true" selection-start-line="240" selection-start-column="45" selection-end-line="240" selection-end-column="45" />
+        <state relative-caret-position="108">
+          <caret line="116" column="35" selection-start-line="116" selection-start-column="16" selection-end-line="116" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#8430#8431#0" expanded="true" />
-            <element signature="e#8525#8526#0" expanded="true" />
-            <element signature="e#8664#8665#0" expanded="true" />
-            <element signature="e#8761#8762#0" expanded="true" />
-            <element signature="e#8928#8929#0" expanded="true" />
-            <element signature="e#8996#8997#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/app/JockeyApp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="40" column="8" selection-start-line="40" selection-start-column="8" selection-end-line="40" selection-end-column="8" />
+        <state relative-caret-position="359">
+          <caret line="43" column="35" lean-forward="true" selection-start-line="43" selection-start-column="35" selection-end-line="43" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -819,12 +859,33 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/crawler/DataCrawler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="415" column="9" lean-forward="true" selection-start-line="415" selection-start-column="9" selection-end-line="415" selection-end-column="9" />
+        <state relative-caret-position="121">
+          <caret line="101" selection-start-line="101" selection-end-line="101" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#18007#18008#0" expanded="true" />
-            <element signature="e#18056#18057#0" expanded="true" />
+            <element signature="method#getNewRaceCard#0;class#DataCrawler#0" />
+            <element signature="method#listLinksOfNewRaces#0;class#DataCrawler#0" />
+            <element signature="e#18143#18144#0" expanded="true" />
+            <element signature="e#18192#18193#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/SQL/schema.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="73" column="54" selection-start-line="73" selection-start-column="47" selection-end-line="73" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/andrea/jockey/jdbc/RecordCardDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12">
+          <caret line="149" column="65" selection-start-line="149" selection-start-column="65" selection-end-line="149" selection-end-column="65" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#batchInsertResults#0;class#RecordCardDAO#0" />
+            <element signature="method#batchInsertNewRace#0;class#RecordCardDAO#0" />
           </folding>
         </state>
       </provider>

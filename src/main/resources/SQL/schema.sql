@@ -69,5 +69,24 @@ Create table newRace(
 	
 );
 
-ALTER TABLE newrace RENAME column hourseNo to horseNo
-ALTER TABLE racecard RENAME column ratedate to raceDate
+ALTER TABLE newrace RENAME column hourseNo to horseNo;
+
+ALTER TABLE racecard RENAME column hourseNo to horseNo;
+ALTER TABLE racecard RENAME column ratedate to raceDate;
+
+ALTER TABLE racecard add column horse_winPer FLOAT;
+ALTER TABLE racecard add column jockey_winPer FLOAT;
+ALTER TABLE racecard add column horse_winCount SMALLINT;
+ALTER TABLE racecard add column jockey_winCount SMALLINT;
+ALTER TABLE racecard add column horse_newHorse SMALLINT;
+ALTER TABLE racecard add column horse_newDistance SMALLINT;
+/*Statistic for new Race*/
+ALTER TABLE newrace add column horse_winPer FLOAT;
+ALTER TABLE newrace add column jockey_winPer FLOAT;
+ALTER TABLE newrace add column horse_winCount SMALLINT;
+ALTER TABLE newrace add column jockey_winCount SMALLINT;
+ALTER TABLE newrace add column horse_newHorse SMALLINT;
+ALTER TABLE newrace add column horse_newDistance SMALLINT;
+
+
+

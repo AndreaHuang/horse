@@ -31,10 +31,8 @@ public class AppConfig {
         return  new JockeyWebsiteConfig();
     }
 
-    //@Bean
-    SeleniumConfig getSeleniumConfig(){
-        return new SeleniumConfig();
-    }
+    @Bean
+    SeleniumConfig getSeleniumConfig(){ return new SeleniumConfig(); }
 
 
 

@@ -1,0 +1,30 @@
+use jockey;
+select * from racecard where horseId='V279' order by ratedate desc
+select * from racecard where ratedate=20170627
+order by ratedate desc
+
+delete  from racecard where raceDate = 20181205
+
+select  raceDate, raceSeqOfDay ,raceclass ,count(*) from newrace
+group by  raceDate, raceSeqOfDay ,raceclass
+
+select * from racecard where horseId='A356'
+
+
+select  * from newrace where raceSeqOfDay=1hourseNo
+
+ALTER TABLE newrace RENAME column hourseNo to horseNo
+ALTER TABLE racecard RENAME column ratedate to raceDate
+
+datatype(length);
+
+select distance,course,going,raceClass,avg(finishTime) from racecard
+ where place=1 group by distance,course,going,raceClass
+ order by distance,course,raceClass,going
+
+ select distinct raceMeeting,course from racecard order by course
+ select * from new rac
+ min(racecard.finishTime)
+ select  racecard.* from newrace inner join racecard
+ on newrace.course=racecard.course and newrace.raceClass=racecard.raceClass
+ and newrace.distance = racecard.distance  where raceCard.place=1 and newrace.raceSeqOfDay=1 group by racecard.raceClass,racecard.course,racecard.distance

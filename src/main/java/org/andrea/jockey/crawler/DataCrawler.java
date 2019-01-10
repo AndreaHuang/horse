@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jsoup.nodes.Document;
 
+
 @Component
 public class DataCrawler {
 
@@ -98,7 +99,7 @@ public class DataCrawler {
                 dao.batchInsertResults(raceCardResultOfARace);
             }catch(Exception e){
                 e.printStackTrace();
-                dao.insertUrls(urlOfARace.substring(urlOfARace.indexOf("Local")));
+
             }
         }
     }
@@ -409,13 +410,15 @@ public class DataCrawler {
         raceInfo.setCourse(course.toUpperCase());
         /*Distance*/
         String distance =null;
-        if(array.length >2){
-            distance = array[2];
-        } else{
-            distance = array[1];
-        }
+//        if(array.length >2){
+//            distance = array[2];
+//        } else{
+//            distance = array[1];
+//        }
+        distance = array[array.length-2];
 
         distance = distance.toUpperCase().replace("M","");
+        System.out.println(distance);
         raceInfo.setDistance(Integer.parseInt(distance.trim()));
         /*Going*/
         if(infoArray[2].split(",").length >3){
@@ -601,7 +604,6 @@ public class DataCrawler {
         new WebDriverWait(getDriver(), 10).until(
                 webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
     }
-
 
 
 }
