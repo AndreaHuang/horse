@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -69,8 +70,8 @@ public class Statistics {
 
         totalRaceCount = jockeys.size();
         if(totalRaceCount == 0){
-            r.setHorse_winPer(0.0);
-            r.setHorse_winCount(0);
+            r.setJockey_winPer(0.0);
+            r.setJockey_winCount(0);
         } else {
             long inTargetPlace_RaceCount = jockeys.stream().filter(a -> a.getPlace() <= TARGET_PLACE).count();
             double jockeyWin_Percentage = inTargetPlace_RaceCount * 1.0
@@ -78,7 +79,7 @@ public class Statistics {
 
             jockeyWin_Percentage = new BigDecimal(jockeyWin_Percentage).setScale(2, BigDecimal.ROUND_UP).doubleValue();
             r.setJockey_winPer(jockeyWin_Percentage);
-            r.setHorse_winCount(Long.valueOf(inTargetPlace_RaceCount).intValue());
+            r.setJockey_winCount(Long.valueOf(inTargetPlace_RaceCount).intValue());
         }
         return r;
 
@@ -118,12 +119,20 @@ public class Statistics {
         int raceDate = dao.getNewRaceDate();
         int raceNumber = dao.getNewRaceNumber();
         for(int i=1; i<=raceNumber;i++){
-            this.statistic(raceDate,i,true);
+            this.statisticNewRace(raceDate,i);
         }
     }
-    private void statistic(int raceDate,int seq, boolean isNewRace){
+    public void statisticForPastRecords(int raceDate){
 
-        String sql ="select * from "+ (isNewRace? "newRace":"raceCard")+
+        int raceNumber = dao.getRaceSeqOfDay(raceDate);
+        for(int i=1; i<=raceNumber;i++){
+            this.statisticRaceCard(raceDate,i);
+        }
+
+    }
+    private void statisticNewRace(int raceDate,int seq ){
+
+        String sql ="select * from newRace "+
                 " where racedate="+raceDate+
                 " and raceSeqOfDay="+seq;
 
@@ -134,6 +143,23 @@ public class Statistics {
 
         }
 
-        dao.batchUpdateRaceStatistic(results,isNewRace);
+        dao.batchUpdateRaceStatistic(results,true);
+    }
+    private void statisticRaceCard(int raceDate,int seq ){
+
+        String sql ="select * from  raceCard " +
+                " where racedate="+raceDate+
+                " and raceSeqOfDay="+seq;
+
+        List<RaceCardResult> queryResults = dao.queryRaceResult(sql);
+
+        List<RaceCardItem> statisticResults = new ArrayList<>();
+        for(RaceCardItem aResult: queryResults){
+            RaceCardItem result =this.buildStatistics_Horse(aResult);
+            statisticResults.add(result);
+            //System.out.println(result.printStatisticsResult());
+        }
+
+        dao.batchUpdateRaceStatistic(statisticResults,false);
     }
 }

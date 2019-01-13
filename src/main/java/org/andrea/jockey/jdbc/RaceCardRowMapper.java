@@ -33,7 +33,12 @@ public class RaceCardRowMapper implements RowMapper<RaceCardResult> {
         r.setRunningPosition(resultSet.getString("runningPosition"));
         r.setFinishTime(resultSet.getDouble("finishTime"));
         r.setRating(resultSet.getInt("rating"));
-
+        r.setHorse_winPer(resultSet.getDouble("horse_winPer"));
+        r.setHorse_winCount(resultSet.getInt("horse_winCount"));
+        r.setHorse_newDistance(resultSet.getInt("horse_newDistance"));
+        r.setHorse_newHorse(resultSet.getInt("horse_newHorse"));
+        r.setJockey_winPer(resultSet.getDouble("jockey_winPer"));
+        r.setJockey_winCount(resultSet.getInt("jockey_winCount"));
 
         return r;
     }

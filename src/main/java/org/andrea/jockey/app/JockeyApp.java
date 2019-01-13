@@ -24,7 +24,7 @@ public class JockeyApp {
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-//
+
 //        DataCrawler crawler = context.getBean(DataCrawler.class);
 //        crawler.getRecord();
 //
@@ -41,10 +41,22 @@ public class JockeyApp {
 
 
         Statistics stat = context.getBean(Statistics.class);
-        stat.statisticAllNewRace();
+        //stat.statisticAllNewRace();
+//        stat.statisticForPastRecords(20190112);
+//        stat.statisticForPastRecords(20190109);
+//        stat.statisticForPastRecords(20190106);
+//        stat.statisticForPastRecords(20190101);
+        stat.statisticForPastRecords(20181229);
+        stat.statisticForPastRecords(20181226);
+        stat.statisticForPastRecords(20181223);
 
-//        Predictor predictor = context.getBean(Predictor.class);
-//        predictor.predictAll();
+//        stat.statisticForPastRecords(20181219);
+//        stat.statisticForPastRecords(20181216);
+//        stat.statisticForPastRecords(20181212);
+
+        Predictor predictor = context.getBean(Predictor.class);
+        predictor.regressionOfRaceCard("Select * from racecard where racedate >='20181212'",
+                "regression");
 
     }
 

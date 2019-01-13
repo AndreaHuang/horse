@@ -40,7 +40,7 @@ public class RecordCardDAO {
             "draw," +
             "horseId," +
             "horseName," +
-            "hourseNo," +
+            "horseNo," +
             "rating," +
             "jockey," +
             "trainer," +
@@ -142,12 +142,12 @@ public class RecordCardDAO {
     private static final String SQL_UPDATE_RACECARD_STATISTIC="update racecard set "+
             " horse_winPer = ?, horse_winCount=?,horse_newDistance=?, " +
             " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?" +
-            " where raceDate = ?  and RaceSeqOfDay =? and horseNo =?";
+            " where raceDate = ?  and RaceSeqOfDay =? and horseId =?";
 
     private static final String SQL_UPDATE_NEWRACE_STATISTIC="update newrace set "+
             " horse_winPer = ?, horse_winCount=?,horse_newDistance=?, " +
             " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?" +
-            " where raceDate = ?  and RaceSeqOfDay =? and horseNo =?";
+            " where raceDate = ?  and RaceSeqOfDay =? and horseId =?";
 
 
     public void batchInsertResults(final List<RaceCardResult> raceResultList){
@@ -232,7 +232,6 @@ public class RecordCardDAO {
 
     public void batchUpdateRaceStatistic(final List<RaceCardItem> raceCardList,
                                                    boolean isNewRace){
-
         String sql = isNewRace ?SQL_UPDATE_NEWRACE_STATISTIC: SQL_UPDATE_RACECARD_STATISTIC;
         this.jdbc.batchUpdate(sql,
                 new BatchPreparedStatementSetter(){
@@ -252,7 +251,7 @@ public class RecordCardDAO {
 
                         ps.setString(++idx,race.getRaceDate());
                         ps.setInt(++idx,race.getRaceSeqOfDay());
-                        ps.setString(++idx,race.getHorseNo());
+                        ps.setString(++idx,race.getHorseId());
                     }
 
                     public int getBatchSize() {
@@ -293,6 +292,9 @@ public class RecordCardDAO {
     }
     public int getNewRaceNumber() {
         return jdbc.queryForObject("select max(raceSeqOfDay) from newrace", Integer.class);
+    }
+    public int getRaceSeqOfDay(int raceDate) {
+        return jdbc.queryForObject("select max(raceSeqOfDay) from racecard where racedate="+raceDate, Integer.class);
     }
     public void deleteNewRace(){
         jdbc.execute("delete from newrace where 1=1");
