@@ -88,5 +88,21 @@ ALTER TABLE newrace add column jockey_winCount SMALLINT;
 ALTER TABLE newrace add column horse_newHorse SMALLINT;
 ALTER TABLE newrace add column horse_newDistance SMALLINT;
 
+create table racestats (
+    raceClass TINYINT not null,
+	distance SMALLINT not null,
+    going enum
+       ("GOOD",
+        "GOOD TO FIRM",
+        "YIELDING",
+        "GOOD TO YIELDING",
+         "WET SLOW",
+	"FAST"),
+	course varchar(30),
+	avg_finishTime FLOAT,
+	min_finishTime FLOAT,
+    count SMALLINT not null
+)
+
 
 

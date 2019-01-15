@@ -22,7 +22,15 @@ public class RaceCardItem extends RaceInfo{
     private int horse_newHorse;
     private double jockey_winPer;
     private int jockey_winCount;
+    private int horse_speedRate;
 
+    public int getHorse_speedRate() {
+        return horse_speedRate;
+    }
+
+    public void setHorse_speedRate(int horse_speedRate) {
+        this.horse_speedRate = horse_speedRate;
+    }
 
     public int getRatingDelta() {
         return ratingDelta;

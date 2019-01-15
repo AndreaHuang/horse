@@ -1,18 +1,16 @@
 package org.andrea.jockey.statistics;
 
 import org.andrea.jockey.jdbc.RecordCardDAO;
-import org.andrea.jockey.model.HorseStatistics;
-import org.andrea.jockey.model.JockeyStatistics;
-import org.andrea.jockey.model.RaceCardItem;
-import org.andrea.jockey.model.RaceCardResult;
+import org.andrea.jockey.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -21,6 +19,30 @@ public class Statistics {
     private static int TARGET_PLACE=3;
     @Autowired
     RecordCardDAO dao;
+    public void buildStatistics_Race(){
+        String sql ="  select raceclass, course,going,distance,avg(finishTime) as avgFinishTime,\n" +
+                "  min(finishTime) as minFinishTime ,count(*) as count from racecard \n" +
+                " where place=1 \n" +
+                " group by raceclass, course,distance,going\n" +
+                " order by raceclass,distance,course,going";
+       List<RaceStatistics> races = dao.queryRaceStatistics(sql);
+       dao.batchInsertRaceStates(races);
+    }
+    private Map<String,RaceStatistics> queryStatistic_Race(){
+
+        List<RaceStatistics> races = dao.queryRaceStatistics("select * from racestats");
+        Map<String,RaceStatistics> result =races.stream().collect(Collectors.toMap(x->x.getRaceClass()+"_"
+                        +x.getDistance()+"_"+x.getCourse()+"_"+x.getGoing(),
+                x->x));
+        return result;
+
+    }
+    private RaceStatistics queryStatistic_Race(Map<String,RaceStatistics> statisticsMap, RaceCardItem r){
+        String key =String.join("_", Integer.toString(r.getRaceClass()),Integer.toString(r.getDistance()),
+                r.getCourse(),r.getGoing());
+        return statisticsMap.get(key);
+
+    }
     private RaceCardItem buildStatistics_Horse(RaceCardItem r){
         String sql = "select place, raceDate,distance,course " +
                 " from racecard where horseId='"+r.getHorseId()+"' and " +

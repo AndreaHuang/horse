@@ -2,10 +2,7 @@ package org.andrea.jockey.jdbc;
 
 
 
-import org.andrea.jockey.model.HorseStatistics;
-import org.andrea.jockey.model.JockeyStatistics;
-import org.andrea.jockey.model.RaceCardItem;
-import org.andrea.jockey.model.RaceCardResult;
+import org.andrea.jockey.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -139,6 +136,22 @@ public class RecordCardDAO {
             "?"+//<{ratingDelta }>," +
             ")";
 
+    private static final String SQL_INSERT_RACE_STATISTICS="INSERT INTO `jockey`.`racestats`\n" +
+            "(raceClass," +
+            "distance," +
+            "going," +
+            "course," +
+            "avg_finishTime," +
+            "min_finishTime," +
+            "count) " +
+            "VALUES " +
+            "(?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?);";
     private static final String SQL_UPDATE_RACECARD_STATISTIC="update racecard set "+
             " horse_winPer = ?, horse_winCount=?,horse_newDistance=?, " +
             " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?" +
@@ -192,6 +205,34 @@ public class RecordCardDAO {
                 });
     }
 
+    public void batchInsertRaceStates(final List<RaceStatistics> raceStatisticsList){
+
+        this.jdbc.batchUpdate(SQL_INSERT_RACE_STATISTICS,
+                new BatchPreparedStatementSetter(){
+
+                    public void setValues(PreparedStatement ps, int i)
+                            throws SQLException {
+                        RaceStatistics statistics = raceStatisticsList.get(i);
+                        //System.out.println(race);
+                        int idx =0;
+                        ps.setInt(++idx,statistics.getRaceClass());
+                        ps.setInt(++idx,statistics.getDistance());
+
+                        ps.setString(++idx,statistics.getGoing());
+
+                        ps.setString(++idx,statistics.getCourse());
+                        ps.setDouble(++idx,statistics.getAvgFinishTime());
+                        ps.setDouble(++idx,statistics.getMinFinishTime());
+                        ps.setInt(++idx,statistics.getCount());
+
+                    }
+
+                    public int getBatchSize() {
+                        return raceStatisticsList.size();
+                    }
+                });
+    }
+
     public void batchInsertNewRace(final List<RaceCardItem> raceCardList){
 
         this.jdbc.batchUpdate(SQL_INSERTNEWRECORD,
@@ -230,8 +271,7 @@ public class RecordCardDAO {
                 });
     }
 
-    public void batchUpdateRaceStatistic(final List<RaceCardItem> raceCardList,
-                                                   boolean isNewRace){
+    public void batchUpdateRaceStatistic(final List<RaceCardItem> raceCardList,boolean isNewRace){
         String sql = isNewRace ?SQL_UPDATE_NEWRACE_STATISTIC: SQL_UPDATE_RACECARD_STATISTIC;
         this.jdbc.batchUpdate(sql,
                 new BatchPreparedStatementSetter(){
@@ -279,6 +319,10 @@ public class RecordCardDAO {
     public List<JockeyStatistics> queryJockeyStatistics(String SQL){
 
         return jdbc.query(SQL, new StatisticsRowMapper.JockeyRowMapper());
+    }
+    public List<RaceStatistics> queryRaceStatistics(String SQL){
+
+        return jdbc.query(SQL, new StatisticsRowMapper.RaceRowMapper());
     }
     public int getMaxDate(){
         return jdbc.queryForObject("select max(raceDate) from racecard", Integer.class);

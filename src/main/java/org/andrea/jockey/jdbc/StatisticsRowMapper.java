@@ -2,6 +2,7 @@ package org.andrea.jockey.jdbc;
 
 import org.andrea.jockey.model.HorseStatistics;
 import org.andrea.jockey.model.JockeyStatistics;
+import org.andrea.jockey.model.RaceStatistics;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -33,6 +34,20 @@ public class StatisticsRowMapper {
 
             r.setPlace(resultSet.getInt("place"));
             return r;
+        }
+    }
+    static class RaceRowMapper implements RowMapper<RaceStatistics> {
+        @Override
+        public RaceStatistics mapRow(ResultSet resultSet, int i) throws SQLException {
+            RaceStatistics result = new RaceStatistics();
+            result.setAvgFinishTime(resultSet.getDouble("avgFinishTime"));
+            result.setMinFinishTime(resultSet.getDouble("minFinishTime"));
+            result.setDistance(resultSet.getInt("distance"));
+            result.setRaceClass(resultSet.getInt("raceClass"));
+            result.setCourse(resultSet.getString("course"));
+            result.setGoing(resultSet.getString("going"));
+            result.setCount(resultSet.getInt("count"));
+            return result;
         }
     }
 }
