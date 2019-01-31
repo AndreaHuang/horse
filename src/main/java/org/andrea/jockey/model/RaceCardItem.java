@@ -22,14 +22,32 @@ public class RaceCardItem extends RaceInfo{
     private int horse_newHorse;
     private double jockey_winPer;
     private int jockey_winCount;
-    private int horse_speedRate;
+    private int horse_last4SpeedRate;
+    private int horse_latestSpeedRate;
+    private int days_from_lastRace;
 
-    public int getHorse_speedRate() {
-        return horse_speedRate;
+    public int getDays_from_lastRace() {
+        return days_from_lastRace;
     }
 
-    public void setHorse_speedRate(int horse_speedRate) {
-        this.horse_speedRate = horse_speedRate;
+    public void setDays_from_lastRace(int days_from_lastRace) {
+        this.days_from_lastRace = days_from_lastRace;
+    }
+
+    public int getHorse_last4SpeedRate() {
+        return horse_last4SpeedRate;
+    }
+
+    public void setHorse_last4SpeedRate(int horse_last4SpeedRate) {
+        this.horse_last4SpeedRate = horse_last4SpeedRate;
+    }
+
+    public int getHorse_latestSpeedRate() {
+        return horse_latestSpeedRate;
+    }
+
+    public void setHorse_latestSpeedRate(int horse_latestSpeedRate) {
+        this.horse_latestSpeedRate = horse_latestSpeedRate;
     }
 
     public int getRatingDelta() {

@@ -6,12 +6,14 @@ import org.andrea.jockey.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -154,12 +156,14 @@ public class RecordCardDAO {
             "?);";
     private static final String SQL_UPDATE_RACECARD_STATISTIC="update racecard set "+
             " horse_winPer = ?, horse_winCount=?,horse_newDistance=?, " +
-            " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?" +
+            " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?," +
+            " horse_last4SpeedRate =?, horse_latestSpeedRate =? , days_from_lastRace=? "+
             " where raceDate = ?  and RaceSeqOfDay =? and horseId =?";
 
     private static final String SQL_UPDATE_NEWRACE_STATISTIC="update newrace set "+
             " horse_winPer = ?, horse_winCount=?,horse_newDistance=?, " +
-            " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?" +
+            " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?," +
+            " horse_last4SpeedRate =?, horse_latestSpeedRate =? , days_from_lastRace=? "+
             " where raceDate = ?  and RaceSeqOfDay =? and horseId =?";
 
 
@@ -288,10 +292,14 @@ public class RecordCardDAO {
                         ps.setInt(++idx,race.getHorse_newHorse());
                         ps.setDouble(++idx,race.getJockey_winPer());
                         ps.setInt(++idx,race.getJockey_winCount());
-
+                        ps.setInt(++idx,race.getHorse_last4SpeedRate());
+                        ps.setInt(++idx,race.getHorse_latestSpeedRate());
+                        ps.setInt(++idx,race.getDays_from_lastRace());
                         ps.setString(++idx,race.getRaceDate());
                         ps.setInt(++idx,race.getRaceSeqOfDay());
                         ps.setString(++idx,race.getHorseId());
+
+
                     }
 
                     public int getBatchSize() {
@@ -326,6 +334,23 @@ public class RecordCardDAO {
     }
     public int getMaxDate(){
         return jdbc.queryForObject("select max(raceDate) from racecard", Integer.class);
+    }
+    public List<String> getRaceDates(String daysOnAfter){
+        return jdbc.query("select distinct(raceDate) from racecard where raceDate >= "+ daysOnAfter, new RowMapper<String>(){
+            public String mapRow(ResultSet rs, int rowNum)
+                    throws SQLException {
+                return rs.getString(1);
+            }
+        });
+    }
+    public List<String> getRaceDates( String daysOnAfter,String daysOnBefore){
+        return jdbc.query("select distinct(raceDate) from racecard where raceDate <=" + daysOnBefore
+                +  " and raceDate >= "+ daysOnAfter, new RowMapper<String>(){
+            public String mapRow(ResultSet rs, int rowNum)
+                    throws SQLException {
+                return rs.getString(1);
+            }
+        });
     }
     public double queryForDouble(String sql){
         System.out.println(sql);

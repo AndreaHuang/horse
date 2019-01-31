@@ -22,6 +22,9 @@ public class StatisticsRowMapper {
             r.setCourse(resultSet.getString("course"));
 
             r.setPlace(resultSet.getInt("place"));
+            r.setGoing(resultSet.getString("going"));
+            r.setFinishTime(resultSet.getDouble("finishTime"));
+            r.setRaceClass(resultSet.getInt("raceClass"));
             return r;
         }
     }
@@ -40,8 +43,8 @@ public class StatisticsRowMapper {
         @Override
         public RaceStatistics mapRow(ResultSet resultSet, int i) throws SQLException {
             RaceStatistics result = new RaceStatistics();
-            result.setAvgFinishTime(resultSet.getDouble("avgFinishTime"));
-            result.setMinFinishTime(resultSet.getDouble("minFinishTime"));
+            result.setAvgFinishTime(resultSet.getDouble("avg_FinishTime"));
+            result.setMinFinishTime(resultSet.getDouble("min_FinishTime"));
             result.setDistance(resultSet.getInt("distance"));
             result.setRaceClass(resultSet.getInt("raceClass"));
             result.setCourse(resultSet.getString("course"));

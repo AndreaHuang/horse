@@ -198,12 +198,15 @@ public class Predictor {
     private void printRaceCardHeader(FileWriter writer) throws IOException {
         writer.write("raceSeqOfDate,raceMeeting,horseId,horseName,rateDate,draw," +
                 "distance,course,raceClass,rating,jockey,going,addedWeight,declaredHorseWeight," +
-                "finishTime,place,lbw,winOdds,horse_winPer,horse_winCount,horse_newHorse,horse_newDistance,jockey_winPer,jockey_winCount");
+                "finishTime,place,lbw,winOdds,horse_winPer,horse_winCount,horse_newHorse,horse_newDistance," +
+                "jockey_winPer,jockey_winCount,horse_last4SpeedRate,horse_latestSpeedRate,Days_from_lastRace");
         writer.write("\r\n");
     }
     private void printNewRaceHeader(FileWriter writer) throws IOException {
         writer.write("raceMeeting,horseNo,horseId,horseName,rateDate,draw," +
-                "distance,course,raceClass,rating,jockey,going,addedWeight,declaredHorseWeight");
+                "distance,course,raceClass,rating,jockey,going,addedWeight,declaredHorseWeight," +
+                "horse_winPer,horse_winCount,horse_newHorse,horse_newDistance," +
+                "jockey_winPer,jockey_winCount,horse_last4SpeedRate,horse_latestSpeedRate,Days_from_lastRace");
         writer.write("\r\n");
     }
     private void printRaceCard(FileWriter writer, RaceCardResult r) throws IOException {
@@ -220,7 +223,11 @@ public class Predictor {
                 Integer.toString(r.getHorse_newHorse()),
                 Integer.toString(r.getHorse_newDistance()),
                 Double.toString(r.getJockey_winPer()),
-                Integer.toString(r.getJockey_winCount())));
+                Integer.toString(r.getJockey_winCount()),
+                Integer.toString(r.getHorse_last4SpeedRate()),
+                Integer.toString(r.getHorse_latestSpeedRate()),
+                Integer.toString(r.getDays_from_lastRace())
+                ));
         writer.write("\r\n");
     }
     private void printNewRace(FileWriter writer, RaceCardItem r) throws IOException {
@@ -228,7 +235,17 @@ public class Predictor {
                 Integer.toString(r.getDraw()), Integer.toString(r.getDistance()),r.getCourse(),
                 Integer.toString(r.getRaceClass()),
                 Integer.toString(r.getRating()),r.getJockey(),r.getGoing(),
-                Integer.toString(r.getAddedWeight()),Integer.toString(r.getDeclaredHorseWeight())));
+                Integer.toString(r.getAddedWeight()),
+                Integer.toString(r.getDeclaredHorseWeight()),
+                Double.toString(r.getHorse_winPer()),
+                Integer.toString(r.getHorse_winCount()),
+                Integer.toString(r.getHorse_newHorse()),
+                Integer.toString(r.getHorse_newDistance()),
+                Double.toString(r.getJockey_winPer()),
+                Integer.toString(r.getJockey_winCount()),
+                Integer.toString(r.getHorse_last4SpeedRate()),
+                Integer.toString(r.getHorse_latestSpeedRate()),
+                Integer.toString(r.getDays_from_lastRace())));
         writer.write("\r\n");
     }
 

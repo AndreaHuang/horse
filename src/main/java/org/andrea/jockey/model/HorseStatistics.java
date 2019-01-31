@@ -3,6 +3,8 @@ package org.andrea.jockey.model;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+
 @Data
 public class HorseStatistics {
     @Getter @Setter String  raceDate;//YYYYMMDD
@@ -10,6 +12,8 @@ public class HorseStatistics {
     @Getter @Setter int distance;
     @Getter @Setter int place;
     @Getter @Setter String course;
+    @Getter @Setter String going;
+    @Getter @Setter double finishTime;
 
     public String getRaceDate() {
         return raceDate;
@@ -49,5 +53,21 @@ public class HorseStatistics {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public double getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(double finishTime) {
+        this.finishTime = finishTime;
+    }
+
+    public String getGoing() {
+        return going;
+    }
+
+    public void setGoing(String going) {
+        this.going = going;
     }
 }

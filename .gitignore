@@ -1,5 +1,2 @@
-target
-*.csv
-*.numbers
-.idea/*.xml
-
+/target
+.idea/*
