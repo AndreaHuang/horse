@@ -345,7 +345,7 @@ public class RecordCardDAO {
     }
     public List<String> getRaceDates( String daysOnAfter,String daysOnBefore){
         return jdbc.query("select distinct(raceDate) from racecard where raceDate <=" + daysOnBefore
-                +  " and raceDate >= "+ daysOnAfter, new RowMapper<String>(){
+                +  " and raceDate >= "+ daysOnAfter + " order by raceDate asc", new RowMapper<String>(){
             public String mapRow(ResultSet rs, int rowNum)
                     throws SQLException {
                 return rs.getString(1);
@@ -362,8 +362,12 @@ public class RecordCardDAO {
     public int getNewRaceNumber() {
         return jdbc.queryForObject("select max(raceSeqOfDay) from newrace", Integer.class);
     }
-    public int getRaceSeqOfDay(int raceDate) {
-        return jdbc.queryForObject("select max(raceSeqOfDay) from racecard where racedate="+raceDate, Integer.class);
+    public int getRaceSeqOfDay(String raceDate) {
+        try {
+            return jdbc.queryForObject("select max(raceSeqOfDay) from racecard where racedate=" + raceDate, Integer.class);
+        }catch(Exception e){
+            return 0;
+        }
     }
     public void deleteNewRace(){
         jdbc.execute("delete from newrace where 1=1");

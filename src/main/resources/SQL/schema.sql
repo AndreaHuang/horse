@@ -108,6 +108,15 @@ alter table newrace add column horse_last4SpeedRate SMALLINT;
 alter table newrace add column horse_latestSpeedRate SMALLINT;
 alter table newrace add column days_from_lastRace SMALLINT;
 
+
 alter table racecard add column horse_last4SpeedRate SMALLINT;
 alter table racecard add column horse_latestSpeedRate SMALLINT;
 alter table racecard add column days_from_lastRace SMALLINT;
+alter table newrace add column finishTime_predicted FLOAT;
+alter table racecard add column finishTime_predicted FLOAT;
+
+alter table newrace add column predicted_place SMALLINT;
+alter table racecard add column predicted_place SMALLINT;
+
+ALTER TABLE newrace RENAME column finishTime_predicted to predicted_finishTime;
+ALTER TABLE racecard RENAME column finishTime_predicted to predicted_finishTime;

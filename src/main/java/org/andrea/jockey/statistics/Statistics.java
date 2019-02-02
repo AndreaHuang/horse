@@ -194,7 +194,7 @@ public class Statistics {
             this.statisticNewRace(raceDate,i);
         }
     }
-    public void statisticForPastRecords(int raceDate){
+    public void statisticForPastRecords(String raceDate){
 
         int raceNumber = dao.getRaceSeqOfDay(raceDate);
         for(int i=1; i<=raceNumber;i++){
@@ -217,7 +217,7 @@ public class Statistics {
 
         dao.batchUpdateRaceStatistic(results,true);
     }
-    public void statisticRaceCard(int raceDate,int seq ){
+    public void statisticRaceCard(String raceDate,int seq ){
 
         String sql ="select * from  raceCard " +
                 " where racedate="+raceDate+
@@ -255,14 +255,14 @@ public class Statistics {
        List<String> allDates = dao.getRaceDates(daysOnAfter);
        for(String aDate: allDates){
            System.out.println("build Statics for race day:"+aDate);
-           this.statisticForPastRecords(Integer.valueOf(aDate));
+           this.statisticForPastRecords(aDate);
        }
     }
     public void buildStatistics_allRaceCards(String daysFrom, String daysOnAfter){
         List<String> allDates = dao.getRaceDates(daysFrom, daysOnAfter);
         for(String aDate: allDates){
             System.out.println("build Statics for race day:"+aDate);
-            this.statisticForPastRecords(Integer.valueOf(aDate));
+            this.statisticForPastRecords(aDate);
         }
     }
 }

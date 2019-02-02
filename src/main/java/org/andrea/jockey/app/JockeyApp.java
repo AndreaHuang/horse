@@ -2,6 +2,7 @@ package org.andrea.jockey.app;
 
 
 
+import org.andrea.jockey.predict.Metric;
 import org.andrea.jockey.predict.Predictor;
 import org.andrea.jockey.crawler.DataCrawler;
 import org.andrea.jockey.jdbc.RecordCardDAO;
@@ -12,6 +13,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 @ComponentScan
 @EnableAutoConfiguration
@@ -19,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JockeyApp {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
@@ -56,10 +60,13 @@ public class JockeyApp {
 //        stat.statisticForPastRecords(20181216);
 //        stat.statisticForPastRecords(20181212);
 
-        Predictor predictor = context.getBean(Predictor.class);
-        predictor.regressionOfRaceCard("Select * from racecard ",
-                "regression_20190127");
-     //   predictor.
+//        Predictor predictor = context.getBean(Predictor.class);
+//        predictor.regressionOfRaceCard("Select * from racecard ","regression_20190127");
+
+
+
+        Metric metric = context.getBean(Metric.class);
+        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019");
 
     }
 

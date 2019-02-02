@@ -25,6 +25,24 @@ public class RaceCardItem extends RaceInfo{
     private int horse_last4SpeedRate;
     private int horse_latestSpeedRate;
     private int days_from_lastRace;
+    private double predicted_finishTime;
+    private int predicted_place;
+
+    public double getPredicted_finishTime() {
+        return predicted_finishTime;
+    }
+
+    public void setPredicted_finishTime(double predicted_finishTime) {
+        this.predicted_finishTime = predicted_finishTime;
+    }
+
+    public int getPredicted_place() {
+        return predicted_place;
+    }
+
+    public void setPredicted_place(int predicted_place) {
+        this.predicted_place = predicted_place;
+    }
 
     public int getDays_from_lastRace() {
         return days_from_lastRace;

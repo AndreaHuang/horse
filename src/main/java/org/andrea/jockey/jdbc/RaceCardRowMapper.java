@@ -42,6 +42,8 @@ public class RaceCardRowMapper implements RowMapper<RaceCardResult> {
         r.setHorse_last4SpeedRate(resultSet.getInt("horse_last4SpeedRate"));
         r.setHorse_latestSpeedRate(resultSet.getInt("horse_latestSpeedRate"));
         r.setDays_from_lastRace(resultSet.getInt("days_from_lastRace"));
+        r.setPredicted_finishTime(resultSet.getDouble("predicted_finishTime"));
+        r.setPredicted_place(resultSet.getInt("predicted_place"));
         return r;
     }
 }
