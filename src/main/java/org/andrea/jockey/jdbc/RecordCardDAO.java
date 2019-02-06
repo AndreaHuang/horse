@@ -167,6 +167,30 @@ public class RecordCardDAO {
             " where raceDate = ?  and RaceSeqOfDay =? and horseId =?";
 
 
+    private static final String SQL_INSERT_DIVIDEND="insert into dividend (raceDate, RaceSeqOfDay," +
+            "pool,winning, dividend) values" +
+            "(?,?,?,?,?);";
+    public void batchInsertDividend(final List<Dividend> dividendList){
+        this.jdbc.batchUpdate(SQL_INSERT_DIVIDEND,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        Dividend dividend = dividendList.get(i);
+                        int index=1;
+                        ps.setString(index++,dividend.getRaceDate());
+                        ps.setInt(index++,dividend.getRaceSeqOfDay());
+                        ps.setString(index++,dividend.getPool());
+                        ps.setString(index++,dividend.getWinning());
+                        ps.setBigDecimal(index++, dividend.getDividend());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return dividendList.size();
+                    }
+                });
+    }
+
     public void batchInsertResults(final List<RaceCardResult> raceResultList){
 
         this.jdbc.batchUpdate(SQL_INSERT,

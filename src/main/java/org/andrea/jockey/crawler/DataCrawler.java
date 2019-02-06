@@ -3,10 +3,12 @@ package org.andrea.jockey.crawler;
 import org.andrea.jockey.app.JockeyWebsiteConfig;
 import org.andrea.jockey.app.SeleniumConfig;
 import org.andrea.jockey.jdbc.RecordCardDAO;
+import org.andrea.jockey.model.Dividend;
 import org.andrea.jockey.model.RaceCardItem;
 import org.andrea.jockey.model.RaceCardResult;
 import org.andrea.jockey.model.RaceInfo;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +32,11 @@ public class DataCrawler {
     private static final SimpleDateFormat SDF_Original = new SimpleDateFormat("dd/MM/yyyy");
     private static final SimpleDateFormat SDF_Original_NewRace = new SimpleDateFormat("MMMM dd, yyyy");
     private static final SimpleDateFormat SDF_Update = new SimpleDateFormat("yyyyMMdd");
+
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,###.##");
+    static  {
+        DECIMAL_FORMAT.setParseBigDecimal(true);
+    }
 
     @Autowired
     JockeyWebsiteConfig jockeyWebsiteConfig;
@@ -104,6 +113,41 @@ public class DataCrawler {
         }
     }
 
+
+    public void getDividends() {
+
+        int maxDateOfExistingRecords = dao.getMaxDate();
+        System.out.println("Max Date of Existing Records: "+maxDateOfExistingRecords);
+        //
+        List<String> links = listLinksOfRaceDaysInDateRange(jockeyWebsiteConfig.getUrl(),
+                Integer.toString(20170101)  , jockeyWebsiteConfig.getEndDate());
+
+
+        for (String urlOfARaceDay : links) {
+            getDividendsByUrlOfDay(urlOfARaceDay);
+        }
+
+        return;
+    }
+    public void getDividendsByUrlOfDay(String urlOfARaceDay){
+        List<Dividend> dividendsList= new ArrayList<>();
+        List<String> linksOfEachRace =new ArrayList<>();
+        List<String> urlsOfRacesOnOneRaceDay = listLinksOfOneRaceDay(urlOfARaceDay);
+        linksOfEachRace.addAll(urlsOfRacesOnOneRaceDay);
+        System.out.println(String.format("Date %s has %d races", urlOfARaceDay, urlsOfRacesOnOneRaceDay.size()));
+        for (String urlOfARace : urlsOfRacesOnOneRaceDay) {
+
+            System.out.println("Checking " + urlOfARace);
+            try {
+                dividendsList.addAll(checkDividendsOfARace(urlOfARace));
+
+            }catch(Exception e){
+                e.printStackTrace();
+
+            }
+        }
+        dao.batchInsertDividend(dividendsList);
+    }
     public void getRecordOfARace(String urlOfARace) {
 
 
@@ -157,8 +201,115 @@ public class DataCrawler {
 
     }
 
+    private List<Dividend> checkDividendsOfARace(String url){
+        String[] splitted= url.split("/");
+        String raceSeq = splitted[splitted.length-1];
+        String raceDate = splitted[splitted.length-3];
+
+        List<Dividend> results = new ArrayList<>();
+        getDriver().get(url);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        waitForPageLoaded();
+
+        WebElement resultEle = waitForPresence(By.id("results"));
+        // WebElement resultEle = getDriver().findElement(By.id("results"));
+
+        String a = resultEle.getAttribute("outerHTML");
+
+        //System.out.println("AndreaTest:"+a.length());
+        int count=0;
+        while(a.length() < 3000 && count <10){
+            count++;
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            resultEle = getDriver().findElement(By.id("results"));
+
+            a = resultEle.getAttribute("outerHTML");
+        }
+        Document doc = Jsoup.parse(a);
+        Elements infoList = doc.select("div");
 
 
+        for(Element div: infoList){
+            Elements  headers = div.select("table > tbody tr > td > table > tbody tr > td");
+           if(headers.size()>0) {
+               if("Dividend".equals(headers.first().ownText())){
+                   Element dividendTable= headers.first().parent().parent();
+                   Elements dividendRows =  dividendTable.select("tr");
+                   //System.out.println(dividendRows.size());
+                   int rowCount=0;
+                   int rowspan=0;
+                   String lastPool=null;
+                   for(Element row:dividendRows) {
+                       rowCount++;
+                       if(rowCount==1 || rowCount==2) {
+                           continue;//skip header row
+                       }
+                       Elements td_List = row.select("td");
+                     //  System.out.println(rowCount +" : "+td_List.size()+" ="+td_List.get(0).ownText());
+                       Dividend dividend = new Dividend(raceDate,Integer.parseInt(raceSeq));
+
+
+                       if(rowspan==0) {
+
+                           dividend.setPool(td_List.get(0).ownText());
+                           dividend.setWinning(td_List.get(1).ownText());
+                           dividend.setDividend(this.parseDividend(td_List.get(2).ownText()));
+                           if(dividend.getDividend() !=null) {
+                               results.add(dividend);
+                           }
+                           //check if there is new rowspan
+                           String rowspan_Str = td_List.get(0).attr("rowspan");
+                           if (rowspan_Str != null && !rowspan_Str.trim().isEmpty()) {
+                               rowspan = Integer.parseInt(rowspan_Str);
+                               rowspan--;
+                               lastPool = td_List.get(0).ownText();
+
+                           }
+                       } else{
+                           rowspan--;
+                           dividend.setPool(lastPool);
+                           dividend.setWinning(td_List.get(0).ownText());
+                           dividend.setDividend(this.parseDividend(td_List.get(1).ownText()));
+                           if(dividend.getDividend() !=null) {
+                               results.add(dividend);
+                           }
+                       }
+                       System.out.println(rowCount +" : "+ dividend.toString());
+                   }
+               }
+           }
+        }
+
+        return results;
+
+    }
+
+    private BigDecimal parseDividend(String dividendString){
+        // System.out.println(dividendString);
+        if(dividendString==null || dividendString.trim().isEmpty()) {
+            return null;
+        }else if("NOT WIN".equals(dividendString)){
+            return  BigDecimal.ZERO;
+        } else if("Detail".equals(dividendString)){
+            return null;
+        } else {
+            try {
+                return (BigDecimal)(DECIMAL_FORMAT.parse(dividendString));
+
+            }catch(ParseException e){
+                e.printStackTrace();
+                throw new RuntimeException( e.getCause());
+            }
+        }
+    }
     private List<RaceCardResult> checkDetailsOfARace(String url) {
         List<RaceCardResult> results = new ArrayList<>();
         System.out.println(url);

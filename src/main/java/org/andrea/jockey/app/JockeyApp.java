@@ -29,13 +29,13 @@ public class JockeyApp {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
 
-//       DataCrawler crawler = context.getBean(DataCrawler.class);
+       DataCrawler crawler = context.getBean(DataCrawler.class);
 //        crawler.getRecord();
 //        crawler.getNewRaceCard();
 
 
-  //    String url= "https://racing.hkjc.com/racing/info/meeting/Results/English/Local/20181205/HV";
-  //    crawler.getRecordsByUrlOfDay(url);
+//      String url= "https://racing.hkjc.com/racing/info/meeting/Results/English/Local/20181205/HV";
+      crawler.getDividends();
       //crawler.getRecordOfARace(url);
    //     crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/S");
    //     crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/ST/10");
@@ -65,8 +65,8 @@ public class JockeyApp {
 
 
 
-        Metric metric = context.getBean(Metric.class);
-        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019");
+//        Metric metric = context.getBean(Metric.class);
+//        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019");
 
     }
 

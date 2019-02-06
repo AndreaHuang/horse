@@ -120,3 +120,11 @@ alter table racecard add column predicted_place SMALLINT;
 
 ALTER TABLE newrace RENAME column finishTime_predicted to predicted_finishTime;
 ALTER TABLE racecard RENAME column finishTime_predicted to predicted_finishTime;
+
+create table dividend (
+raceDate char(8) not null,
+raceSeqOfDay TINYINT not null,
+    pool varchar(30),
+    winning varchar(20),
+    dividend FLOAT
+)
