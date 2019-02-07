@@ -12,6 +12,9 @@ public class Dividend {
     String winning;
     BigDecimal dividend;
 
+    public Dividend() {
+
+    }
     public Dividend(String raceDate, int raceSeqOfDay) {
         this.raceDate = raceDate;
         this.raceSeqOfDay = raceSeqOfDay;

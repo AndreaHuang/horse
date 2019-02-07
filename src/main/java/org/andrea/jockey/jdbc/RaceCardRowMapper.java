@@ -22,6 +22,7 @@ public class RaceCardRowMapper implements RowMapper<RaceCardResult> {
         r.setCourse(resultSet.getString("course"));
         r.setDraw(resultSet.getInt("draw"));
         r.setHorseId(resultSet.getString("horseId"));
+        r.setHorseNo(resultSet.getString("horseNo"));
         r.setHorseName(resultSet.getString("horseName"));
         r.setJockey(resultSet.getString("jockey"));
         r.setTrainer(resultSet.getString("trainer"));

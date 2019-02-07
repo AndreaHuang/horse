@@ -2,6 +2,7 @@ package org.andrea.jockey.jdbc;
 
 
 
+import com.sun.org.apache.xpath.internal.operations.Div;
 import org.andrea.jockey.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -355,6 +356,9 @@ public class RecordCardDAO {
     public List<RaceStatistics> queryRaceStatistics(String SQL){
 
         return jdbc.query(SQL, new StatisticsRowMapper.RaceRowMapper());
+    }
+    public List<Dividend> queryDividend(String SQL){
+        return jdbc.query(SQL,new DividendRowMapper());
     }
     public int getMaxDate(){
         return jdbc.queryForObject("select max(raceDate) from racecard", Integer.class);

@@ -13,8 +13,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 @ComponentScan
@@ -32,10 +30,35 @@ public class JockeyApp {
        DataCrawler crawler = context.getBean(DataCrawler.class);
 //        crawler.getRecord();
 //        crawler.getNewRaceCard();
+//       crawler.getDividends(20171011);
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171126/ST");
+//
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171223/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180128/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180221/HV");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180318/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180328/HV");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180429/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180506/ST");
+
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180527/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180603/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180613/HV");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180616/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180624/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20180909/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181028/HV");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181114/HV");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181118/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181125/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181216/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20190106/ST");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20190116/HV");
+//        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20190120/ST");
 
 
 //      String url= "https://racing.hkjc.com/racing/info/meeting/Results/English/Local/20181205/HV";
-      crawler.getDividends();
+
       //crawler.getRecordOfARace(url);
    //     crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/S");
    //     crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/ST/10");
@@ -65,8 +88,10 @@ public class JockeyApp {
 
 
 
-//        Metric metric = context.getBean(Metric.class);
-//        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019");
+        Metric metric = context.getBean(Metric.class);
+//        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019_20190207");
+       metric.checkForcastMetric("20180506","20180506" ,"test");
+
 
     }
 

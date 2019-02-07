@@ -125,6 +125,6 @@ create table dividend (
 raceDate char(8) not null,
 raceSeqOfDay TINYINT not null,
     pool varchar(30),
-    winning varchar(20),
+    winning varchar(50),
     dividend FLOAT
 )

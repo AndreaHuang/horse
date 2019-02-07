@@ -129,6 +129,19 @@ public class DataCrawler {
 
         return;
     }
+    public void getDividends(int raceDate) {
+
+        List<String> links = listLinksOfRaceDaysInDateRange(jockeyWebsiteConfig.getUrl(),
+                Integer.toString(raceDate)  ,  Integer.toString(raceDate));
+
+
+        for (String urlOfARaceDay : links) {
+            getDividendsByUrlOfDay(urlOfARaceDay);
+        }
+
+        return;
+    }
+
     public void getDividendsByUrlOfDay(String urlOfARaceDay){
         List<Dividend> dividendsList= new ArrayList<>();
         List<String> linksOfEachRace =new ArrayList<>();
@@ -296,8 +309,11 @@ public class DataCrawler {
         // System.out.println(dividendString);
         if(dividendString==null || dividendString.trim().isEmpty()) {
             return null;
-        }else if("NOT WIN".equals(dividendString)){
-            return  BigDecimal.ZERO;
+        }else if("NOT WIN".equals(dividendString)) {
+            return BigDecimal.ZERO;
+        }
+        else if("REFUND".equals(dividendString)){
+                return BigDecimal.ZERO;
         } else if("Detail".equals(dividendString)){
             return null;
         } else {

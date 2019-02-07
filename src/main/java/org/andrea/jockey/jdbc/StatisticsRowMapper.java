@@ -1,5 +1,6 @@
 package org.andrea.jockey.jdbc;
 
+import org.andrea.jockey.model.Dividend;
 import org.andrea.jockey.model.HorseStatistics;
 import org.andrea.jockey.model.JockeyStatistics;
 import org.andrea.jockey.model.RaceStatistics;
