@@ -28,7 +28,7 @@ public class SeleniumConfig {
             options.merge(capabilities);
             driver = new ChromeDriver(service, options);
 
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
         }
     }
     public ChromeDriver getDriver(){

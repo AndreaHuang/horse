@@ -89,8 +89,8 @@ public class JockeyApp {
 
 
         Metric metric = context.getBean(Metric.class);
-//        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019_20190207");
-       metric.checkForcastMetric("20180506","20180506" ,"test");
+        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019_20190207");
+//       metric.checkForcastMetric("20190109","20190109" ,"test");
 
 
     }
