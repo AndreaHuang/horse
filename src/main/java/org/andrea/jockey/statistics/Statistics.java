@@ -147,6 +147,10 @@ public class Statistics {
         String key =String.join("_", Integer.toString(r.getRaceClass()),Integer.toString(r.getDistance()),
                 r.getCourse(),r.getGoing());
         RaceStatistics raceStatistics =  statisticsMap.get(key);
+        if(raceStatistics ==null){
+            System.err.println("No Speed Record found for "+key);
+            return 0;
+        }
         double minFinishTime = raceStatistics.getMinFinishTime();
 
 
@@ -157,7 +161,7 @@ public class Statistics {
     }
 
     /**======================================================= */
-        public void check(int raceDate){
+    public void check(int raceDate){
         String sql ="select * from newrace where racedate="+raceDate+
                 " and raceSeqOfDay=1";
 
@@ -233,7 +237,7 @@ public class Statistics {
 
 
 
-            //System.out.println(result.printStatisticsResult());
+            System.out.println(result.printStatisticsResult());
         }
 
         dao.batchUpdateRaceStatistic(statisticResults,false);

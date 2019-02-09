@@ -1,5 +1,6 @@
 package org.andrea.jockey.predict;
 
+import org.andrea.jockey.jdbc.NewRaceRowMapper;
 import org.andrea.jockey.jdbc.RecordCardDAO;
 import org.andrea.jockey.model.RaceCardAnalysis;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -52,6 +54,7 @@ public class Predictor {
     @Autowired
     RecordCardDAO dao;
 
+    @Deprecated
     public void predictAll(){
         int raceDate = dao.getNewRaceDate();
         int raceNumber = dao.getNewRaceNumber();
@@ -59,6 +62,7 @@ public class Predictor {
             this.predictARace2(raceDate,i);
         }
     }
+    @Deprecated
     private void predictARace(int date, int seqOfDay) {
         System.out.println("Race :" + seqOfDay);
         /*Finish Time statistics*/
@@ -101,6 +105,7 @@ public class Predictor {
             }
         }
     }
+    @Deprecated
     private void predictARace2(int date, int seqOfDay) {
         System.out.println("Race :" + seqOfDay);
          /* same course same distance*/
@@ -125,6 +130,39 @@ public class Predictor {
             this.printRaceCardHeader(writer);
             for (RaceCardResult a : raceCard) {
                 this.printRaceCard(writer, a);
+            }
+            writer.close();
+            writer= null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
+            if(writer!=null){
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                writer = null;
+            }
+        }
+    }
+
+    public void predictNewRace() {
+
+        int raceDate = dao.getNewRaceDate();
+
+        List<RaceCardItem> newRaces = null;
+
+        FileWriter writer = null;
+        File f =null;
+        try {
+            newRaces = dao.queryNewRace("select * from newRace");
+
+            f = new File("predict.csv");
+            writer = new FileWriter(f);
+            this.printNewRaceHeader(writer);
+            for (RaceCardItem newRace : newRaces) {
+                this.printNewRace(writer, newRace);
             }
             writer.close();
             writer= null;
@@ -203,7 +241,7 @@ public class Predictor {
         writer.write("\r\n");
     }
     private void printNewRaceHeader(FileWriter writer) throws IOException {
-        writer.write("raceMeeting,horseNo,horseId,horseName,rateDate,draw," +
+        writer.write("raceSeqOfDate,raceMeeting,horseNo,horseId,horseName,rateDate,draw," +
                 "distance,course,raceClass,rating,jockey,going,addedWeight,declaredHorseWeight," +
                 "horse_winPer,horse_winCount,horse_newHorse,horse_newDistance," +
                 "jockey_winPer,jockey_winCount,horse_last4SpeedRate,horse_latestSpeedRate,Days_from_lastRace");
@@ -231,7 +269,7 @@ public class Predictor {
         writer.write("\r\n");
     }
     private void printNewRace(FileWriter writer, RaceCardItem r) throws IOException {
-        writer.write(String.join(",",r.getRacePlace(),r.getHorseNo(),r.getHorseId(),r.getHorseName(),r.getRaceDate(),
+        writer.write(String.join(",",Integer.toString(r.getRaceSeqOfDay()), r.getRacePlace(),r.getHorseNo(),r.getHorseId(),r.getHorseName(),r.getRaceDate(),
                 Integer.toString(r.getDraw()), Integer.toString(r.getDistance()),r.getCourse(),
                 Integer.toString(r.getRaceClass()),
                 Integer.toString(r.getRating()),r.getJockey(),r.getGoing(),

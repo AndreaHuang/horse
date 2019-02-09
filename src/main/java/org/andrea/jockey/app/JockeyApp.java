@@ -26,10 +26,11 @@ public class JockeyApp {
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-
-       DataCrawler crawler = context.getBean(DataCrawler.class);
+/*Step 1: get History record and new Race*/
+//       DataCrawler crawler = context.getBean(DataCrawler.class);
 //        crawler.getRecord();
 //        crawler.getNewRaceCard();
+        /*Step 1.1. get dividend for regression */
 //       crawler.getDividends(20171011);
 //        crawler.getDividendsByUrlOfDay("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171126/ST");
 //
@@ -63,28 +64,17 @@ public class JockeyApp {
    //     crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/S");
    //     crawler.getRecordOfARace("http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20171111/ST/10");
 
-
-//        Statistics stat = context.getBean(Statistics.class);
-  //    stat.buildStatistics_allRaceCards("20181205");
-  //      stat.buildStatistics_allRaceCards("20181206","20191212");
-        // stat.buildStatistics_allRaceCards("2017001","20170831");
+/* Step2 : Build statistic for history and new race*/
+//       Statistics stat = context.getBean(Statistics.class);
+//       stat.buildStatistics_allRaceCards("20190207","20190207");
 //       stat.statisticAllNewRace();
-//      stat. buildStatistics_Race();
-//        stat.statisticForPastRecords(20190112);
-//       stat.statisticRaceCard(20181229,7);
-//        stat.statisticForPastRecords(20190109);
-//        stat.statisticForPastRecords(20190106);
-//        stat.statisticForPastRecords(20190101);
-//        stat.statisticForPastRecords(20181229);
-//        stat.statisticForPastRecords(20181226);
-//        stat.statisticForPastRecords(20181223);
 
-//        stat.statisticForPastRecords(20181219);
-//        stat.statisticForPastRecords(20181216);
-//        stat.statisticForPastRecords(20181212);
 
+/* Step3 : generate csv file for history and new race*/
 //        Predictor predictor = context.getBean(Predictor.class);
-//        predictor.regressionOfRaceCard("Select * from racecard ","regression_20190127");
+//        predictor.predictNewRace();
+      //  predictor.regressionOfRaceCard("select * from racecard", "history");
+//        predictor.regressionOfRaceCard("select * from racecard where racedate=20190202 or racedate=20190130", "regress");
 
 
 

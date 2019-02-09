@@ -100,7 +100,7 @@ public class Metric {
         List<RaceCardResult> resultList = dao.queryRaceResult("select * from racecard " +
                 "where racedate = "+ raceDate +" and raceSeqOfDay =" +seqOfDay +
                 " and predicted_place is not null "+
-                " order by predicted_place asc");
+                " order by place asc");
 
         if(resultList.isEmpty()){
             System.err.println("Empty Result:"+ raceDate +":"+seqOfDay);
@@ -145,11 +145,16 @@ public class Metric {
         BigDecimal quinella_place_Dividend_Gained=BigDecimal.ZERO;
         BigDecimal trio_Dividend_Gained=BigDecimal.ZERO;
         BigDecimal trio_Dividend_Paid=BigDecimal.ZERO;
+        BigDecimal win_Dividend_Paid =BigDecimal.ZERO;
 
         for(RaceCardResult aItem : resultList){
-            if(aItem.getPlace()==1 && aItem.getPredicted_place() ==1) {
-                win_Dividend_Gained = win_Dividend;
+            if(aItem.getPredicted_place() > 0 && aItem.getPredicted_place() <3 && aItem.getWinOdds()>5){
+                win_Dividend_Paid = win_Dividend_Paid.add(BigDecimal.valueOf(10));
+                if(aItem.getPlace()==1) {
+                    win_Dividend_Gained = win_Dividend;
+                }
             }
+
             if(aItem.getPredicted_place()>0 && aItem.getPredicted_place()<=3 && aItem.getPlace()<=3){
                 if(place_Dividend.get(aItem.getHorseNo())!=null){
                     place_Dividend_Gained=place_Dividend_Gained.add(place_Dividend.get(aItem.getHorseNo()));
@@ -165,7 +170,7 @@ public class Metric {
             }
 
             //Calculate
-            sb.append(aItem.getPlace()).append("-");
+            sb.append(aItem.getPredicted_place()).append("-");
         }
         Collections.sort(horseNo_PredictedPlace, new Comparator<String>() {
             @Override
@@ -215,7 +220,7 @@ public class Metric {
 
         writer.write(raceDate +","+seqOfDay+","+resultList.get(0).getDistance()+","+
                 resultList.get(0).getRaceClass()+","+resultList.get(0).getGoing()+","
-                +sb.toString()+","+bingo+",30,"+win_Dividend_Gained+",30,"+place_Dividend_Gained+",30,"+
+                +sb.toString()+","+bingo+","+win_Dividend_Paid+","+win_Dividend_Gained+",30,"+place_Dividend_Gained+",30,"+
                 quinella_Dividend_Gained +",30,"
                 +quinella_place_Dividend_Gained+","+trio_Dividend_Paid+","+trio_Dividend_Gained);
         writer.write("\r\n");
