@@ -21,6 +21,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.jsoup.nodes.Document;
@@ -80,19 +82,31 @@ public class DataCrawler {
         }
         return results;
     }
-    public void getRecord() {
+    public String[] getRecord() {
 
         int maxDateOfExistingRecords = dao.getMaxDate();
         System.out.println("Max Date of Existing Records: "+maxDateOfExistingRecords);
+
       //
         List<String> links = listLinksOfRaceDaysInDateRange(jockeyWebsiteConfig.getUrl(),
-                Integer.toString(maxDateOfExistingRecords)  , jockeyWebsiteConfig.getEndDate());
+                Integer.toString(maxDateOfExistingRecords+1)  , jockeyWebsiteConfig.getEndDate());
 
         for (String urlOfARaceDay : links) {
             getRecordsByUrlOfDay(urlOfARaceDay);
         }
+        List<String> raceDate=new ArrayList<>();
+        for (String urlOfARaceDay : links) {
+            String[] array =  urlOfARaceDay.split("/");
+            String date =array [array.length-2];
+            raceDate.add(date);
+        }
+        Collections.sort(raceDate);
+        if(raceDate.size()>0){
+            return new String[]{raceDate.get(0),raceDate.get(raceDate.size()-1)};
+        } else {
+            return new String[]{};
+        }
 
-        return;
     }
     public void getRecordsByUrlOfDay(String urlOfARaceDay){
         List<String> linksOfEachRace =new ArrayList<>();
@@ -104,8 +118,10 @@ public class DataCrawler {
             System.out.println("Checking " + urlOfARace);
             try {
                 List<RaceCardResult> raceCardResultOfARace = checkDetailsOfARace(urlOfARace);
+
                 // results.addAll(raceCardResultOfARace);
                 dao.batchInsertResults(raceCardResultOfARace);
+                dao.batchInsertDividend(checkDividendsOfARace(urlOfARace));
             }catch(Exception e){
                 e.printStackTrace();
 
@@ -121,6 +137,18 @@ public class DataCrawler {
         //
         List<String> links = listLinksOfRaceDaysInDateRange(jockeyWebsiteConfig.getUrl(),
                 Integer.toString(20170101)  , jockeyWebsiteConfig.getEndDate());
+
+
+        for (String urlOfARaceDay : links) {
+            getDividendsByUrlOfDay(urlOfARaceDay);
+        }
+
+        return;
+    }
+    public void getDividends(int raceDateStart,int raceDateEnd) {
+
+        List<String> links = listLinksOfRaceDaysInDateRange(jockeyWebsiteConfig.getUrl(),
+                Integer.toString(raceDateStart)  ,  Integer.toString(raceDateEnd));
 
 
         for (String urlOfARaceDay : links) {
@@ -161,6 +189,16 @@ public class DataCrawler {
         }
         dao.batchInsertDividend(dividendsList);
     }
+    public void getDividendsByUrlOfRace(String urlOfARace){
+        try {
+            List<Dividend> dividendsList = checkDividendsOfARace(urlOfARace);
+            dao.batchInsertDividend(dividendsList);
+        }catch(Exception e) {
+            e.printStackTrace();
+
+        }
+
+    }
     public void getRecordOfARace(String urlOfARace) {
 
 
@@ -185,7 +223,7 @@ public class DataCrawler {
             int length = "Local".length();
             if (path.startsWith("Local")) {
                 String date = path.split("/")[1];
-                if (date.compareTo(startDate) > 0 && date.compareTo(endDate) < 0) {
+                if (date.compareTo(startDate) >= 0 && date.compareTo(endDate) <= 0) {
                     String urlOfARaceDay = url + path.substring(length);
 
                     result.add(urlOfARaceDay);
@@ -582,7 +620,7 @@ public class DataCrawler {
 //        } else{
 //            distance = array[1];
 //        }
-        distance = array[array.length-2];
+        distance = array[array.length-1];
 
         distance = distance.toUpperCase().replace("M","");
         System.out.println(distance);

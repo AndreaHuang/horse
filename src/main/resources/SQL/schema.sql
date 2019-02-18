@@ -128,3 +128,5 @@ raceSeqOfDay TINYINT not null,
     winning varchar(50),
     dividend FLOAT
 )
+alter table racecard add column weightRadio float;
+alter table racecard add column weightRD float;
