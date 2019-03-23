@@ -130,3 +130,21 @@ raceSeqOfDay TINYINT not null,
 )
 alter table racecard add column weightRadio float;
 alter table racecard add column weightRD float;
+
+alter table racecard add column propByWinOdds float;
+
+alter table racecard add column jockeyTtlCnt int;
+alter table racecard add column jockeyPosCnt int;
+alter table racecard add column jockeyFx float;
+
+alter table racecard add column jockeyTtlCnt_Distance int;
+alter table racecard add column jockeyPosCnt_Distance int;
+alter table racecard add column jockeyFx_Distance float;
+
+alter table racecard add column horseTtlCnt int;
+alter table racecard add column horsePosCnt int;
+alter table racecard add column horseFx float;
+
+alter table racecard add column horseTtlCnt_Distance int;
+alter table racecard add column horsePosCnt_Distance int;
+alter table racecard add column horseFx_Distance float;

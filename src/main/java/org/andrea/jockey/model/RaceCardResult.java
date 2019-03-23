@@ -29,33 +29,14 @@ public class RaceCardResult extends RaceCardItem {
 
     @Override
     public String toString() {
-        return "RaceCardResult{" +
+        return super.toString()+
                 "place=" + place +
+                ", lbwString='" + lbwString + '\'' +
+                ", lbw=" + lbw +
                 ", runningPosition='" + runningPosition + '\'' +
                 ", finishTimeString='" + finishTimeString + '\'' +
                 ", finishTime=" + finishTime +
-                ", comment='" + comment + '\'' +
-                ", draw=" + draw +
-                ", horseNo='" + horseNo + '\'' +
-                ", horseId='" + horseId + '\'' +
-                ", horseName='" + horseName + '\'' +
-                ", jockey='" + jockey + '\'' +
-                ", trainer='" + trainer + '\'' +
-                ", rating=" + rating +
-                ", addedWeight=" + addedWeight +
-                ", declaredHorseWeight=" + declaredHorseWeight +
-                ", lbwString='" + lbwString + '\'' +
-                ", lbw=" + lbw +
-                ", winOdds=" + winOdds +
-                ", raceDate='" + raceDate + '\'' +
-                ", racePlace='" + racePlace + '\'' +
-                ", raceId='" + raceId + '\'' +
-                ", raceSeqOfDay=" + raceSeqOfDay +
-                ", raceClass=" + raceClass +
-                ", distance=" + distance +
-                ", going='" + going + '\'' +
-                ", course='" + course + '\'' +
-                '}';
+                ", comment='" + comment + '\'' ;
     }
 
     public int getPlace() {

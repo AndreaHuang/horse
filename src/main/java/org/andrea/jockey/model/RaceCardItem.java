@@ -28,6 +28,173 @@ public class RaceCardItem extends RaceInfo{
     private double predicted_finishTime;
     private int predicted_place;
 
+    private double propByWinOdds;
+    private int jockeyTtlCnt;
+    private int jockeyPosCnt;
+    private double jockeyFx;
+    private int jockeyTtlCnt_Distance;
+    private int jockeyPosCnt_Distance;
+    private double jockeyFx_Distance;
+
+    private int horseTtlCnt;
+    private int horsePosCnt;
+    private double horseFx;
+    private int horseTtlCnt_Distance;
+    private int horsePosCnt_Distance;
+    private double horseFx_Distance;
+
+    @Override
+    public String toString() {
+        return
+                "draw=" + draw +
+                ", horseNo='" + horseNo + '\'' +
+                ", horseId='" + horseId + '\'' +
+                ", horseName='" + horseName + '\'' +
+                ", jockey='" + jockey + '\'' +
+                ", trainer='" + trainer + '\'' +
+                ", rating=" + rating +
+                ", ratingDelta=" + ratingDelta +
+                ", addedWeight=" + addedWeight +
+                ", horse_winPer=" + horse_winPer +
+                ", horse_winCount=" + horse_winCount +
+                ", horse_newDistance=" + horse_newDistance +
+                ", horse_newHorse=" + horse_newHorse +
+                ", jockey_winPer=" + jockey_winPer +
+                ", jockey_winCount=" + jockey_winCount +
+                ", horse_last4SpeedRate=" + horse_last4SpeedRate +
+                ", horse_latestSpeedRate=" + horse_latestSpeedRate +
+                ", days_from_lastRace=" + days_from_lastRace +
+                ", predicted_finishTime=" + predicted_finishTime +
+                ", predicted_place=" + predicted_place +
+                ", propByWinOdds=" + propByWinOdds +
+                ", jockeyTtlCnt=" + jockeyTtlCnt +
+                ", jockeyPosCnt=" + jockeyPosCnt +
+                ", jockeyFx=" + jockeyFx +
+                ", jockeyTtlCnt_Distance=" + jockeyTtlCnt_Distance +
+                ", jockeyPosCnt_Distance=" + jockeyPosCnt_Distance +
+                ", jockeyFx_Distance=" + jockeyFx_Distance +
+                ", horseTtlCnt=" + horseTtlCnt +
+                ", horsePosCnt=" + horsePosCnt +
+                ", horseFx=" + horseFx +
+                ", horseTtlCnt_Distance=" + horseTtlCnt_Distance +
+                ", horsePosCnt_Distance=" + horsePosCnt_Distance +
+                ", horseFx_Distance=" + horseFx_Distance +
+                ", declaredHorseWeight=" + declaredHorseWeight +
+                ", winOdds=" + winOdds +
+                ", raceDate='" + raceDate + '\'' +
+                ", racePlace='" + racePlace + '\'' +
+                ", raceId='" + raceId + '\'' +
+                ", raceSeqOfDay=" + raceSeqOfDay +
+                ", raceClass=" + raceClass +
+                ", distance=" + distance +
+                ", going='" + going + '\'' +
+                ", course='" + course + '\'' ;
+    }
+
+    public double getPropByWinOdds() {
+        return propByWinOdds;
+    }
+
+    public void setPropByWinOdds(double propByWinOdds) {
+        this.propByWinOdds = propByWinOdds;
+    }
+
+    public int getJockeyTtlCnt() {
+        return jockeyTtlCnt;
+    }
+
+    public void setJockeyTtlCnt(int jockeyTtlCnt) {
+        this.jockeyTtlCnt = jockeyTtlCnt;
+    }
+
+    public int getJockeyPosCnt() {
+        return jockeyPosCnt;
+    }
+
+    public void setJockeyPosCnt(int jockeyPosCnt) {
+        this.jockeyPosCnt = jockeyPosCnt;
+    }
+
+    public double getJockeyFx() {
+        return jockeyFx;
+    }
+
+    public void setJockeyFx(double jockeyFx) {
+        this.jockeyFx = jockeyFx;
+    }
+
+    public int getJockeyTtlCnt_Distance() {
+        return jockeyTtlCnt_Distance;
+    }
+
+    public void setJockeyTtlCnt_Distance(int jockeyTtlCnt_Distance) {
+        this.jockeyTtlCnt_Distance = jockeyTtlCnt_Distance;
+    }
+
+    public int getJockeyPosCnt_Distance() {
+        return jockeyPosCnt_Distance;
+    }
+
+    public void setJockeyPosCnt_Distance(int jockeyPosCnt_Distance) {
+        this.jockeyPosCnt_Distance = jockeyPosCnt_Distance;
+    }
+
+    public double getJockeyFx_Distance() {
+        return jockeyFx_Distance;
+    }
+
+    public void setJockeyFx_Distance(double jockeyFx_Distance) {
+        this.jockeyFx_Distance = jockeyFx_Distance;
+    }
+
+    public int getHorseTtlCnt() {
+        return horseTtlCnt;
+    }
+
+    public void setHorseTtlCnt(int horseTtlCnt) {
+        this.horseTtlCnt = horseTtlCnt;
+    }
+
+    public int getHorsePosCnt() {
+        return horsePosCnt;
+    }
+
+    public void setHorsePosCnt(int horsePosCnt) {
+        this.horsePosCnt = horsePosCnt;
+    }
+
+    public double getHorseFx() {
+        return horseFx;
+    }
+
+    public void setHorseFx(double horseFx) {
+        this.horseFx = horseFx;
+    }
+
+    public int getHorseTtlCnt_Distance() {
+        return horseTtlCnt_Distance;
+    }
+
+    public void setHorseTtlCnt_Distance(int horseTtlCnt_Distance) {
+        this.horseTtlCnt_Distance = horseTtlCnt_Distance;
+    }
+
+    public int getHorsePosCnt_Distance() {
+        return horsePosCnt_Distance;
+    }
+
+    public void setHorsePosCnt_Distance(int horsePosCnt_Distance) {
+        this.horsePosCnt_Distance = horsePosCnt_Distance;
+    }
+
+    public double getHorseFx_Distance() {
+        return horseFx_Distance;
+    }
+
+    public void setHorseFx_Distance(double horseFx_Distance) {
+        this.horseFx_Distance = horseFx_Distance;
+    }
+
     public double getPredicted_finishTime() {
         return predicted_finishTime;
     }

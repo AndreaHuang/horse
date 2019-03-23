@@ -158,7 +158,12 @@ public class RecordCardDAO {
     private static final String SQL_UPDATE_RACECARD_STATISTIC="update racecard set "+
             " horse_winPer = ?, horse_winCount=?,horse_newDistance=?, " +
             " horse_newHorse =?,jockey_winPer=?,jockey_winCount=?," +
-            " horse_last4SpeedRate =?, horse_latestSpeedRate =? , days_from_lastRace=? "+
+            " horse_last4SpeedRate =?, horse_latestSpeedRate =? , days_from_lastRace=?, "+
+            " jockeyTtlCnt=?, jockeyPosCnt=?,jockeyFx=?, " +
+            " jockeyTtlCnt_Distance =?, jockeyPosCnt_Distance=?,jockeyFx_Distance=?,"+
+            " horseTtlCnt=?,horsePosCnt=?,horseFx=?," +
+            " horseTtlCnt_Distance=?,horsePosCnt_Distance=?,horseFx_Distance=?, "+
+            " propByWinOdds=?"+
             " where raceDate = ?  and RaceSeqOfDay =? and horseId =?";
 
     private static final String SQL_UPDATE_NEWRACE_STATISTIC="update newrace set "+
@@ -308,7 +313,7 @@ public class RecordCardDAO {
                     public void setValues(PreparedStatement ps, int i)
                             throws SQLException {
                         RaceCardItem race = raceCardList.get(i);
-                        //System.out.println(race);
+                        System.out.println(race);
                         int idx =0;
                         ps.setDouble(++idx,race.getHorse_winPer());
                         ps.setInt(++idx,race.getHorse_winCount());
@@ -320,6 +325,24 @@ public class RecordCardDAO {
                         ps.setInt(++idx,race.getHorse_last4SpeedRate());
                         ps.setInt(++idx,race.getHorse_latestSpeedRate());
                         ps.setInt(++idx,race.getDays_from_lastRace());
+
+                        if(!isNewRace){
+
+                            ps.setInt(++idx,race.getJockeyTtlCnt());
+                            ps.setInt(++idx,race.getJockeyPosCnt());
+                            ps.setDouble(++idx,race.getJockeyFx());
+                            ps.setInt(++idx,race.getJockeyTtlCnt_Distance());
+                            ps.setInt(++idx,race.getJockeyPosCnt_Distance());
+                            ps.setDouble(++idx,race.getJockeyFx_Distance());
+
+                            ps.setInt(++idx,race.getHorseTtlCnt());
+                            ps.setInt(++idx,race.getHorsePosCnt());
+                            ps.setDouble(++idx,race.getHorseFx());
+                            ps.setInt(++idx,race.getHorseTtlCnt_Distance());
+                            ps.setInt(++idx,race.getHorsePosCnt_Distance());
+                            ps.setDouble(++idx,race.getHorseFx_Distance());
+                            ps.setDouble(++idx,race.getPropByWinOdds());
+                        }
                         ps.setString(++idx,race.getRaceDate());
                         ps.setInt(++idx,race.getRaceSeqOfDay());
                         ps.setString(++idx,race.getHorseId());
@@ -399,6 +422,10 @@ public class RecordCardDAO {
     }
     public void deleteNewRace(){
         jdbc.execute("delete from newrace where 1=1");
+    }
+
+    public void runSQL(String sql){
+        jdbc.execute(sql);
     }
 
 }

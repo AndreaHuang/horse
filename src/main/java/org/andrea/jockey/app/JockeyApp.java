@@ -27,11 +27,11 @@ public class JockeyApp {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
         /*Step 1: get History record and new Race*/
-       DataCrawler crawler = context.getBean(DataCrawler.class);
+//       DataCrawler crawler = context.getBean(DataCrawler.class);
 //       String []raceDate = crawler.getRecord();
 //       crawler.getNewRaceCard();
         /* Step2 : Build statistic for history and new race*/
-       Statistics stat = context.getBean(Statistics.class);
+//       Statistics stat = context.getBean(Statistics.class);
 //       if(raceDate.length >0) {
 //           stat.buildStatistics_allRaceCards(raceDate[0], raceDate[1]);
 //       }
@@ -39,14 +39,14 @@ public class JockeyApp {
 
 
 
-//        stat.buildStatistics_allRaceCards("20190217", "20190217");
+//        stat.buildStatistics_allRaceCards("20000217", "20200217");
 
 //        crawler.getDividendsByUrlOfRace("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181118/ST/3");
  //      crawler.getDividendsByUrlOfRace("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181216/ST/8");
 
         Metric metric = context.getBean(Metric.class);
-        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019_20190218");
-        //metric.checkForcastMetric("20181114","20181114" ,"test");
+        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019_20190323-4");
+//        metric.checkForcastMetric("20181114","20181114" ,"test");
 
 
 

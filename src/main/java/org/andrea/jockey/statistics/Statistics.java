@@ -2,6 +2,7 @@ package org.andrea.jockey.statistics;
 
 import org.andrea.jockey.jdbc.RecordCardDAO;
 import org.andrea.jockey.model.*;
+import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class Statistics {
@@ -56,6 +59,70 @@ public class Statistics {
                         +x.getDistance()+"_"+x.getCourse()+"_"+x.getGoing(),
                 x->x));
         return result;
+
+    }
+
+    private RaceCardItem buildStatistics_Horse_sql(RaceCardItem r) {
+
+        double propByWinOdds =0.0;
+        if(r.getWinOdds() !=0){
+            propByWinOdds = 0.82/r.getWinOdds();
+        }
+        String sql_horse = "select raceclass, place, raceDate,distance,course,going,finishTime " +
+                " from racecard where horseId='" + r.getHorseId() + "' and " +
+                " raceDate <'" + r.getRaceDate() + "' order by raceDate desc";
+        List<HorseStatistics> horses= dao.queryHorseStatistics(sql_horse);
+        int horseTtlCnt = horses.size();
+
+        Predicate<HorseStatistics> predicate = s-> s.getPlace()<=3;
+        long horsePosCnt = horses.stream().filter(predicate).count();
+
+        Predicate<HorseStatistics>  predicateByDistance = s-> Math.abs(s.getDistance() - r.getDistance()) <=300;
+
+        List<HorseStatistics> filteredByDistance = horses.stream()
+                .filter(predicateByDistance)
+                .collect(Collectors.toList());
+        int horseTtlCnt_Distance = filteredByDistance.size();
+        long horsePosCnt_Distance = filteredByDistance.stream().filter(predicate).count();
+
+
+        String sql_jockey = "select raceclass, place, raceDate,distance,course,going,finishTime " +
+                " from racecard where jockey='" + r.getJockey() + "' and " +
+                " raceDate <'" + r.getRaceDate() + "' order by raceDate desc";
+        List<HorseStatistics> jockeys= dao.queryHorseStatistics(sql_jockey);
+
+        int jockeyTtlCnt = jockeys.size();
+        long jockeyPosCnt = jockeys.stream().filter(predicate).count();
+
+        filteredByDistance = jockeys.stream()
+                .filter(predicateByDistance)
+                .collect(Collectors.toList());
+        int jockeyTtlCnt_Distance = filteredByDistance.size();
+        long jockeyPosCnt_Distance = filteredByDistance.stream().filter(predicate).count();
+
+        r.setPropByWinOdds(propByWinOdds);
+        r.setJockeyTtlCnt(jockeyTtlCnt);
+        r.setJockeyPosCnt((int)jockeyPosCnt);
+        r.setJockeyTtlCnt_Distance(jockeyTtlCnt_Distance);
+        r.setJockeyPosCnt_Distance((int)jockeyPosCnt_Distance);
+        r.setHorseTtlCnt(horseTtlCnt);
+        r.setHorsePosCnt((int)horsePosCnt);
+        r.setHorseTtlCnt_Distance(horseTtlCnt_Distance);
+        r.setHorsePosCnt_Distance((int)horsePosCnt_Distance);
+        return r;
+
+
+//        String updateSQL="update raceCard set propByWinOdds = " +propByWinOdds+","+
+//                " jockeyTtlCnt="+jockeyTtlCnt+", jockeyPosCnt= "+jockeyPosCnt+"," +
+//                " jockeyTtlCnt_Distance="+jockeyTtlCnt_Distance+", jockeyPosCnt_Distance= "+jockeyPosCnt_Distance+"," +
+//                " horseTtlCnt= "+horseTtlCnt+",horsePosCnt=" +horsePosCnt+","+
+//                " horseTtlCnt_Distance= "+horseTtlCnt_Distance+",horsePosCnt_Distance=" +horsePosCnt_Distance+" "+
+//                " where racedate ="+r.getRaceDate()+" and raceSeqOfDay="+r.getRaceSeqOfDay()+
+//                " and horseId='"+r.getHorseId()+"'";
+//
+//        System.out.println(updateSQL);
+//        dao.runSQL(updateSQL);
+
 
     }
 
@@ -230,15 +297,75 @@ public class Statistics {
         List<RaceCardResult> queryResults = dao.queryRaceResult(sql);
 
         List<RaceCardItem> statisticResults = new ArrayList<>();
+
+
+        int jockeyTtlCnt=0,jockeyPosCnt=0,jockeyTtlCnt_Distance=0,jockeyPosCnt_Distance=0;
+        int horseTtlCnt=0,horsePosCnt=0,horseTtlCnt_Distance=0,horsePosCnt_Distance=0;
+
         for(RaceCardItem aResult: queryResults){
             RaceCardItem result =this.buildStatistics_Horse(aResult);
+            result = this.buildStatistics_Horse_sql(result);
             statisticResults.add(result);
-
-
-
-
-            System.out.println(result.printStatisticsResult());
+            jockeyTtlCnt = jockeyTtlCnt + result.getJockeyTtlCnt();
+            jockeyPosCnt = jockeyPosCnt+ result.getJockeyPosCnt();
+            jockeyTtlCnt_Distance = jockeyTtlCnt_Distance+ result.getJockeyTtlCnt_Distance();
+            jockeyPosCnt_Distance = jockeyPosCnt_Distance+result.getJockeyPosCnt_Distance();
+            horseTtlCnt = horseTtlCnt+ result.getHorseTtlCnt();
+            horsePosCnt = horsePosCnt+ result.getHorsePosCnt();
+            horseTtlCnt_Distance = horseTtlCnt_Distance+ result.getHorseTtlCnt_Distance();
+            horsePosCnt_Distance = horsePosCnt_Distance + result.getHorsePosCnt_Distance();
+            //System.out.println(result.printStatisticsResult());
         }
+        ChiSquareTest test = new ChiSquareTest();
+
+        for(RaceCardItem aResult: statisticResults){
+            System.out.println();
+            System.out.println(aResult.getHorseNo()+","+ aResult.getHorseId());
+            long[][] stats = new long[][]{
+                    {(long)aResult.getHorsePosCnt(),(long)aResult.getHorseTtlCnt()},
+                    {horsePosCnt - aResult.getHorsePosCnt(),horseTtlCnt -aResult.getHorseTtlCnt()}
+            };
+            double horseFx = test.chiSquareTest(stats);
+            aResult.setHorseFx(Double.isNaN(horseFx)?0.0:horseFx);
+            System.out.println("HorseFx");
+            System.out.println(stats[0][0]+","+stats[0][1]+","+stats[1][0]+","+stats[1][1]);
+            System.out.println("fx:"+horseFx);
+
+            stats = new long[][]{
+                    {(long)aResult.getHorsePosCnt_Distance(),(long)aResult.getHorseTtlCnt_Distance()},
+                    {horsePosCnt_Distance - aResult.getHorsePosCnt_Distance(),
+                            horseTtlCnt_Distance -aResult.getHorseTtlCnt_Distance() }
+            };
+            double horseFx_Distance = test.chiSquareTest(stats);
+            System.out.println("horseFx_Distance");
+            System.out.println(stats[0][0]+","+stats[0][1]+","+stats[1][0]+","+stats[1][1]);
+            System.out.println("fx:"+horseFx_Distance);
+            aResult.setHorseFx_Distance(Double.isNaN(horseFx_Distance)?0.0:horseFx_Distance);
+
+
+            stats = new long[][]{
+                    {(long)aResult.getJockeyPosCnt(),(long)aResult.getJockeyTtlCnt()},
+                    {jockeyPosCnt -aResult.getJockeyPosCnt(),jockeyTtlCnt-aResult.getJockeyTtlCnt()}
+            };
+            double jockeyFx = test.chiSquareTest(stats);
+            System.out.println("jockeyFx");
+            System.out.println(stats[0][0]+","+stats[0][1]+","+stats[1][0]+","+stats[1][1]);
+            System.out.println("fx:"+jockeyFx);
+            aResult.setJockeyFx(Double.isNaN(jockeyFx)?0.0:jockeyFx);
+
+            stats = new long[][]{
+                    {(long)aResult.getJockeyPosCnt_Distance(),(long)aResult.getJockeyTtlCnt_Distance()},
+                    {jockeyPosCnt_Distance -aResult.getJockeyPosCnt_Distance() ,
+                            jockeyTtlCnt_Distance-aResult.getJockeyTtlCnt_Distance()}
+            };
+            double jockeyFx_Distance = test.chiSquareTest(stats);
+            System.out.println("jockeyFx_Distance");
+            System.out.println(stats[0][0]+","+stats[0][1]+","+stats[1][0]+","+stats[1][1]);
+            System.out.print("fx:"+jockeyFx_Distance);
+
+            aResult.setJockeyFx_Distance(Double.isNaN(jockeyFx_Distance)?0.0:jockeyFx_Distance);
+        }
+
 
         dao.batchUpdateRaceStatistic(statisticResults,false);
     }
