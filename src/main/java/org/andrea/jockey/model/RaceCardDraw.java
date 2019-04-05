@@ -4,8 +4,17 @@ public class RaceCardDraw {
 
     String racemeeting;
     int distance;
+    String course;
     int draw;
     int ttlCount;
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
 
     public int getDraw() {
         return draw;

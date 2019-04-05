@@ -358,8 +358,8 @@ public class RecordCardDAO {
 
     public void batchInsertRaceCardDraw(List<RaceCardDraw> list){
 
-        String sql  ="insert into racecarddraw (racemeeting,distance,draw,ttlCount,posCount,fx)" +
-                " values(?,?,?,?,?,?)";
+        String sql  ="insert into racecarddraw (racemeeting,distance,draw,course, ttlCount,posCount,fx)" +
+                " values(?,?,?,?,?,?,?)";
         this.jdbc.batchUpdate(sql,
                 new BatchPreparedStatementSetter() {
 
@@ -370,6 +370,7 @@ public class RecordCardDAO {
                         ps.setString(++idx,item.getRacemeeting());
                         ps.setInt(++idx,item.getDistance());
                         ps.setInt(++idx,item.getDraw());
+                        ps.setString(++idx,item.getCourse());
                         ps.setInt(++idx,item.getTtlCount());
                         ps.setInt(++idx,item.getPosCount());
                         ps.setDouble(++idx,item.getFx());

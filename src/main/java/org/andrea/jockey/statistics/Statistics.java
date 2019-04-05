@@ -398,24 +398,22 @@ public class Statistics {
     }
     public void buildStatistics_draw(){
         //statistics for each distance and
-        String sql ="select  racemeeting, distance, draw, count(*) ttlcount,sum(pos) as posCount from \n" +
-                "\n" +
-                "(select racemeeting, distance, draw,\n" +
+        String sql ="select  racemeeting, distance, draw,course, count(*) ttlcount,sum(pos) as posCount from \n" +
+                "(select racemeeting, distance, draw,course,\n" +
                 "case\n" +
-                "when place=1 then 1.2\n" +
-                "when place=2 then 1.1\n" +
-                "when place=3 then 1\n" +
+                "when place<=3 then 1\n" +
                 "else  0\n" +
                 "end as pos\n" +
                 "from racecard) t\n" +
                 "\n" +
-                "group by racemeeting, distance,draw";
+                "group by racemeeting, distance,draw,course";
+        System.out.println(sql);
         List<RaceCardDraw> draws = dao.queryRaceCardDraw(sql);
 
 
         Map<RaceMeetingDistance,List<RaceCardDraw>> raceCardDrawGroup=
         draws.stream().collect(Collectors.groupingBy(item ->
-                new RaceMeetingDistance(item.getRacemeeting(),item.getDistance())));
+                new RaceMeetingDistance(item.getRacemeeting(),item.getDistance(),item.getCourse())));
 
         ChiSquareTest test = new ChiSquareTest();
         List<RaceCardDraw> results = new ArrayList<>();
@@ -446,7 +444,7 @@ public class Statistics {
         dao.batchInsertRaceCardDraw(results);
         //update draw_fx to racecard table
         dao.runSQL("update racecarddraw d join racecard r on \n" +
-                "d.racemeeting=r.racemeeting and d.distance=r.distance and d.draw=r.draw\n" +
+                "d.racemeeting=r.racemeeting and d.distance=r.distance and d.draw=r.draw and d.course=r.course \n" +
                 "set r.drawFx=d.fx");
 
     }
@@ -454,24 +452,35 @@ public class Statistics {
     private static final class RaceMeetingDistance{
         String racemeeting;
         int distance;
+        String course;
+
+        public RaceMeetingDistance(String racemeeting, int distance, String course) {
+            this.racemeeting = racemeeting;
+            this.distance = distance;
+            this.course = course;
+        }
+
+        public String getCourse() {
+            return course;
+        }
+
+        public void setCourse(String course) {
+            this.course = course;
+        }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             RaceMeetingDistance that = (RaceMeetingDistance) o;
-            return distance == that.distance &&
-                    Objects.equals(racemeeting, that.racemeeting);
+            return getDistance() == that.getDistance() &&
+                    Objects.equals(getRacemeeting(), that.getRacemeeting()) &&
+                    Objects.equals(course, that.course);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(racemeeting, distance);
-        }
-
-        public RaceMeetingDistance(String racemeeting, int distance) {
-            this.racemeeting = racemeeting;
-            this.distance = distance;
+            return Objects.hash(getRacemeeting(), getDistance(), course);
         }
 
         public String getRacemeeting() {

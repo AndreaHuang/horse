@@ -16,6 +16,7 @@ public class RaceCardDrawRowMapper implements RowMapper<RaceCardDraw> {
         result.setTtlCount(resultSet.getInt("ttlCount"));
         result.setPosCount(resultSet.getInt("posCount"));
         result.setDraw(resultSet.getInt("draw"));
+        result.setCourse(resultSet.getString("course"));
         return result;
     }
 }

@@ -157,4 +157,5 @@ create table racecarddraw(
     posCount smallint not null,
     fx float
 );
+alter table racecarddraw add column course varchar(30);
 alter table racecard add column drawFx float;
