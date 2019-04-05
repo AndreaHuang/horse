@@ -396,4 +396,98 @@ public class Statistics {
             this.statisticForPastRecords(aDate);
         }
     }
+    public void buildStatistics_draw(){
+        //statistics for each distance and
+        String sql ="select  racemeeting, distance, draw, count(*) ttlcount,sum(pos) as posCount from \n" +
+                "\n" +
+                "(select racemeeting, distance, draw,\n" +
+                "case\n" +
+                "when place=1 then 1.2\n" +
+                "when place=2 then 1.1\n" +
+                "when place=3 then 1\n" +
+                "else  0\n" +
+                "end as pos\n" +
+                "from racecard) t\n" +
+                "\n" +
+                "group by racemeeting, distance,draw";
+        List<RaceCardDraw> draws = dao.queryRaceCardDraw(sql);
+
+
+        Map<RaceMeetingDistance,List<RaceCardDraw>> raceCardDrawGroup=
+        draws.stream().collect(Collectors.groupingBy(item ->
+                new RaceMeetingDistance(item.getRacemeeting(),item.getDistance())));
+
+        ChiSquareTest test = new ChiSquareTest();
+        List<RaceCardDraw> results = new ArrayList<>();
+        for(Map.Entry<RaceMeetingDistance,List<RaceCardDraw>> entry: raceCardDrawGroup.entrySet()){
+            RaceMeetingDistance key= entry.getKey();
+            System.out.println();
+            System.out.println("checking"+key.getRacemeeting()+","+key.getDistance());
+            List<RaceCardDraw> list = entry.getValue();
+            //do fx calculation for each
+            int sumOfTtlCount = list.stream().collect(Collectors.summingInt(s->s.getTtlCount()));
+            int sumOfPosCount = list.stream().collect(Collectors.summingInt(s->s.getPosCount()));
+
+            for(RaceCardDraw item: list){
+                long [][] stats = new long[][]{
+                        {(long)item.getPosCount(),(long)item.getTtlCount()},
+                        { sumOfPosCount-item.getPosCount(),sumOfTtlCount-item.getTtlCount()}
+                };
+                System.out.print(String.join(",",Integer.toString(item.getDraw()),Long.toString(stats[0][0]),
+                        Long.toString(stats[0][1]),Long.toString(stats[1][0]),Long.toString(stats[1][1])));
+
+                double fx = test.chiSquareTest(stats);
+                System.out.println(","+fx);
+                item.setFx(fx);
+                results.add(item);
+            }
+        }
+        dao.runSQL("delete from racecarddraw ");
+        dao.batchInsertRaceCardDraw(results);
+        //update draw_fx to racecard table
+        dao.runSQL("update racecarddraw d join racecard r on \n" +
+                "d.racemeeting=r.racemeeting and d.distance=r.distance and d.draw=r.draw\n" +
+                "set r.drawFx=d.fx");
+
+    }
+
+    private static final class RaceMeetingDistance{
+        String racemeeting;
+        int distance;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            RaceMeetingDistance that = (RaceMeetingDistance) o;
+            return distance == that.distance &&
+                    Objects.equals(racemeeting, that.racemeeting);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(racemeeting, distance);
+        }
+
+        public RaceMeetingDistance(String racemeeting, int distance) {
+            this.racemeeting = racemeeting;
+            this.distance = distance;
+        }
+
+        public String getRacemeeting() {
+            return racemeeting;
+        }
+
+        public void setRacemeeting(String racemeeting) {
+            this.racemeeting = racemeeting;
+        }
+
+        public int getDistance() {
+            return distance;
+        }
+
+        public void setDistance(int distance) {
+            this.distance = distance;
+        }
+    }
 }

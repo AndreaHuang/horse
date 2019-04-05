@@ -356,10 +356,40 @@ public class RecordCardDAO {
                 });
     }
 
+    public void batchInsertRaceCardDraw(List<RaceCardDraw> list){
+
+        String sql  ="insert into racecarddraw (racemeeting,distance,draw,ttlCount,posCount,fx)" +
+                " values(?,?,?,?,?,?)";
+        this.jdbc.batchUpdate(sql,
+                new BatchPreparedStatementSetter() {
+
+                    public void setValues(PreparedStatement ps, int i)
+                            throws SQLException {
+                        RaceCardDraw item = list.get(i);
+                        int idx=0;
+                        ps.setString(++idx,item.getRacemeeting());
+                        ps.setInt(++idx,item.getDistance());
+                        ps.setInt(++idx,item.getDraw());
+                        ps.setInt(++idx,item.getTtlCount());
+                        ps.setInt(++idx,item.getPosCount());
+                        ps.setDouble(++idx,item.getFx());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return list.size();
+                    }
+                });
+    }
+
     public List<org.andrea.jockey.model.RaceCardAnalysis> query(String SQL){
 
         return jdbc.query(SQL, new RaceCardAnalysisRowMapper());
     }
+    public List<RaceCardDraw> queryRaceCardDraw(String SQL){
+        return jdbc.query(SQL, new RaceCardDrawRowMapper());
+    }
+
     public List<RaceCardResult> queryRaceResult(String SQL){
 
         return jdbc.query(SQL, new RaceCardRowMapper());
@@ -420,6 +450,7 @@ public class RecordCardDAO {
             return 0;
         }
     }
+
     public void deleteNewRace(){
         jdbc.execute("delete from newrace where 1=1");
     }

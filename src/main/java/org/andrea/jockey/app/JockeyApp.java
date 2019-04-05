@@ -13,6 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @ComponentScan
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Component
 public class JockeyApp {
+    private static final SimpleDateFormat SDF=new SimpleDateFormat("yyyyMMddhhmmss");
 
     public static void main(String[] args) throws Exception{
 
@@ -31,11 +34,13 @@ public class JockeyApp {
 //       String []raceDate = crawler.getRecord();
 //       crawler.getNewRaceCard();
         /* Step2 : Build statistic for history and new race*/
-//       Statistics stat = context.getBean(Statistics.class);
+    //  Statistics stat = context.getBean(Statistics.class);
 //       if(raceDate.length >0) {
 //           stat.buildStatistics_allRaceCards(raceDate[0], raceDate[1]);
 //       }
 //       stat.statisticAllNewRace();
+
+     //   stat.buildStatistics_draw();
 
 
 
@@ -44,8 +49,9 @@ public class JockeyApp {
 //        crawler.getDividendsByUrlOfRace("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181118/ST/3");
  //      crawler.getDividendsByUrlOfRace("https://racing.hkjc.com/racing/Info/meeting/Results/English/Local/20181216/ST/8");
 
+
         Metric metric = context.getBean(Metric.class);
-        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019_20190323-4");
+        metric.checkForcastMetric("20170101","20200101" ,"Metric-2017-2019_"+SDF.format(new Date()));
 //        metric.checkForcastMetric("20181114","20181114" ,"test");
 
 

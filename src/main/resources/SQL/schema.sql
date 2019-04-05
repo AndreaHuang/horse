@@ -148,3 +148,13 @@ alter table racecard add column horseFx float;
 alter table racecard add column horseTtlCnt_Distance int;
 alter table racecard add column horsePosCnt_Distance int;
 alter table racecard add column horseFx_Distance float;
+alter table racecard add column predicted_date char(14);
+create table racecarddraw(
+  racemeeting char(2) not null,
+   distance smallint not null,
+   draw smallint not null,
+    ttlCount smallint not null,
+    posCount smallint not null,
+    fx float
+);
+alter table racecard add column drawFx float;
