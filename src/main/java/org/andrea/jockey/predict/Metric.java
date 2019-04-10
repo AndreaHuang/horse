@@ -177,7 +177,7 @@ public class Metric {
         List<RaceCardResult> resultList = dao.queryRaceResult("select * from racecard " +
                 "where racedate = "+ raceDate +" and raceSeqOfDay =" +seqOfDay +
                 " and predicted_place is not null "+
-                " order by place asc");
+                " order by predicted_place asc");
 
         if(resultList.isEmpty()){
             System.err.println("Empty Result:"+ raceDate +":"+seqOfDay);
@@ -253,7 +253,7 @@ public class Metric {
 
 
             //Calculate
-            sb.append(aItem.getPredicted_place()).append("-");
+            sb.append(aItem.getPlace()).append("-");
         }
         Collections.sort(horseNo_PredictedPlace, new Comparator<String>() {
             @Override
@@ -312,6 +312,8 @@ public class Metric {
 
 
         MetricResult result = new MetricResult();
+        result.setRaceMeeting(resultList.get(0).getRacePlace());
+        result.setCourse(resultList.get(0).getCourse());
         result.setRaceDate(raceDate);
         result.setRaceSeq(seqOfDay);
         result.setDistance(resultList.get(0).getDistance());
@@ -352,7 +354,8 @@ public class Metric {
     }
 
     private static class MetricResult{
-
+        private String raceMeeting;
+        private String course;
       private String raceDate;
       private int raceSeq;
       private int distance;
@@ -360,26 +363,26 @@ public class Metric {
       private String going;
       private String predicted_place;
       private int bingo;
-      private BigDecimal win_Dividend_Paid;
-      private BigDecimal win_Dividend_Gained;
-      private BigDecimal place_Dividend_Paid;
-      private BigDecimal place_Dividend_Gained;
-      private BigDecimal quinella_Dividend_Paid;
-      private BigDecimal quinella_Dividend_Gained;
-      private BigDecimal quinella_place_Dividend_Paid;
-      private BigDecimal quinella_place_Dividend_Gained;
-      private BigDecimal trio_Dividend_Paid;
-      private BigDecimal trio_Dividend_Gained;
+      private BigDecimal win_Dividend_Paid = BigDecimal.ZERO;
+      private BigDecimal win_Dividend_Gained = BigDecimal.ZERO;
+      private BigDecimal place_Dividend_Paid= BigDecimal.ZERO;
+      private BigDecimal place_Dividend_Gained= BigDecimal.ZERO;
+      private BigDecimal quinella_Dividend_Paid= BigDecimal.ZERO;
+      private BigDecimal quinella_Dividend_Gained= BigDecimal.ZERO;
+      private BigDecimal quinella_place_Dividend_Paid= BigDecimal.ZERO;
+      private BigDecimal quinella_place_Dividend_Gained= BigDecimal.ZERO;
+      private BigDecimal trio_Dividend_Paid= BigDecimal.ZERO;
+      private BigDecimal trio_Dividend_Gained= BigDecimal.ZERO;
 
 
       static String printHeader(){
-          String header = "RaceDate,SeqOfDay,Distance,Class,Going,ActualPlace,Bingo,Win-Pay,Win-Gain,Place-Pay," +
+          String header = "RaceMeeting,RaceDate,SeqOfDay,Distance,Course,Class,Going,ActualPlace,Bingo,Win-Pay,Win-Gain,Place-Pay," +
                     "Place-Gain,Q-Pay,Q-Gain,QPlace-Pay,QPlace-Gain,TRIO-Pay,TRIO-Gain";
           return header;
       }
       public String printResult(){
-          String result = String.join(",",raceDate,Integer.toString(raceSeq),
-                  Integer.toString(distance),Integer.toString(raceClass),going,predicted_place,
+          String result = String.join(",",raceMeeting,raceDate,Integer.toString(raceSeq),
+                  Integer.toString(distance),course,Integer.toString(raceClass),going,predicted_place,
                   Integer.toString(bingo),win_Dividend_Paid.toString(),win_Dividend_Gained.toString(),
                   place_Dividend_Paid.toString(),place_Dividend_Gained.toString(),
                   quinella_Dividend_Paid.toString(),quinella_Dividend_Gained.toString(),
@@ -387,6 +390,22 @@ public class Metric {
                   trio_Dividend_Paid.toString(),trio_Dividend_Gained.toString());
           return result;
       }
+
+        public String getRaceMeeting() {
+            return raceMeeting;
+        }
+
+        public void setRaceMeeting(String raceMeeting) {
+            this.raceMeeting = raceMeeting;
+        }
+
+        public String getCourse() {
+            return course;
+        }
+
+        public void setCourse(String course) {
+            this.course = course;
+        }
 
         public String getRaceDate() {
             return raceDate;
@@ -449,6 +468,10 @@ public class Metric {
         }
 
         public void setWin_Dividend_Paid(BigDecimal win_Dividend_Paid) {
+            if(win_Dividend_Paid ==null){
+                System.err.println("win_Dividend_Paid is Null");
+                return;
+            }
             this.win_Dividend_Paid = win_Dividend_Paid;
         }
 
@@ -457,6 +480,10 @@ public class Metric {
         }
 
         public void setWin_Dividend_Gained(BigDecimal win_Dividend_Gained) {
+            if(win_Dividend_Gained ==null){
+                System.err.println("win_Dividend_Gained is Null");
+                return;
+            }
             this.win_Dividend_Gained = win_Dividend_Gained;
         }
 
@@ -465,6 +492,10 @@ public class Metric {
         }
 
         public void setPlace_Dividend_Paid(BigDecimal place_Dividend_Paid) {
+            if(place_Dividend_Paid ==null){
+                System.err.println("place_Dividend_Paid is Null");
+                return;
+            }
             this.place_Dividend_Paid = place_Dividend_Paid;
         }
 
@@ -473,6 +504,10 @@ public class Metric {
         }
 
         public void setPlace_Dividend_Gained(BigDecimal place_Dividend_Gained) {
+            if(place_Dividend_Gained ==null){
+                System.err.println("place_Dividend_Gained is Null");
+                return;
+            }
             this.place_Dividend_Gained = place_Dividend_Gained;
         }
 
@@ -481,6 +516,10 @@ public class Metric {
         }
 
         public void setQuinella_Dividend_Paid(BigDecimal quinella_Dividend_Paid) {
+            if(quinella_Dividend_Paid ==null){
+                System.err.println("quinella_Dividend_Paid is Null");
+                return;
+            }
             this.quinella_Dividend_Paid = quinella_Dividend_Paid;
         }
 
@@ -489,6 +528,10 @@ public class Metric {
         }
 
         public void setQuinella_Dividend_Gained(BigDecimal quinella_Dividend_Gained) {
+            if(quinella_Dividend_Gained ==null){
+                System.err.println("quinella_Dividend_Gained is Null");
+                return;
+            }
             this.quinella_Dividend_Gained = quinella_Dividend_Gained;
         }
 
@@ -497,6 +540,10 @@ public class Metric {
         }
 
         public void setQuinella_place_Dividend_Paid(BigDecimal quinella_place_Dividend_Paid) {
+            if(quinella_place_Dividend_Paid ==null){
+                System.err.println("quinella_place_Dividend_Paid is Null");
+                return;
+            }
             this.quinella_place_Dividend_Paid = quinella_place_Dividend_Paid;
         }
 
@@ -505,6 +552,10 @@ public class Metric {
         }
 
         public void setQuinella_place_Dividend_Gained(BigDecimal quinella_place_Dividend_Gained) {
+            if(quinella_place_Dividend_Gained ==null){
+                System.err.println("quinella_place_Dividend_Gained is Null");
+                return;
+            }
             this.quinella_place_Dividend_Gained = quinella_place_Dividend_Gained;
         }
 
@@ -513,6 +564,10 @@ public class Metric {
         }
 
         public void setTrio_Dividend_Paid(BigDecimal trio_Dividend_Paid) {
+            if(trio_Dividend_Paid ==null){
+                System.err.println("trio_Dividend_Paid is Null");
+                return;
+            }
             this.trio_Dividend_Paid = trio_Dividend_Paid;
         }
 
@@ -521,6 +576,10 @@ public class Metric {
         }
 
         public void setTrio_Dividend_Gained(BigDecimal trio_Dividend_Gained) {
+            if(trio_Dividend_Gained ==null){
+                System.err.println("trio_Dividend_Gained is Null");
+                return;
+            }
             this.trio_Dividend_Gained = trio_Dividend_Gained;
         }
     }
