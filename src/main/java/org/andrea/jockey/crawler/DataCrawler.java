@@ -32,13 +32,18 @@ import org.jsoup.nodes.Document;
 public class DataCrawler {
 
     private static final SimpleDateFormat SDF_Original = new SimpleDateFormat("dd/MM/yyyy");
+    private static final SimpleDateFormat SDF_Original_Dividend = new SimpleDateFormat("yyyy/MM/dd");
     private static final SimpleDateFormat SDF_Original_NewRace = new SimpleDateFormat("MMMM dd, yyyy");
     private static final SimpleDateFormat SDF_Update = new SimpleDateFormat("yyyyMMdd");
 
+
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,###.##");
+    private static final By ByXPath_resultEle = By.xpath("//div[contains(@class, 'localResults')]");
+    private static final By ByXPath_dividendEle = By.xpath("//div[contains(@class, 'dividend_tab')]");
     static  {
         DECIMAL_FORMAT.setParseBigDecimal(true);
     }
+
 
     @Autowired
     JockeyWebsiteConfig jockeyWebsiteConfig;
@@ -214,7 +219,7 @@ public class DataCrawler {
     private List<String> listLinksOfRaceDaysInDateRange(String url, String startDate, String endDate) {
         List<String> result = new ArrayList<String>();
         getDriver().get(url);
-        List<WebElement> date_options = getDriver().findElement(By.id("raceDateSelect")).findElements(By.tagName("option"));
+        List<WebElement> date_options = getDriver().findElement(By.id("selectId")).findElements(By.tagName("option"));
 
         for (WebElement aDate : date_options) {
             //getDriver().navigate().refresh();
@@ -228,6 +233,23 @@ public class DataCrawler {
 
                     result.add(urlOfARaceDay);
                 }
+            } else {
+                //path is like 10/04/2019
+                //https://racing.hkjc.com/racing/information/English/Racing/LocalResults.aspx?RaceDate=2019/04/10
+                //url: http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/
+                try {
+                    String currentUrl=getDriver().getCurrentUrl();
+                    //https://racing.hkjc.com/racing/information/English/racing/LocalResults.aspx
+                    String date = SDF_Update.format(SDF_Original.parse(path));
+                    if (date.compareTo(startDate) >= 0 && date.compareTo(endDate) <= 0) {
+                        String urlOfARaceDay = currentUrl+ "?RaceDate=" + path;
+                        result.add(urlOfARaceDay);
+                    }
+                }catch(java.text.ParseException e){
+                    System.err.println("Skipped " +path);
+                    e.printStackTrace();
+                }
+
             }
         }
 
@@ -238,13 +260,16 @@ public class DataCrawler {
 
     private List<String> listLinksOfOneRaceDay(String url) {
         List<String> results = new ArrayList<String>();
-        results.add(url + "/1");
         getDriver().get(url);
-        List<WebElement> allLinksElements = getDriver().findElements(By.xpath("//*[@id=\"results\"]/div[2]/table/tbody/tr/td/a"));
+        List<WebElement> allLinksElements = getDriver().findElements(By.xpath("//div[contains(@class, 'localResults')]/div[2]/table/tbody/tr/td/a"));
 
         for (WebElement aLinkElement : allLinksElements) {
             String link = aLinkElement.getAttribute("href");
             if (!link.contains("ResultsAll") && !link.contains("Simulcast")) {
+                if(link.endsWith("2")){
+                    String firstRace =link.substring(0,link.length()-1)+"1";
+                    results.add(firstRace);
+                }
                 results.add(link);
             }
         }
@@ -253,10 +278,17 @@ public class DataCrawler {
     }
 
     private List<Dividend> checkDividendsOfARace(String url){
-        String[] splitted= url.split("/");
-        String raceSeq = splitted[splitted.length-1];
-        String raceDate = splitted[splitted.length-3];
+        String[] splitted= url.split("\\?")[1].split("&");
+        String raceSeq = splitted[2].split("=")[1];
+        String raceDate = splitted[0].split("=")[1];
 
+        try {
+            raceDate = SDF_Update.format(SDF_Original_Dividend.parse(raceDate));
+
+        }catch(java.text.ParseException e){
+            System.err.println("Skipped " +raceDate);
+            e.printStackTrace();
+        }
         List<Dividend> results = new ArrayList<>();
         getDriver().get(url);
         try {
@@ -266,7 +298,7 @@ public class DataCrawler {
         }
         waitForPageLoaded();
 
-        WebElement resultEle = waitForPresence(By.id("results"));
+        WebElement resultEle = waitForPresence(ByXPath_resultEle);
         // WebElement resultEle = getDriver().findElement(By.id("results"));
 
         String a = resultEle.getAttribute("outerHTML");
@@ -280,7 +312,7 @@ public class DataCrawler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            resultEle = getDriver().findElement(By.id("results"));
+            resultEle = getDriver().findElement(ByXPath_resultEle);
 
             a = resultEle.getAttribute("outerHTML");
         }
@@ -289,20 +321,21 @@ public class DataCrawler {
 
 
         for(Element div: infoList){
-            Elements  headers = div.select("table > tbody tr > td > table > tbody tr > td");
+           // Elements  headers = div.select("table > tbody tr > td > table > tbody tr > td");
+            Elements  headers = div.select("table > thead > tr > td");
            if(headers.size()>0) {
                if("Dividend".equals(headers.first().ownText())){
-                   Element dividendTable= headers.first().parent().parent();
-                   Elements dividendRows =  dividendTable.select("tr");
+                   Element dividendTable= headers.first().parent().parent().parent();
+                   Elements dividendRows =  dividendTable.select("tbody > tr");
                    //System.out.println(dividendRows.size());
                    int rowCount=0;
                    int rowspan=0;
                    String lastPool=null;
                    for(Element row:dividendRows) {
                        rowCount++;
-                       if(rowCount==1 || rowCount==2) {
-                           continue;//skip header row
-                       }
+                      // if(rowCount==1 || rowCount==2) {
+                      //     continue;//skip header row
+                      // }
                        Elements td_List = row.select("td");
                      //  System.out.println(rowCount +" : "+td_List.size()+" ="+td_List.get(0).ownText());
                        Dividend dividend = new Dividend(raceDate,Integer.parseInt(raceSeq));
@@ -376,7 +409,7 @@ public class DataCrawler {
         }
         waitForPageLoaded();
 
-        WebElement resultEle = waitForPresence(By.id("results"));
+        WebElement resultEle = waitForPresence(ByXPath_resultEle);
        // WebElement resultEle = getDriver().findElement(By.id("results"));
 
         String a = resultEle.getAttribute("outerHTML");
@@ -390,7 +423,7 @@ public class DataCrawler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            resultEle = getDriver().findElement(By.id("results"));
+            resultEle = getDriver().findElement(ByXPath_resultEle);
 
            a = resultEle.getAttribute("outerHTML");
         }
@@ -407,11 +440,11 @@ public class DataCrawler {
         RaceInfo raceInfo = new RaceInfo();
 
 
-        Elements infoList = doc.select("div");
+        Elements infoList = doc.select("html > body > div.localResults.commContent > div");
 
-        String info = infoList.get(3).select("table > tbody > tr > td").first().text();
+       // String info = infoList.get(3).select("table > tbody > tr > td").first().text();
        // String info = resultEle.findElement(By.xpath("//div[3]/table/tbody/tr/td[1]")).getText();
-
+        String info = infoList.get(2).select("p").first().select("span").first().text();
 
         try {
             String raceDate = SDF_Update.format(SDF_Original.parse(info.split(":")[1].trim().split(" ")[0]));
@@ -423,19 +456,24 @@ public class DataCrawler {
         String place = info.split(":")[1].trim().split(" ")[1];
         if (place.toUpperCase().startsWith("SHA")) {
             raceInfo.setRacePlace("ST");
-        } else {
+        } else if(place.toUpperCase().startsWith("HAPP")){
             raceInfo.setRacePlace("HV");
+        } else {
+            return results; //Skip Conghua race
         }
 
 
         /* Race ID */
-        info = doc.select("div").get(6).getElementsByTag("div").get(0).text();
+        info = infoList.get(3).select("table > thead > tr > td").first().text();
         System.out.println(info);
         raceInfo.setRaceSeqOfDay(Integer.parseInt(info.substring(0, info.indexOf("(")).trim().split(" ")[1]));
         raceInfo.setRaceId(info.substring(info.indexOf("(") + 1, info.indexOf(")")).trim());
         /*Class and distance*/
-        Elements eleList = doc.select("div").get(6).select("div > table > tbody > tr");
-        info = eleList.get(0).select("td").get(0).text();
+        //Elements eleList = doc.select("div").get(6).select("div > table > tbody > tr");
+        //info = eleList.get(0).select("td").get(0).text();
+        Elements eleList = infoList.get(3).select("table > tbody > tr");
+        info = eleList.get(1).select("td").first().text();
+
         String classString = info.split("-")[0].trim().split(" ")[1];
         try {
             int classInt = Integer.parseInt(classString);
@@ -467,18 +505,18 @@ public class DataCrawler {
 
         raceInfo.setDistance(Integer.parseInt(info.split("-")[1].trim().split("M")[0]));
         /* Going */
-        raceInfo.setGoing(eleList.get(0).select("td").get(2).text());
+        raceInfo.setGoing(eleList.get(1).select("td").get(2).text());
         /* Course */
-        raceInfo.setCourse(eleList.get(1).select("td").get(2).text());
+        raceInfo.setCourse(eleList.get(2).select("td").get(2).text());
 
 
-        List<WebElement> trList = getDriver().findElements(By.xpath("//*[@id=\"results\"]/div[6]/table/tbody/tr"));
+        //List<WebElement> trList = getDriver().findElements(By.xpath("//*[@id=\"results\"]/div[6]/table/tbody/tr"));
 
+        Elements trList = infoList.get(4).select("table > tbody > tr");
         int rows = trList.size();
 
-
-        List<WebElement> tdList = getDriver().findElements(By.xpath("//*[@id=\"results\"]/div[6]/table/tbody/tr/td"));
-
+        //List<WebElement> tdList = getDriver().findElements(By.xpath("//*[@id=\"results\"]/div[6]/table/tbody/tr/td"));
+        Elements tdList = infoList.get(4).select("table > tbody > tr > td");
         int cells = tdList.size();
 
         int columns = cells / rows;
@@ -490,7 +528,7 @@ public class DataCrawler {
 
             item = new RaceCardResult(raceInfo);
             /* Place*/
-            String placeOfTheHorse = tdList.get(i * 12).getText().trim();
+            String placeOfTheHorse = tdList.get(i * 12).text().trim();
             try {
                 item.setPlace(Integer.parseInt(placeOfTheHorse));
             } catch (Exception e) {
@@ -499,40 +537,40 @@ public class DataCrawler {
 
 
             /* Horse No.*/
-            item.setHorseNo(tdList.get(i * 12 + 1).getText().trim());
+            item.setHorseNo(tdList.get(i * 12 + 1).text().trim());
             /* Horse Name.*/
-            String horseName = tdList.get(i * 12 + 2).getText().trim();
+            String horseName = tdList.get(i * 12 + 2).text().trim();
             item.setHorseName(horseName);
             item.setHorseId(this.parseHorseId(horseName));
             /* Jockey.*/
-            item.setJockey(tdList.get(i * 12 + 3).getText().trim());
+            item.setJockey(tdList.get(i * 12 + 3).text().trim());
             /* Trainer.*/
-            item.setTrainer(tdList.get(i * 12 + 4).getText().trim());
+            item.setTrainer(tdList.get(i * 12 + 4).text().trim());
             /* Actual Weight.*/
-            item.setAddedWeight(Integer.parseInt(tdList.get(i * 12 + 5).getText().trim()));
+            item.setAddedWeight(Integer.parseInt(tdList.get(i * 12 + 5).text().trim()));
             /* Declare Horse Weight */
-            item.setDeclaredHorseWeight(Integer.parseInt(tdList.get(i * 12 + 6).getText().trim()));
+            item.setDeclaredHorseWeight(Integer.parseInt(tdList.get(i * 12 + 6).text().trim()));
             /* Draw */
             try {
-                item.setDraw(Integer.parseInt(tdList.get(i * 12 + 7).getText().trim()));
+                item.setDraw(Integer.parseInt(tdList.get(i * 12 + 7).text().trim()));
             }catch(Exception e){
               /*  skip this row */
                continue;
             }
             /* LBW */
-            String lbw_String = tdList.get(i * 12 + 8).getText().trim();
+            String lbw_String = tdList.get(i * 12 + 8).text().trim();
             item.setLbwString(lbw_String);
             item.setLbw(parseLBW(lbw_String));
 
 
             /* Running Position*/
-            item.setRunningPosition(tdList.get(i * 12 + 9).getText().trim());
+            item.setRunningPosition(tdList.get(i * 12 + 9).text().trim());
             /* Finish Time*/
-            String finishTime_String = tdList.get(i * 12 + 10).getText().trim();
+            String finishTime_String = tdList.get(i * 12 + 10).text().trim();
             item.setFinishTimeString(finishTime_String);
             item.setFinishTime(this.parseFinishTime(finishTime_String));
             /* Win Odds*/
-            item.setWinOdds(Double.parseDouble(tdList.get(i * 12 + 11).getText().trim()));
+            item.setWinOdds(Double.parseDouble(tdList.get(i * 12 + 11).text().trim()));
 
             System.out.println(i+":"+item);
 
@@ -615,18 +653,18 @@ public class DataCrawler {
         raceInfo.setCourse(course.toUpperCase());
         /*Distance*/
         String distance =null;
-//        if(array.length >2){
-//            distance = array[2];
-//        } else{
-//            distance = array[1];
-//        }
-        distance = array[array.length-1];
+        if(array.length >2){
+            distance = array[2];
+        } else{
+            distance = array[1];
+        }
+        //distance = array[array.length-1];
 
         distance = distance.toUpperCase().replace("M","");
         System.out.println(distance);
         raceInfo.setDistance(Integer.parseInt(distance.trim()));
         /*Going*/
-        if(infoArray[2].split(",").length >3){
+        if(array.length >3){
             raceInfo.setGoing(infoArray[2].split(",")[3].toUpperCase().trim());
         }
         /*Class*/
@@ -749,7 +787,7 @@ public class DataCrawler {
 
     private double parseFinishTime(String finishTime_String) {
         // System.out.println(finishTime_String);
-        String[] splitted = finishTime_String.split("\\.", -1);
+        String[] splitted =finishTime_String.replace(":",".").split("\\.", -1);
 
         int mininutes = Integer.parseInt(splitted[0]);
         int seconds = Integer.parseInt(splitted[1]);

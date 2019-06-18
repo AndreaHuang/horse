@@ -183,6 +183,7 @@ public class RecordCardDAO {
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         Dividend dividend = dividendList.get(i);
                         int index=1;
+                        System.out.println(i +":"+ dividend.toString());
                         ps.setString(index++,dividend.getRaceDate());
                         ps.setInt(index++,dividend.getRaceSeqOfDay());
                         ps.setString(index++,dividend.getPool());
@@ -365,7 +366,9 @@ public class RecordCardDAO {
 
                     public void setValues(PreparedStatement ps, int i)
                             throws SQLException {
+
                         RaceCardDraw item = list.get(i);
+
                         int idx=0;
                         ps.setString(++idx,item.getRacemeeting());
                         ps.setInt(++idx,item.getDistance());
@@ -373,7 +376,7 @@ public class RecordCardDAO {
                         ps.setString(++idx,item.getCourse());
                         ps.setInt(++idx,item.getTtlCount());
                         ps.setInt(++idx,item.getPosCount());
-                        ps.setDouble(++idx,item.getFx());
+                        ps.setDouble(++idx, Double.isNaN(item.getFx())? 1.0:item.getFx());
                     }
 
                     @Override
@@ -410,6 +413,19 @@ public class RecordCardDAO {
     public List<RaceStatistics> queryRaceStatistics(String SQL){
 
         return jdbc.query(SQL, new StatisticsRowMapper.RaceRowMapper());
+    }
+
+    public List<SurvivalAnalysis.SurvivalAnalysis_Horse> querySurvivalAnalysis_Horse(String SQL){
+
+        return jdbc.query(SQL, new StatisticsRowMapper.SurvivalAnalysis_Horse_RowMapper());
+    }
+    public List<SurvivalAnalysis.SurvivalAnalysis_Draw> querySurvivalAnalysis_Draw(String SQL){
+
+        return jdbc.query(SQL, new StatisticsRowMapper.SurvivalAnalysis_Draw_RowMapper());
+    }
+    public List<SurvivalAnalysis.SurvivalAnalysis_Jockey> querySurvivalAnalysis_Jockey(String SQL){
+
+        return jdbc.query(SQL, new StatisticsRowMapper.SurvivalAnalysis_Jockey_RowMapper());
     }
     public List<Dividend> queryDividend(String SQL){
         return jdbc.query(SQL,new DividendRowMapper());

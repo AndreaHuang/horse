@@ -8,30 +8,26 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
-public class Statistics {
+public class StatisticsBackup {
 
     private static int TARGET_PLACE=3;
     private static SimpleDateFormat DATEFORMATE = new SimpleDateFormat("yyyyMMdd");
     private static Map<Integer,Double> FINISHTIME_SCALE;
     private static Map<String,RaceStatistics>  RACE_STATISTICS;
-    @Autowired
-    RecordCardDAO dao;
-
     @PostConstruct
     public void init(){
         RACE_STATISTICS =this.queryStatistic_Race();
         FINISHTIME_SCALE = createFinishTimeScaleMap();
     }
-
+    @Autowired
+    RecordCardDAO dao;
     private static Map<Integer, Double> createFinishTimeScaleMap() {
         Map<Integer,Double> myMap = new HashMap<Integer,Double>();
         myMap.put(1000, 0.2); //57s
@@ -402,12 +398,12 @@ public class Statistics {
         buildStatistics_weight();
 
     }
-    private void buildStatistics_weight(){
+    public void buildStatistics_weight(){
         dao.runSQL("update racecard set weightRadio  =  addedweight/declaredhorseWeight");
         dao.runSQL("update racecard set weightRD  =  weightRadio*distance");
     }
 
-    private void buildStatistics_draw(String startDate, String endDate){
+    public void buildStatistics_draw(String startDate, String endDate){
         //statistics for each distance and
         String sql ="select  racemeeting, distance, draw,course, count(*) ttlcount,sum(pos) as posCount from \n" +
                 "(select racemeeting, distance, draw,course,\n" +
@@ -511,5 +507,4 @@ public class Statistics {
             this.distance = distance;
         }
     }
-
 }

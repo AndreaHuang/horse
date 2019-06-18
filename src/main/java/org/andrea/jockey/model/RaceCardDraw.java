@@ -67,4 +67,17 @@ public class RaceCardDraw {
     public void setPosCount(int posCount) {
         this.posCount = posCount;
     }
+
+    @Override
+    public String toString() {
+        return "RaceCardDraw{" +
+                "racemeeting='" + racemeeting + '\'' +
+                ", distance=" + distance +
+                ", course='" + course + '\'' +
+                ", draw=" + draw +
+                ", ttlCount=" + ttlCount +
+                ", posCount=" + posCount +
+                ", fx=" + fx +
+                '}';
+    }
 }

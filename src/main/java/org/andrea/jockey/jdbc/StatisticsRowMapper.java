@@ -1,9 +1,6 @@
 package org.andrea.jockey.jdbc;
 
-import org.andrea.jockey.model.Dividend;
-import org.andrea.jockey.model.HorseStatistics;
-import org.andrea.jockey.model.JockeyStatistics;
-import org.andrea.jockey.model.RaceStatistics;
+import org.andrea.jockey.model.*;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -52,6 +49,70 @@ public class StatisticsRowMapper {
             result.setGoing(resultSet.getString("going"));
             result.setCount(resultSet.getInt("count"));
             return result;
+        }
+    }
+
+    static class SurvivalAnalysis_Horse_RowMapper implements RowMapper<SurvivalAnalysis.SurvivalAnalysis_Horse> {
+        @Override
+        public SurvivalAnalysis.SurvivalAnalysis_Horse mapRow(ResultSet resultSet, int i) throws SQLException {
+            SurvivalAnalysis.SurvivalAnalysis_Horse r = new SurvivalAnalysis.SurvivalAnalysis_Horse();
+
+            r.setRaceDate(resultSet.getString("raceDate"));
+
+            r.setRacePlace(resultSet.getString("raceMeeting"));
+
+            r.setDistance(resultSet.getInt("distance"));
+
+            r.setCourse(resultSet.getString("course"));
+
+            r.setFinishTime(resultSet.getDouble("finishTime"));
+
+            r.setHorseId(resultSet.getString("horseId"));
+
+
+            return r;
+        }
+    }
+    static class SurvivalAnalysis_Draw_RowMapper implements RowMapper<SurvivalAnalysis.SurvivalAnalysis_Draw> {
+        @Override
+        public SurvivalAnalysis.SurvivalAnalysis_Draw mapRow(ResultSet resultSet, int i) throws SQLException {
+            SurvivalAnalysis.SurvivalAnalysis_Draw r = new SurvivalAnalysis.SurvivalAnalysis_Draw();
+
+            r.setRaceDate(resultSet.getString("raceDate"));
+
+            r.setRacePlace(resultSet.getString("raceMeeting"));
+
+            r.setDistance(resultSet.getInt("distance"));
+
+            r.setCourse(resultSet.getString("course"));
+
+            r.setFinishTime(resultSet.getDouble("finishTime"));
+
+            r.setDraw(resultSet.getInt("draw"));
+
+
+            return r;
+        }
+    }
+    static class SurvivalAnalysis_Jockey_RowMapper implements RowMapper<SurvivalAnalysis.SurvivalAnalysis_Jockey> {
+        @Override
+        public SurvivalAnalysis.SurvivalAnalysis_Jockey mapRow(ResultSet resultSet, int i) throws SQLException {
+            SurvivalAnalysis.SurvivalAnalysis_Jockey r = new SurvivalAnalysis.SurvivalAnalysis_Jockey();
+
+            r.setRaceDate(resultSet.getString("raceDate"));
+
+            r.setRacePlace(resultSet.getString("raceMeeting"));
+
+            r.setDistance(resultSet.getInt("distance"));
+
+            r.setCourse(resultSet.getString("course"));
+
+            r.setFinishTime(resultSet.getDouble("finishTime"));
+
+            r.setJockey(resultSet.getString("jockey"));
+
+
+            return r;
         }
     }
 }

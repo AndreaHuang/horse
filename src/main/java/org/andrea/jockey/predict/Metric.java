@@ -20,8 +20,6 @@ public class Metric {
 
     @Autowired
     RecordCardDAO dao;
-
-
     public void checkForcastMetric(String fromDate, String toDate,String fileName){
 
         FileWriter writer = null;
@@ -91,6 +89,8 @@ public class Metric {
                 trio_Dividend_Gained =trio_Dividend_Gained.add(aRace.getTrio_Dividend_Gained());
 
             }
+
+            BigDecimal totalGain = trio_Dividend_Gained.add(quinella_Dividend_Gained).add(place_Dividend_Gained);
             String result = String.join(",",
                      Integer.toString(bingo_0),
                     Integer.toString(bingo_1),
@@ -100,7 +100,7 @@ public class Metric {
                     place_Dividend_Paid.toString(),place_Dividend_Gained.toString(),
                     quinella_Dividend_Paid.toString(),quinella_Dividend_Gained.toString(),
                     quinella_place_Dividend_Paid.toString(),quinella_place_Dividend_Gained.toString(),
-                    trio_Dividend_Paid.toString(),trio_Dividend_Gained.toString(),"\r\n");
+                    trio_Dividend_Paid.toString(),trio_Dividend_Gained.toString(),totalGain.toString(),"\r\n");
 
             String header = String.join(",",
                     "Bingo_0","Bingo_1", "Bingo_2", "Bingo_3",
@@ -144,36 +144,7 @@ public class Metric {
 //            return null;
 //        }
         System.out.println(raceDate+":"+seqOfDay);
-//        if(
-//                //raceDate.equals("20171011")||
-//                raceDate.equals("20171126")|| raceDate.equals("20171223")
-//           ||raceDate.equals("20180128")
-//            ||raceDate.equals("20180221") ||
-//                raceDate.equals("20180318")
-//        || raceDate.equals("20180328")
-//                || raceDate.equals("20180429")
-//        ||raceDate.equals("20180506")
-//        ||raceDate.equals("20180527")
-//                ||raceDate.equals("20180603")
-//                ||raceDate.equals("20180613")
-//                ||raceDate.equals("20180616")
-//                ||raceDate.equals("20180624")
-//                ||raceDate.equals("20180909")
-//                ||raceDate.equals("20181028")
-//                ||raceDate.equals("20181114")
-//                ||raceDate.equals("20181118")
-//                ||raceDate.equals("20181125")
-//                ||raceDate.equals("20181216")
-//                ||raceDate.equals("20190106")
-//                ||raceDate.equals("20190116")
-//                ||raceDate.equals("20190120")
-//
-//
-//        )
-//
-//    {
-//            return;
-//        }
+
         List<RaceCardResult> resultList = dao.queryRaceResult("select * from racecard " +
                 "where racedate = "+ raceDate +" and raceSeqOfDay =" +seqOfDay +
                 " and predicted_place is not null "+
@@ -226,7 +197,9 @@ public class Metric {
         BigDecimal trio_Dividend_Paid=BigDecimal.ZERO;
         BigDecimal win_Dividend_Paid =BigDecimal.ZERO;
 
+
         for(RaceCardResult aItem : resultList){
+            System.out.println(aItem.getHorseNo() +","+aItem.getPredicted_place() + ","+aItem.getPlace());
             if(aItem.getPredicted_place() > 0 && aItem.getPredicted_place() <3 && aItem.getWinOdds()>5){
                 win_Dividend_Paid = win_Dividend_Paid.add(BigDecimal.valueOf(10));
                 if(aItem.getPlace()==1) {
@@ -307,6 +280,7 @@ public class Metric {
                     quinella_place_Dividend.containsKey(comb1) ?
                             quinella_place_Dividend.get(comb1) : BigDecimal.ZERO);
         }
+        //Quinella
         quinella_Dividend_Gained=quinella_Dividend.containsKey(horseNo_PredictedQ.get(0)+","+horseNo_PredictedQ.get(1))?
                 quinella_Dividend.get(horseNo_PredictedQ.get(0)+","+horseNo_PredictedQ.get(1)):BigDecimal.ZERO;
 
@@ -377,17 +351,19 @@ public class Metric {
 
       static String printHeader(){
           String header = "RaceMeeting,RaceDate,SeqOfDay,Distance,Course,Class,Going,ActualPlace,Bingo,Win-Pay,Win-Gain,Place-Pay," +
-                    "Place-Gain,Q-Pay,Q-Gain,QPlace-Pay,QPlace-Gain,TRIO-Pay,TRIO-Gain";
+                    "Place-Gain,Q-Pay,Q-Gain,QPlace-Pay,QPlace-Gain,TRIO-Pay,TRIO-Gain,Total-Gain";
           return header;
       }
       public String printResult(){
+          BigDecimal totalGain = trio_Dividend_Gained.add(quinella_Dividend_Gained).add(place_Dividend_Gained);
+
           String result = String.join(",",raceMeeting,raceDate,Integer.toString(raceSeq),
                   Integer.toString(distance),course,Integer.toString(raceClass),going,predicted_place,
                   Integer.toString(bingo),win_Dividend_Paid.toString(),win_Dividend_Gained.toString(),
                   place_Dividend_Paid.toString(),place_Dividend_Gained.toString(),
                   quinella_Dividend_Paid.toString(),quinella_Dividend_Gained.toString(),
                   quinella_place_Dividend_Paid.toString(),quinella_place_Dividend_Gained.toString(),
-                  trio_Dividend_Paid.toString(),trio_Dividend_Gained.toString());
+                  trio_Dividend_Paid.toString(),trio_Dividend_Gained.toString(),totalGain.toString());
           return result;
       }
 
