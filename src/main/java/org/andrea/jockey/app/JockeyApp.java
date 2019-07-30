@@ -85,7 +85,7 @@ public class JockeyApp {
     public static void statistic_SurvivalAnalysis(AnnotationConfigApplicationContext context ){
         Statistic_SurvivalAnalysis stat = context.getBean(Statistic_SurvivalAnalysis.class);
 
-        stat.testLogRankTest();
+        stat.buildAnalysis_HistoryRecord("20180101","20190301");
     }
 
 }

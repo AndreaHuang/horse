@@ -1,6 +1,7 @@
 package org.andrea.jockey.statistics;
 
 import org.andrea.jockey.model.RaceCardItem;
+import org.andrea.jockey.model.RaceInfo;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 
@@ -12,6 +13,157 @@ import java.util.List;
 
 public class StatUtils {
 
+    public static class SurvivalAnalysisResultWrapper{
+        RaceInfo raceInfo;
+
+        int drawA;
+        String horseNoA;
+        String horseIdA;
+        String jockeyA;
+        double finishTimeA=0.0;
+        int drawB;
+        String horseNoB;
+        String horseIdB;
+        String jockeyB;
+        double finishTimeB=0.0;
+
+        int result; //1 means A is better than B,2 means B is better than A
+
+        public double getFinishTimeA() {
+            return finishTimeA;
+        }
+
+        public void setFinishTimeA(double finishTimeA) {
+            this.finishTimeA = finishTimeA;
+        }
+
+        public double getFinishTimeB() {
+            return finishTimeB;
+        }
+
+        public void setFinishTimeB(double finishTimeB) {
+            this.finishTimeB = finishTimeB;
+        }
+
+
+
+        public int getResult() {
+            return result;
+        }
+
+        public void setResult(int result) {
+            this.result = result;
+        }
+
+        public RaceInfo getRaceInfo() {
+            return raceInfo;
+        }
+
+        public void setRaceInfo(RaceInfo raceInfo) {
+            this.raceInfo = raceInfo;
+        }
+
+        public int getDrawA() {
+            return drawA;
+        }
+
+        public void setDrawA(int drawA) {
+            this.drawA = drawA;
+        }
+
+        public String getHorseNoA() {
+            return horseNoA;
+        }
+
+        public void setHorseNoA(String horseNoA) {
+            this.horseNoA = horseNoA;
+        }
+
+        public String getHorseIdA() {
+            return horseIdA;
+        }
+
+        public void setHorseIdA(String horseIdA) {
+            this.horseIdA = horseIdA;
+        }
+
+        public String getJockeyA() {
+            return jockeyA;
+        }
+
+        public void setJockeyA(String jockeyA) {
+            this.jockeyA = jockeyA;
+        }
+
+        public int getDrawB() {
+            return drawB;
+        }
+
+        public void setDrawB(int drawB) {
+            this.drawB = drawB;
+        }
+
+        public String getHorseNoB() {
+            return horseNoB;
+        }
+
+        public void setHorseNoB(String horseNoB) {
+            this.horseNoB = horseNoB;
+        }
+
+        public String getHorseIdB() {
+            return horseIdB;
+        }
+
+        public void setHorseIdB(String horseIdB) {
+            this.horseIdB = horseIdB;
+        }
+
+        public String getJockeyB() {
+            return jockeyB;
+        }
+
+        public void setJockeyB(String jockeyB) {
+            this.jockeyB = jockeyB;
+        }
+
+        SurvivalAnalysisResult jockeyResult;
+        SurvivalAnalysisResult drawResult;
+        SurvivalAnalysisResult sameHorseResult;
+        SurvivalAnalysisResult diffHorseResult;
+
+        public SurvivalAnalysisResult getJockeyResult() {
+            return jockeyResult;
+        }
+
+        public void setJockeyResult(SurvivalAnalysisResult jockeyResult) {
+            this.jockeyResult = jockeyResult;
+        }
+
+        public SurvivalAnalysisResult getDrawResult() {
+            return drawResult;
+        }
+
+        public void setDrawResult(SurvivalAnalysisResult drawResult) {
+            this.drawResult = drawResult;
+        }
+
+        public SurvivalAnalysisResult getSameHorseResult() {
+            return sameHorseResult;
+        }
+
+        public void setSameHorseResult(SurvivalAnalysisResult sameHorseResult) {
+            this.sameHorseResult = sameHorseResult;
+        }
+
+        public SurvivalAnalysisResult getDiffHorseResult() {
+            return diffHorseResult;
+        }
+
+        public void setDiffHorseResult(SurvivalAnalysisResult diffHorseResult) {
+            this.diffHorseResult = diffHorseResult;
+        }
+    }
 
     public static class SurvivalAnalysisResult{
         BigDecimal confidence_interval_from;

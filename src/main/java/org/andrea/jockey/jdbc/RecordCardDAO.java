@@ -4,6 +4,7 @@ package org.andrea.jockey.jdbc;
 
 import com.sun.org.apache.xpath.internal.operations.Div;
 import org.andrea.jockey.model.*;
+import org.andrea.jockey.statistics.StatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -176,6 +178,22 @@ public class RecordCardDAO {
     private static final String SQL_INSERT_DIVIDEND="insert into dividend (raceDate, RaceSeqOfDay," +
             "pool,winning, dividend) values" +
             "(?,?,?,?,?);";
+
+    private static final String SQL_INSERT_SURVIVAL_ANALYSIS ="insert into survival_analysis(" +
+            "raceMeeting,racedate,seq,place,distance,course," +
+            "horseNoA,horseNoB,horseIdA,horseIdB,drawA,drawB,jockeyA,jockeyB," +
+            "jockeyACnt,jockeyBCnt,jockeyRelRiskA2B," +
+            "drawACnt,drawBCnt,drawRelRiskA2B," +
+            "sameHorseACnt,sameHorseBCnt,sameHorseRelRiskA2B," +
+            "diffHorseACnt,diffHorseBCnt,diffHorseRelRiskA2B," +
+            "finishTimeA,finishTimeB,result) values" +
+            "(?,?,?,?,?," +
+            "?,?,?,?,?,?,?,?," +
+            "?,?,?," +
+            "?,?,?," +
+            "?,?,?," +
+            "?,?,?," +
+            "?)";
     public void batchInsertDividend(final List<Dividend> dividendList){
         this.jdbc.batchUpdate(SQL_INSERT_DIVIDEND,
                 new BatchPreparedStatementSetter() {
@@ -386,6 +404,106 @@ public class RecordCardDAO {
                 });
     }
 
+    public void batchInsertSurvialAnalysis(List<StatUtils.SurvivalAnalysisResultWrapper> survivalResultList){
+
+        this.jdbc.batchUpdate(SQL_INSERT_SURVIVAL_ANALYSIS,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        StatUtils.SurvivalAnalysisResultWrapper survivalResult = survivalResultList.get(i);
+                        int index=1;
+                        StatUtils.SurvivalAnalysisResultWrapper wrapper = survivalResultList.get(i);
+
+                        RaceInfo raceInfo = wrapper.getRaceInfo();
+                        System.out.println(i +":"+ raceInfo.toString());
+
+                        ps.setString(index++,raceInfo.getRacePlace());
+                        ps.setString(index++,raceInfo.getRaceDate());
+                        ps.setInt(index++,raceInfo.getRaceSeqOfDay());
+                        ps.setString(index++,raceInfo.getRacePlace());
+                        ps.setInt(index++,raceInfo.getDistance());
+                        ps.setString(index++,raceInfo.getCourse());
+
+                        ps.setString(index++,wrapper.getHorseNoA());
+                        ps.setString(index++,wrapper.getHorseNoB());
+
+                        ps.setString(index++,wrapper.getHorseIdA());
+                        ps.setString(index++,wrapper.getHorseIdB());
+
+                        ps.setInt(index++,wrapper.getDrawA());
+                        ps.setInt(index++,wrapper.getDrawB());
+                        ps.setString(index++,wrapper.getJockeyA());
+                        ps.setString(index++,wrapper.getJockeyB());
+
+                        System.out.println(i +":"+ wrapper.getHorseNoA()+" vs " +  wrapper.getHorseNoB());
+                        System.out.println(i +":"+ wrapper.getHorseIdA()+" vs " +  wrapper.getHorseIdB());
+                        System.out.println(i +":"+ wrapper.getDrawA()+" vs " +  wrapper.getDrawB());
+                        System.out.println(i +":"+ wrapper.getJockeyA()+" vs " +  wrapper.getJockeyB());
+
+
+                        StatUtils.SurvivalAnalysisResult jockeyResult = wrapper.getJockeyResult();
+
+                        if(jockeyResult!=null) {
+                            System.out.println(i +": jockeyResult : "+ jockeyResult.toString());
+                            ps.setInt(index++, jockeyResult.getCountA());
+                            ps.setInt(index++, jockeyResult.getCountB());
+                            ps.setBigDecimal(index++, jockeyResult.getRelativeRisk_A2B());
+                        } else {
+                            ps.setInt(index++, 0);
+                            ps.setInt(index++, 0);
+                            ps.setBigDecimal(index++, BigDecimal.ZERO);
+                        }
+
+                        StatUtils.SurvivalAnalysisResult drawResult = wrapper.getDrawResult();
+                        if(drawResult!=null) {
+                            System.out.println(i + ": drawResult : " + drawResult.toString());
+                            ps.setInt(index++, drawResult.getCountA());
+                            ps.setInt(index++, drawResult.getCountB());
+                            ps.setBigDecimal(index++, drawResult.getRelativeRisk_A2B());
+                        }else{
+                            ps.setInt(index++, 0);
+                            ps.setInt(index++, 0);
+                            ps.setBigDecimal(index++,  BigDecimal.ZERO);
+                        }
+
+
+                        StatUtils.SurvivalAnalysisResult sameHorseResult = wrapper.getSameHorseResult();
+                        if(sameHorseResult!=null) {
+                            System.out.println(i + ": sameHorseResult : " + sameHorseResult.toString());
+                            ps.setInt(index++, sameHorseResult.getCountA());
+                            ps.setInt(index++, sameHorseResult.getCountB());
+                            ps.setBigDecimal(index++, sameHorseResult.getRelativeRisk_A2B());
+                        } else {
+                            ps.setInt(index++, 0);
+                            ps.setInt(index++, 0);
+                            ps.setBigDecimal(index++,  BigDecimal.ZERO);
+                        }
+
+                        StatUtils.SurvivalAnalysisResult diffHorseResult = wrapper.getDiffHorseResult();
+                        if(diffHorseResult!=null) {
+                            System.out.println(i + ": diffHorseResult : " + diffHorseResult.toString());
+                            ps.setInt(index++, diffHorseResult.getCountA());
+                            ps.setInt(index++, diffHorseResult.getCountB());
+                            ps.setBigDecimal(index++, diffHorseResult.getRelativeRisk_A2B());
+                        }else {
+                            ps.setInt(index++, 0);
+                            ps.setInt(index++, 0);
+                            ps.setBigDecimal(index++,  BigDecimal.ZERO);
+                        }
+
+                        ps.setDouble(index++,wrapper.getFinishTimeA());
+                        ps.setDouble(index++,wrapper.getFinishTimeB());
+                        ps.setInt(index++,wrapper.getResult());
+
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return survivalResultList.size();
+                    }
+                });
+    }
+
     public List<org.andrea.jockey.model.RaceCardAnalysis> query(String SQL){
 
         return jdbc.query(SQL, new RaceCardAnalysisRowMapper());
@@ -402,6 +520,12 @@ public class RecordCardDAO {
 
         return jdbc.query(SQL, new NewRaceRowMapper());
     }
+
+    public List<RaceCardResult> queryForSurvivalAnalysis(String SQL){
+
+        return jdbc.query(SQL, new StatisticsRowMapper.SurvivalAnalysisRowMapper());
+    }
+
     public List<HorseStatistics> queryHorseStatistics(String SQL){
 
         return jdbc.query(SQL, new StatisticsRowMapper.HorseRowMapper());

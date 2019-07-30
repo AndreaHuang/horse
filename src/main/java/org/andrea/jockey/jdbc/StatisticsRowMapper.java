@@ -4,6 +4,7 @@ import org.andrea.jockey.model.*;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 public class StatisticsRowMapper {
@@ -111,6 +112,35 @@ public class StatisticsRowMapper {
 
             r.setJockey(resultSet.getString("jockey"));
 
+
+            return r;
+        }
+    }
+
+    static class SurvivalAnalysisRowMapper implements RowMapper<RaceCardResult> {
+        @Override
+        public RaceCardResult mapRow(ResultSet resultSet, int i) throws SQLException {
+            RaceCardResult r = new RaceCardResult();
+
+            r.setRaceDate(resultSet.getString("raceDate"));
+            r.setRacePlace(resultSet.getString("raceMeeting"));
+
+            r.setRaceSeqOfDay(resultSet.getInt("raceSeqOfDay"));
+            r.setRaceClass(resultSet.getInt("raceClass"));
+            r.setDistance(resultSet.getInt("distance"));
+            r.setGoing(resultSet.getString("going"));
+            r.setCourse(resultSet.getString("course"));
+            r.setDraw(resultSet.getInt("draw"));
+            r.setHorseId(resultSet.getString("horseId"));
+            r.setHorseName(resultSet.getString("horseName"));
+            r.setHorseNo(resultSet.getString("horseNo"));
+            r.setJockey(resultSet.getString("jockey"));
+
+            try {
+                r.setPlace(resultSet.getInt("place"));
+            } catch(SQLException e){
+                r.setPlace(0);
+            }
 
             return r;
         }

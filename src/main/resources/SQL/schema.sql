@@ -159,3 +159,35 @@ create table racecarddraw(
 );
 alter table racecarddraw add column course varchar(30);
 alter table racecard add column drawFx float;
+
+ create table survival_analysis(
+ racedate char(8) not null,
+ seq TINYINT not null,
+ place enum("ST","HV"),
+ distance smallint not null,
+ course varchar(30),
+ horseNoA TINYINT not null,
+ horseNoB TINYINT not null,
+ horseIdA varchar(4),
+ horseIdB varchar(4),
+ drawA TINYINT not null,
+ drawB TINYINT not null,
+ jockeyA VARCHAR(20),
+ jockeyB VARCHAR(20),
+ jockeyACnt smallint,
+ jockeyBCnt smallint,
+ jockeyRelRiskA2B float,
+ drawACnt smallint,
+ drawBCnt smallint,
+ drawRelRiskA2B float,
+ sameHorseACnt smallint,
+ sameHorseBCnt smallint,
+ sameHorseRelRiskA2B float,
+ diffHorseACnt smallint,
+ diffHorseBCnt smallint,
+ diffHorseRelRiskA2B float ,
+ result smallint not null);
+
+ alter table survival_analysis add raceMeeting enum("ST","HV");
+  alter table survival_analysis add finishTimeA  float;
+ alter table survival_analysis add finishTimeB  float;

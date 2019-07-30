@@ -222,8 +222,13 @@ public class Statistic_SurvivalAnalysis {
         return result;
     }
 
-    public void testLogRankTest(List<RaceCardItem> allRaceCard){
-        RaceCardItem raceInfo = allRaceCard.get(0);
+    public void testLogRankTest(List<RaceCardResult> allRaceCard){
+        if(allRaceCard.isEmpty()){
+            return;
+        }
+        //All horse of a race
+        List<StatUtils.SurvivalAnalysisResultWrapper> result = new ArrayList<>();
+        RaceCardResult raceInfo = allRaceCard.get(0);
         String course = raceInfo.getCourse();
         int distance = raceInfo.getDistance();
         String raceMeeting = raceInfo.getRacePlace();
@@ -283,14 +288,14 @@ public class Statistic_SurvivalAnalysis {
         int j,k=0;
         for(j=0;j<allRaceCard.size() -1; j++){
 
-            RaceCardItem itemA = allRaceCard.get(j);
+            RaceCardResult itemA = allRaceCard.get(j);
             String horseIdA = itemA.getHorseId();
             int drawA = itemA.getDraw();
             String jockeyA = itemA.getJockey();
             String horseNoA = itemA.getHorseNo();
 
             for(k=j+1; k<allRaceCard.size();k ++){
-                RaceCardItem itemB = allRaceCard.get(k);
+                RaceCardResult itemB = allRaceCard.get(k);
                 String horseIdB = itemB.getHorseId();
                 int drawB = itemB.getDraw();
                 String jockeyB = itemB.getJockey();
@@ -298,6 +303,33 @@ public class Statistic_SurvivalAnalysis {
                 System.out.print(horseNoA + ","+horseNoB);
 
 
+                StatUtils.SurvivalAnalysisResultWrapper aResult = new StatUtils.SurvivalAnalysisResultWrapper();
+                aResult.setRaceInfo(raceInfo);
+                aResult.setHorseIdA(horseIdA);
+                aResult.setHorseIdB(horseIdB);
+                aResult.setHorseNoA(itemA.getHorseNo());
+                aResult.setHorseNoB(itemB.getHorseNo());
+
+                aResult.setDrawA(drawA);
+                aResult.setDrawB(drawB);
+                aResult.setJockeyA(jockeyA);
+                aResult.setJockeyB(jockeyB);
+
+                if(itemA.getPlace() == 0 || itemB.getPlace()==0){
+                    aResult.setResult(0);
+                } else {
+                    if (itemA.getPlace() < itemB.getPlace()) {
+                        aResult.setResult(1); //A is better than B
+                    } else {
+                        aResult.setResult(2); //B is better than A
+                    }
+                }
+
+                aResult.setFinishTimeA(itemA.getFinishTime());
+                aResult.setFinishTimeB(itemB.getFinishTime());
+
+
+                ///////////////////////////////Jockey Result //////////////////////////////
                 StatUtils.SurvivalAnalysisResult jockeyResult= jockeyResultAll.get(jockeyB) ==null ? null:
                         jockeyResultAll.get(jockeyB).get(jockeyA);
                 if(jockeyResult==null){
@@ -311,6 +343,9 @@ public class Statistic_SurvivalAnalysis {
                         jockeyResult.setCountB(countA);
                     }
                 }
+
+                aResult.setJockeyResult(jockeyResult);
+                ///////////////////////////////Draw Result //////////////////////////////
                 StatUtils.SurvivalAnalysisResult drawResult= drawResultAll.get(drawB) ==null ? null:
                         drawResultAll.get(drawB).get(drawA);
 
@@ -325,7 +360,9 @@ public class Statistic_SurvivalAnalysis {
                         drawResult.setCountB(countA);
                     }
                 }
+                aResult.setDrawResult(drawResult);
 
+                ///////////////////////////////Horse Result _ same distance //////////////////////////////
                 StatUtils.SurvivalAnalysisResult horseResult_Same = horseResultAll.get(survivalAnalysis_raceInfo) ==null? null:
                         (horseResultAll.get(survivalAnalysis_raceInfo).get(horseIdB) ==null ? null:
                                 horseResultAll.get(survivalAnalysis_raceInfo).get(horseIdB).get(horseIdA));
@@ -344,7 +381,8 @@ public class Statistic_SurvivalAnalysis {
                         horseResult_Same.setCountB(countA);
                     }
                 }
-
+                aResult.setSameHorseResult(horseResult_Same);
+                ///////////////////////////////Horse Result _ diff distance //////////////////////////////
                 List<StatUtils.SurvivalAnalysisResult> horseResult_difference_list = new ArrayList<>();
                 for(Map.Entry<SurvivalAnalysis.SurvivalAnalysis_Core,Map<String,Map<String, StatUtils.SurvivalAnalysisResult>>>
                         entry : horseResultAll.entrySet()){
@@ -375,6 +413,21 @@ public class Statistic_SurvivalAnalysis {
 
                 }
 
+                if(horseResult_difference_list!=null && !horseResult_difference_list.isEmpty()){
+                    if(horseResult_difference_list.size() ==1){
+                        aResult.setDiffHorseResult(horseResult_difference_list.get(0));
+                    } else {
+                        Collections.sort(horseResult_difference_list, new
+                                Comparator<StatUtils.SurvivalAnalysisResult>() {
+                                    @Override
+                                    public int compare(StatUtils.SurvivalAnalysisResult o1, StatUtils.SurvivalAnalysisResult o2) {
+                                      return  (o2.getCountA() + o2.getCountB()) -  (o1.getCountA() + o1.getCountB());
+                                    }
+                                });
+                        aResult.setDiffHorseResult(horseResult_difference_list.get(0));
+                    }
+                }
+                result.add(aResult);
                 if(jockeyResult!=null){
                     System.out.print("," + jockeyResult.getCountA() +":"+jockeyResult.getCountB() +":"+jockeyResult.getRelativeRisk_A2B() );
                 } else {
@@ -399,83 +452,36 @@ public class Statistic_SurvivalAnalysis {
                 System.out.println();
 
             }
+
         }
+
+        dao.batchInsertSurvialAnalysis(result);
 
     }
 
-    public void testLogRankTest(){
-        List<RaceCardItem> allRaceCard  = new ArrayList<>();
-        RaceCardItem a = new RaceCardItem();
-//        a.setRaceDate("20190608");
-//        a.setDistance(1400);
-//        a.setRacePlace("ST");
-//        a.setCourse("TURF - \"C\" COURSE");
-//        a.setJockey("K Teetan");
-//        a.setHorseId("B149");
-//        a.setDraw(1);
-//        a.setHorseNo("11");
-//        allRaceCard.add(a);
+    public void buildAnalysis_HistoryRecord(String daysFrom, String daysOnAfter){
+        List<String> allDates = dao.getRaceDates(daysFrom, daysOnAfter);
+        for(String aDate: allDates){
+            System.out.println("build Statics for race day:"+aDate);
+            int raceNumber = dao.getRaceSeqOfDay(aDate);
+            for(int i=1; i<=raceNumber;i++){
+                this.buildAnalysis_HistoryRecordOfARace(aDate,i);
+            }
 
-//        a = new RaceCardItem();
-//        a.setRaceDate("20190608");
-//        a.setDistance(1400);
-//        a.setRacePlace("ST");
-//        a.setCourse("TURF - \"C\" COURSE");
-//        a.setJockey("C Schofield");
-//        a.setHorseId("A041");
-//        a.setDraw(6);
-//        a.setHorseNo("10");
-//        allRaceCard.add(a);
+        }
 
 
-//        a = new RaceCardItem();
-//        a.setRaceDate("20190608");
-//        a.setDistance(1400);
-//        a.setRacePlace("ST");
-//        a.setCourse("TURF - \"C\" COURSE");
-//        a.setJockey("M L Yeung");
-//        a.setHorseId("B227");
-//        a.setDraw(8);
-//        a.setHorseNo("8");
-//        allRaceCard.add(a);
+    }
+
+    public void buildAnalysis_HistoryRecordOfARace(String raceDate, int raceSeqOfADay){
+
+       dao.runSQL("delete from survival_analysis where raceDate='"+ raceDate+ "' and seq="+raceSeqOfADay);
+       List<RaceCardResult> allRaceCardResult =dao.queryForSurvivalAnalysis(
+               "select * from racecard where raceDate='"+raceDate+"'" +
+               "and raceSeqOfDay="+raceSeqOfADay);
 
 
-        a = new RaceCardItem();
-        a.setRaceDate("20190608");
-        a.setDistance(1400);
-        a.setRacePlace("ST");
-        a.setCourse("TURF - \"C\" COURSE");
-        a.setJockey("A Domeyer");
-        a.setHorseId("A363");
-        a.setDraw(5);
-        a.setHorseNo("7");
-        allRaceCard.add(a);
-
-
-//        a = new RaceCardItem();
-//        a.setRaceDate("20190608");
-//        a.setDistance(1400);
-//        a.setRacePlace("ST");
-//        a.setCourse("TURF - \"C\" COURSE");
-//        a.setJockey("M F Poon");
-//        a.setHorseId("B317");
-//        a.setDraw(4);
-//        a.setHorseNo("5");
-//        allRaceCard.add(a);
-
-
-        a = new RaceCardItem();
-        a.setRaceDate("20190608");
-        a.setDistance(1400);
-        a.setRacePlace("ST");
-        a.setCourse("TURF - \"C\" COURSE");
-        a.setJockey("A Sanna");
-        a.setHorseId("C203");
-        a.setDraw(7);
-        a.setHorseNo("6");
-        allRaceCard.add(a);
-
-        this.testLogRankTest(allRaceCard);
+        this.testLogRankTest(allRaceCardResult);
 
     }
 }
