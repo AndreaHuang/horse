@@ -135,6 +135,7 @@ public class StatisticsRowMapper {
             r.setHorseName(resultSet.getString("horseName"));
             r.setHorseNo(resultSet.getString("horseNo"));
             r.setJockey(resultSet.getString("jockey"));
+            r.setFinishTime(resultSet.getFloat("finishTime"));
 
             try {
                 r.setPlace(resultSet.getInt("place"));

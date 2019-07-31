@@ -187,13 +187,13 @@ public class RecordCardDAO {
             "sameHorseACnt,sameHorseBCnt,sameHorseRelRiskA2B," +
             "diffHorseACnt,diffHorseBCnt,diffHorseRelRiskA2B," +
             "finishTimeA,finishTimeB,result) values" +
-            "(?,?,?,?,?," +
+            "(?,?,?,?,?,?," +
             "?,?,?,?,?,?,?,?," +
             "?,?,?," +
             "?,?,?," +
             "?,?,?," +
             "?,?,?," +
-            "?)";
+            "?,?,?)";
     public void batchInsertDividend(final List<Dividend> dividendList){
         this.jdbc.batchUpdate(SQL_INSERT_DIVIDEND,
                 new BatchPreparedStatementSetter() {
