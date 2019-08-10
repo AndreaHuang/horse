@@ -180,7 +180,7 @@ public class RecordCardDAO {
             "(?,?,?,?,?);";
 
     private static final String SQL_INSERT_SURVIVAL_ANALYSIS ="insert into survival_analysis(" +
-            "raceMeeting,racedate,seq,place,distance,course," +
+            "raceMeeting,racedate,seq,raceClass,distance,course," +
             "horseNoA,horseNoB,horseIdA,horseIdB,drawA,drawB,jockeyA,jockeyB," +
             "jockeyACnt,jockeyBCnt,jockeyRelRiskA2B," +
             "drawACnt,drawBCnt,drawRelRiskA2B," +
@@ -420,7 +420,7 @@ public class RecordCardDAO {
                         ps.setString(index++,raceInfo.getRacePlace());
                         ps.setString(index++,raceInfo.getRaceDate());
                         ps.setInt(index++,raceInfo.getRaceSeqOfDay());
-                        ps.setString(index++,raceInfo.getRacePlace());
+                        ps.setInt(index++,raceInfo.getRaceClass());
                         ps.setInt(index++,raceInfo.getDistance());
                         ps.setString(index++,raceInfo.getCourse());
 
@@ -524,6 +524,10 @@ public class RecordCardDAO {
     public List<RaceCardResult> queryForSurvivalAnalysis(String SQL){
 
         return jdbc.query(SQL, new StatisticsRowMapper.SurvivalAnalysisRowMapper());
+    }
+    public List<SurvivalAnalysis.SurvivalAnalysis_Result> querySurvivalAnalysis_HistoryRecords(String SQL){
+
+        return jdbc.query(SQL, new StatisticsRowMapper.SurvivalAnalysisResultRowMapper());
     }
 
     public List<HorseStatistics> queryHorseStatistics(String SQL){

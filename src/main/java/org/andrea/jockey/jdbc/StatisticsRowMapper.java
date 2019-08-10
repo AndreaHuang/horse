@@ -146,4 +146,35 @@ public class StatisticsRowMapper {
             return r;
         }
     }
+    static class SurvivalAnalysisResultRowMapper implements RowMapper<SurvivalAnalysis.SurvivalAnalysis_Result> {
+        @Override
+        public SurvivalAnalysis.SurvivalAnalysis_Result mapRow(ResultSet resultSet, int i) throws SQLException {
+            SurvivalAnalysis.SurvivalAnalysis_Result r = new SurvivalAnalysis.SurvivalAnalysis_Result();
+
+
+            r.setRaceDate(resultSet.getString("raceDate"));
+            r.setRaceMeeting(resultSet.getString("raceMeeting"));
+
+            r.setRaceSeqOfDay(resultSet.getInt("seq"));
+            r.setRaceClass(resultSet.getInt("raceClass"));
+            r.setDistance(resultSet.getInt("distance"));
+
+            r.setCourse(resultSet.getString("course"));
+            r.setDrawA(resultSet.getInt("drawA"));
+            r.setDrawB(resultSet.getInt("drawB"));
+            r.setHorseIdA(resultSet.getString("horseIdA"));
+            r.setHorseIdB(resultSet.getString("horseIdB"));
+            r.setHorseNoA(resultSet.getInt("horseNoA"));
+            r.setHorseNoB(resultSet.getInt("horseNoB"));
+            r.setJockeyA(resultSet.getString("jockeyA"));
+            r.setJockeyB(resultSet.getString("jockeyB"));
+            r.setFinishTimeA(resultSet.getBigDecimal("finishTimeA"));
+            r.setFinishTimeB(resultSet.getBigDecimal("finishTimeB"));
+            r.setResult(resultSet.getInt("result"));
+            r.setPreditected_result(resultSet.getInt("predicted_result"));
+            r.setPreditected_finishTime(resultSet.getBigDecimal("predicted_finishTime"));
+
+            return r;
+        }
+    }
 }

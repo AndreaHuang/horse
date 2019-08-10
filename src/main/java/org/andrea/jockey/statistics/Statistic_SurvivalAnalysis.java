@@ -222,7 +222,7 @@ public class Statistic_SurvivalAnalysis {
         return result;
     }
 
-    public void testLogRankTest(List<RaceCardResult> allRaceCard){
+    public void testLogRankTestOfARace(List<RaceCardResult> allRaceCard){
         if(allRaceCard.isEmpty()){
             return;
         }
@@ -481,7 +481,7 @@ public class Statistic_SurvivalAnalysis {
                "and raceSeqOfDay="+raceSeqOfADay);
 
 
-        this.testLogRankTest(allRaceCardResult);
+        this.testLogRankTestOfARace(allRaceCardResult);
 
     }
 }

@@ -191,3 +191,8 @@ alter table racecard add column drawFx float;
  alter table survival_analysis add raceMeeting enum("ST","HV");
   alter table survival_analysis add finishTimeA  float;
  alter table survival_analysis add finishTimeB  float;
+
+ alter table survival_analysis add predicted_result smallint;
+ alter table survival_analysis add predicted_finishTime float;
+ alter table survival_analysis add predicted_date  char(14);
+ alter table survival_analysis add raceClass TINYINT not null;
