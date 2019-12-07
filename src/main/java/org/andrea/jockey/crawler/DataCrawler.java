@@ -107,7 +107,12 @@ public class DataCrawler {
         }
         Collections.sort(raceDate);
         if(raceDate.size()>0){
-            return new String[]{raceDate.get(0),raceDate.get(raceDate.size()-1)};
+            //Get dividends
+            String startDate = raceDate.get(0);
+            String endDate = raceDate.get(raceDate.size()-1);
+            this.getDividends(Integer.parseInt(startDate),Integer.parseInt(endDate));
+
+            return new String[]{startDate,endDate};
         } else {
             return new String[]{};
         }

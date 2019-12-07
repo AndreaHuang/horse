@@ -2,7 +2,7 @@ package org.andrea.jockey.app;
 
 
 
-import org.andrea.jockey.predict.FirstFour;
+import org.andrea.jockey.crawler.DataCrawler;
 import org.andrea.jockey.predict.Metric;
 import org.andrea.jockey.predict.Predictor_SurvivalAnalysis;
 import org.andrea.jockey.statistics.Statistic_SurvivalAnalysis;
@@ -32,9 +32,9 @@ public class JockeyApp {
 //           statistic_SurvivalAnalysis(context);
 
             /*Step 1: get History record and new Race*/
-//       DataCrawler crawler = context.getBean(DataCrawler.class);
-//      crawler.getDividends(20190213,20190411);
-//             String [] raceDate = crawler.getRecord();
+            DataCrawler crawler = context.getBean(DataCrawler.class);
+//            crawler.getDividends(20190213,20190411);
+            String [] raceDate = crawler.getRecord(); // Will get Dividends too
 //              crawler.getNewRaceCard();
 
 
@@ -65,9 +65,6 @@ public class JockeyApp {
            // statistic_SurvivalAnalysis(fromDate,toDate);
 //            calculatePredictedPlace(fromDate,toDate);
 //            calculateGains(fromDate,toDate);
-
-
-            calculateFirs4(fromDate,toDate);
 
 
 
@@ -101,9 +98,6 @@ public class JockeyApp {
             Metric metric = context.getBean(Metric.class);
             metric.checkForcastMetric(fromDate,toDate ,"Metric-"+fromDate+"_"+toDate+"_"+SDF.format(new Date()));
     }
-    private static void calculateFirs4(String fromDate,String toDate){
-        FirstFour first4 = context.getBean(FirstFour.class);
-        first4.calGains(fromDate,toDate ,"FirstFour-"+fromDate+"_"+toDate+"_"+SDF.format(new Date()));
-    }
+
 
 }
