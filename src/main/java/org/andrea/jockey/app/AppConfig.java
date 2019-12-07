@@ -1,6 +1,5 @@
 package org.andrea.jockey.app;
 
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,18 +24,6 @@ public class AppConfig {
         return driverManagerDataSource;
 
     }
-
-    @Bean
-    JockeyWebsiteConfig getJockeyWebsiteConfig(){
-        return  new JockeyWebsiteConfig();
-    }
-
-    @Bean
-    SeleniumConfig getSeleniumConfig(){ return new SeleniumConfig(); }
-
-
-
-
 
 
 }

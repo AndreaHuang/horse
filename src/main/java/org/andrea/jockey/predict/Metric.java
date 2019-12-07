@@ -4,7 +4,6 @@ import org.andrea.jockey.jdbc.RecordCardDAO;
 import org.andrea.jockey.model.Dividend;
 import org.andrea.jockey.model.RaceCardItem;
 import org.andrea.jockey.model.RaceCardResult;
-import org.apache.commons.exec.ExecuteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

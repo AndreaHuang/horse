@@ -21,10 +21,60 @@ public class FirstFour {
 
     private static final int MAX_WINODDS=50;
     private static int[] odds_123459A = new int[]{0,1,2,3,4,8,9};
-    private static int[] odds_1234589 = new int[]{0,1,2,3,4,7,8};
+    private static int[] odds_1234589 = new int[]{0,1,2,3,4,7,8}; //473900 vs	643422
+    private static int[] odds_123489A = new int[]{0,1,2,3,7,8,9};
+
+    private static int[] ONEPART=odds_1234589;
 
 
-    private static final String METHOD="odds_1234589";
+    private static int[] odds_1234589_part1 = new int[]{0,1,2,3,4};
+    private static int[] odds_1234589_part2 = new int[]{7,8};
+    private static int[] odds_123489A_part1 = new int[]{0,1,2,3,4};
+    private static int[] odds_123489A_part2 = new int[]{6,7,8};
+
+    private static int[] odds_123489A_part1odds_234589A_part1 = new int[]{1,2,3,4};
+    private static int[] odds_234589A_part2 = new int[]{7,8,9}; // 233940	vs 165409
+
+
+    private static final String METHOD="odds_123489A_twoPart";
+    private static int[] PART_1 = odds_123489A_part1;
+    private static int[] PART_2 = odds_123489A_part2;
+    private static int NUM1=3;
+    private static int NUM2=1;
+
+    private List<String> decideBets(List<RaceCardResult> resultList){
+       return  decideBets_twoParts(resultList);
+    }
+
+    private List<String> decideBets_onePart(List<RaceCardResult> resultList){
+        /* decide the Bet*/
+        List<String> selected_horseNums = new ArrayList<>();
+        List<RaceCardResult> horses = selectHorse(resultList,ONEPART);
+        for(RaceCardResult aRaceCard: horses){
+            selected_horseNums.add(aRaceCard.getHorseNo());
+        }
+
+        List<String> bets = iterateTheBets(selected_horseNums);
+        return bets;
+    }
+
+    private List<String> decideBets_twoParts(List<RaceCardResult> resultList){
+        /* decide the Bet*/
+        List<String> selected_horseNums_part1 = new ArrayList<>();
+        List<String> selected_horseNums_part2 = new ArrayList<>();
+        List<RaceCardResult> horses_part1 = selectHorse(resultList,PART_1);
+        for(RaceCardResult aRaceCard: horses_part1){
+            selected_horseNums_part1.add(aRaceCard.getHorseNo());
+        }
+
+        List<RaceCardResult> horhorses_part2 = selectHorse(resultList,PART_2);
+        for(RaceCardResult aRaceCard: horhorses_part2){
+            selected_horseNums_part2.add(aRaceCard.getHorseNo());
+        }
+        List<String> bets = iterateTheBets(selected_horseNums_part1,NUM1, selected_horseNums_part2,NUM2);
+        return bets;
+    }
+
 
     private List<String> iterateTheBets(List<String> dataList){
         Collections.sort(dataList, new Comparator<String>() {
@@ -43,106 +93,77 @@ public class FirstFour {
         return allResult;
     }
 
+    private List<String> iterateTheBets(List<String> dataList1,int numFromList1, List<String> dataList2,int numFromList2){
 
-    private List<RaceCardResult> selectHorse(List<RaceCardResult> raceCardResults){
+        String[] resultList1 = new String[numFromList1];
+        List<String> allResult1= new ArrayList<>();
+        System.out.println(String.format("C(%d, %d) = %d", dataList1.size(), numFromList1, combination(dataList1.size(), numFromList1)));
+        combinationSelect(dataList1.toArray(new String[dataList1.size()]), 0, resultList1, 0,allResult1);
+
+
+        String[] resultList2 = new String[numFromList2];
+        List<String> allResult2= new ArrayList<>();
+        System.out.println(String.format("C(%d, %d) = %d", dataList2.size(), numFromList2, combination(dataList2.size(), numFromList2)));
+        combinationSelect(dataList2.toArray(new String[dataList2.size()]), 0, resultList2, 0,allResult2);
+
+        int i=1;
+//        for(String fromList1: allResult1){
+//            System.out.println("From Result 1 : "+ i++ +": "+fromList1);
+//        }
+//        for(String fromList2: allResult2){
+//            System.out.println("From Result 2 : "+ i++ +": "+fromList2);
+//        }
+
+        List<String> allResult= new ArrayList<>();
+
+        for(String fromList1: allResult1){
+//            System.out.println("fromList1: "+ fromList1);
+            List<String> combinedResult_part1 = new ArrayList<>();
+            String[] arr_part1 =  fromList1.split(",");
+            for(String a: arr_part1){
+                combinedResult_part1.add(a);
+            }
+
+            for(String fromList2: allResult2){
+//                System.out.println("fromList2: "+ fromList2);
+                List<String> combinedResult_part2 = new ArrayList<>();
+                String[] arr_part2 =  fromList2.split(",");
+                for(String a: arr_part2){
+                    combinedResult_part2.add(a);
+                }
+
+                List<String> combinedResult = new ArrayList<>();
+                combinedResult.addAll(combinedResult_part1);
+                combinedResult.addAll(combinedResult_part2);
+
+                Collections.sort(combinedResult, new Comparator<String>() {
+                    @Override
+                    public int compare(String o1, String o2) {
+                        return Integer.parseInt(o1) -Integer.parseInt(o2) ;
+                    }
+                });
+
+                String thisResult = String.join(",", combinedResult);
+                System.out.println(thisResult);
+                allResult.add(thisResult);
+
+            }
+        }
+
+        return allResult;
+    }
+
+    private List<RaceCardResult> selectHorse(List<RaceCardResult> raceCardResults, int[] indList ){
         List<RaceCardResult> dataList = new ArrayList<>();
-        int[] indList = odds_1234589;
         for(int i=0;i<indList.length;i++){
             int idx=indList[i];
             if(raceCardResults.size()>idx ) {
-               // if (raceCardResults.get(idx).getWinOdds() < MAX_WINODDS) {
-                    dataList.add(raceCardResults.get(idx));
+                // if (raceCardResults.get(idx).getWinOdds() < MAX_WINODDS) {
+                dataList.add(raceCardResults.get(idx));
                 //}
             }
 
         }
-        return dataList;
-    }
-
-    private List<RaceCardResult> selectHorse_Lowest7(List<RaceCardResult> raceCardResults){
-
-
-        List<RaceCardResult> dataList = new ArrayList<>();
-        int i=0;
-
-        for(RaceCardResult aHorse: raceCardResults){
-            if(i++ < 7) {
-                dataList.add(aHorse);
-            }
-        }
-
-       return dataList;
-    }
-
-    private List<RaceCardResult> selectHorse_range2_8(List<RaceCardResult> raceCardResults){
-
-
-        List<RaceCardResult> dataList = new ArrayList<>();
-
-        for(int i=1;i<8 && i<raceCardResults.size();i++){
-            dataList.add(raceCardResults.get(i));
-        }
-
-        return dataList;
-    }
-
-    private List<RaceCardResult> selectHorse_Lowest_8(List<RaceCardResult> raceCardResults){
-
-
-        List<RaceCardResult> dataList = new ArrayList<>();
-
-        for(int i=0;i<8 && i<raceCardResults.size();i++){
-            dataList.add(raceCardResults.get(i));
-        }
-
-        return dataList;
-    }
-    private List<RaceCardResult> selectHorse_1234589(List<RaceCardResult> raceCardResults){
-
-
-        List<RaceCardResult> dataList = new ArrayList<>();
-
-        dataList.add(raceCardResults.get(0));
-        dataList.add(raceCardResults.get(1));
-        dataList.add(raceCardResults.get(2));
-        dataList.add(raceCardResults.get(3));
-        if(raceCardResults.size()>=5) {
-            dataList.add(raceCardResults.get(4));
-        }
-        if(raceCardResults.size()>=8) {
-            dataList.add(raceCardResults.get(7));
-        }
-        if(raceCardResults.size()>=9) {
-            dataList.add(raceCardResults.get(8));
-        }
-
-        return dataList;
-    }
-    private List<RaceCardResult> selectHorse_123459A(List<RaceCardResult> raceCardResults){
-
-        List<RaceCardResult> dataList = new ArrayList<>();
-        int[] indList = new int[]{0,1,2,3,4,8,9};
-        for(int i=0;i<indList.length;i++){
-            int idx=indList[i];
-            if(raceCardResults.size()>idx ) {
-                if (raceCardResults.get(idx).getWinOdds() < MAX_WINODDS) {
-                    dataList.add(raceCardResults.get(idx));
-                }
-            }
-
-        }
-
-        return dataList;
-    }
-    private List<RaceCardResult> selectHorse_Lowest_6(List<RaceCardResult> raceCardResults){
-
-
-        List<RaceCardResult> dataList = new ArrayList<>();
-
-        for(int i=0;i<6 && i<raceCardResults.size();i++){
-            dataList.add(raceCardResults.get(i));
-        }
-
         return dataList;
     }
 
@@ -280,13 +301,7 @@ public class FirstFour {
 
 
         /* decide the Bet*/
-        List<String> selected_horseNums = new ArrayList<>();
-        List<RaceCardResult> horses = selectHorse(resultList);
-        for(RaceCardResult aRaceCard: horses){
-            selected_horseNums.add(aRaceCard.getHorseNo());
-        }
-
-        List<String> bets = iterateTheBets(selected_horseNums);
+        List<String> bets = decideBets(resultList);
 
         /* Get the dividend*/
         List<Dividend> dividends=dao.queryDividend("Select * from dividend where raceDate = "+ raceDate
