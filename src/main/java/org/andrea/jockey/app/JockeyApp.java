@@ -61,11 +61,10 @@ public class JockeyApp {
 
 
             String fromDate = "20170901";
-            String toDate = "20190930";
+            String toDate = "20191230";
            // statistic_SurvivalAnalysis(fromDate,toDate);
 //            calculatePredictedPlace(fromDate,toDate);
 //            calculateGains(fromDate,toDate);
-
 
             calculateFirs4(fromDate,toDate);
 
@@ -103,7 +102,12 @@ public class JockeyApp {
     }
     private static void calculateFirs4(String fromDate,String toDate){
         FirstFour first4 = context.getBean(FirstFour.class);
-        first4.calGains(fromDate,toDate ,"FirstFour-"+fromDate+"_"+toDate+"_"+SDF.format(new Date()));
+        int distance =1800;
+        int raceClass=4;
+        String course= null; //"TURF - \"C\" COURSE";
+        String fileName = String.join("-","FirstFour",String.valueOf(distance),
+        String.valueOf(raceClass),course,fromDate,toDate, SDF.format(new Date()));
+        first4.calGains(fromDate,toDate,fileName,distance,raceClass,course);
     }
 
 }

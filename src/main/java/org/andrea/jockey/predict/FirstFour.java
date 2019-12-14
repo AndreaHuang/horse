@@ -20,36 +20,90 @@ public class FirstFour {
     RecordCardDAO dao;
 
     private static final int MAX_WINODDS=50;
-    private static int[] odds_123459A = new int[]{0,1,2,3,4,8,9};
-    private static int[] odds_1234589 = new int[]{0,1,2,3,4,7,8}; //473900 vs	643422
-    private static int[] odds_123489A = new int[]{0,1,2,3,7,8,9};
 
-    private static int[] ONEPART=odds_1234589;
+    private static class Strategy{
+        int [] seq1;
+        int [] seq2;
+        String name;
+        boolean twoParts;
+        int cntFromSeq1;
+
+        public int getCntFromSeq1() {
+            return cntFromSeq1;
+        }
+
+        public int[] getSeq1() {
+            return seq1;
+        }
+
+        public int[] getSeq2() {
+            return seq2;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean isTwoParts() {
+            return twoParts;
+        }
 
 
-    private static int[] odds_1234589_part1 = new int[]{0,1,2,3,4};
-    private static int[] odds_1234589_part2 = new int[]{7,8};
-    private static int[] odds_123489A_part1 = new int[]{0,1,2,3,4};
-    private static int[] odds_123489A_part2 = new int[]{6,7,8};
 
-    private static int[] odds_123489A_part1odds_234589A_part1 = new int[]{1,2,3,4};
-    private static int[] odds_234589A_part2 = new int[]{7,8,9}; // 233940	vs 165409
-
-
-    private static final String METHOD="odds_123489A_twoPart";
-    private static int[] PART_1 = odds_123489A_part1;
-    private static int[] PART_2 = odds_123489A_part2;
-    private static int NUM1=3;
-    private static int NUM2=1;
-
-    private List<String> decideBets(List<RaceCardResult> resultList){
-       return  decideBets_twoParts(resultList);
+        public Strategy(String name,int[] seq){
+            this.name = name;
+            this.seq1=seq;
+            this.twoParts=false;
+        }
+        public Strategy(String name,int[] seq1,int[] seq2, int cntFromSeq1){
+            this.name = name;
+            this.seq1=seq1;
+            this.seq2=seq2;
+            this.twoParts=true;
+            this.cntFromSeq1=cntFromSeq1;
+        }
     }
 
-    private List<String> decideBets_onePart(List<RaceCardResult> resultList){
+    private static Strategy odds_123459A = new Strategy("123459A",new int[]{0,1,2,3,4,8,9});
+    private static Strategy odds_1234589 = new Strategy("1234589",new int[]{0,1,2,3,4,7,8});
+    private static Strategy odds_123489A = new Strategy("odds_123489A",new int[]{0,1,2,3,7,8,9});
+
+    private static Strategy odds_1234589_twoPart = new Strategy("odds_1234589_twoPart",
+            new int[]{0,1,2,3,4},new int[]{7,8},3);
+
+    private static Strategy odds_123489A_twoPart = new Strategy("odds_123489A_twoPart",
+            new int[]{0,1,2,3,4},new int[]{6,7,8},3);
+
+    private static Strategy odds_234589A_twoPart = new Strategy("odds_234589A_twoPart",
+            new int[]{1,2,3,4},new int[]{7,8,9},3);
+
+    private static Strategy odds_123456789A_twoPart = new Strategy("odds_123456789A_twoPart",
+            new int[]{1,2,3,4},new int[]{5,6,7,8,9},1);
+
+    private static List<Strategy> allStrategy = new ArrayList<>();
+    static {
+//        allStrategy.add(odds_123459A);
+//        allStrategy.add(odds_1234589);
+//        allStrategy.add(odds_123489A);
+//        allStrategy.add(odds_1234589_twoPart);
+        allStrategy.add(odds_123456789A_twoPart);
+
+
+    }
+
+    private List<String> decideBets(List<RaceCardResult> resultList,Strategy strategy){
+        if(strategy.isTwoParts()){
+           // return decideBets_twoParts(resultList,strategy);
+            return decideBets_twoParts_alwaysHasFirst(resultList,strategy);
+        } else {
+            return decideBets_onePart(resultList,strategy);
+        }
+    }
+
+    private List<String> decideBets_onePart(List<RaceCardResult> resultList, Strategy strategy){
         /* decide the Bet*/
         List<String> selected_horseNums = new ArrayList<>();
-        List<RaceCardResult> horses = selectHorse(resultList,ONEPART);
+        List<RaceCardResult> horses = selectHorse(resultList,strategy.getSeq1());
         for(RaceCardResult aRaceCard: horses){
             selected_horseNums.add(aRaceCard.getHorseNo());
         }
@@ -58,23 +112,76 @@ public class FirstFour {
         return bets;
     }
 
-    private List<String> decideBets_twoParts(List<RaceCardResult> resultList){
+    private List<String> decideBets_twoParts(List<RaceCardResult> resultList, Strategy strategy){
         /* decide the Bet*/
         List<String> selected_horseNums_part1 = new ArrayList<>();
         List<String> selected_horseNums_part2 = new ArrayList<>();
-        List<RaceCardResult> horses_part1 = selectHorse(resultList,PART_1);
+        List<RaceCardResult> horses_part1 = selectHorse(resultList,strategy.getSeq1());
         for(RaceCardResult aRaceCard: horses_part1){
             selected_horseNums_part1.add(aRaceCard.getHorseNo());
         }
 
-        List<RaceCardResult> horhorses_part2 = selectHorse(resultList,PART_2);
+        List<RaceCardResult> horhorses_part2 = selectHorse(resultList,strategy.getSeq2());
         for(RaceCardResult aRaceCard: horhorses_part2){
             selected_horseNums_part2.add(aRaceCard.getHorseNo());
         }
-        List<String> bets = iterateTheBets(selected_horseNums_part1,NUM1, selected_horseNums_part2,NUM2);
+
+        List<String> bets = iterateTheBets(selected_horseNums_part1,strategy.getCntFromSeq1(),
+                selected_horseNums_part2,4-strategy.getCntFromSeq1());
+
+
         return bets;
     }
 
+    private List<String> decideBets_twoParts_alwaysHasFirst(List<RaceCardResult> resultList, Strategy strategy){
+        /* decide the Bet*/
+        List<String> selected_horseNums_part1 = new ArrayList<>();
+        List<String> selected_horseNums_part2 = new ArrayList<>();
+        List<RaceCardResult> horses_part1 = selectHorse(resultList,strategy.getSeq1());
+        for(RaceCardResult aRaceCard: horses_part1){
+            selected_horseNums_part1.add(aRaceCard.getHorseNo());
+        }
+
+        List<RaceCardResult> horhorses_part2 = selectHorse(resultList,strategy.getSeq2());
+        for(RaceCardResult aRaceCard: horhorses_part2){
+            selected_horseNums_part2.add(aRaceCard.getHorseNo());
+        }
+        System.out.println("selected_horseNums_part1 "+ selected_horseNums_part1.toString());
+        System.out.println("selected_horseNums_part2 "+ selected_horseNums_part2.toString());
+
+        List<String> bets = iterateTheBets(selected_horseNums_part1,strategy.getCntFromSeq1(),
+                selected_horseNums_part2,3-strategy.getCntFromSeq1());
+        int i=0;
+        List<String> result = new ArrayList<>();
+
+        String first = resultList.get(0).getHorseNo();
+        for(String bet: bets){
+
+            List<String> allHorse = new ArrayList<>();
+            allHorse.addAll(Arrays.asList(bet.split(",")));
+            System.out.print(allHorse.size());
+            allHorse.add(first);
+
+            Collections.sort(allHorse, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    return Integer.parseInt(o1) -Integer.parseInt(o2) ;
+                }
+            });
+
+            String thisResult = String.join(",", allHorse);
+
+            result.add(thisResult);
+        }
+        for(String bet: result){
+            System.out.println("bet " + i++ + ": " +bet);
+        }
+
+
+
+
+        return result;
+    }
 
     private List<String> iterateTheBets(List<String> dataList){
         Collections.sort(dataList, new Comparator<String>() {
@@ -144,7 +251,6 @@ public class FirstFour {
                 });
 
                 String thisResult = String.join(",", combinedResult);
-                System.out.println(thisResult);
                 allResult.add(thisResult);
 
             }
@@ -207,7 +313,7 @@ public class FirstFour {
     private static long factorial(int n) {
         return (n > 1) ? n * factorial(n - 1) : 1;
     }
-    public void calGains(String fromDate, String toDate,String fileName){
+    public void calGains(String fromDate, String toDate,String fileName, int distance, int raceClass, String course){
 
         FileWriter writer = null;
         File f =null;
@@ -216,14 +322,14 @@ public class FirstFour {
 
            List<String> racesDates =  dao.getRaceDates(fromDate,toDate);
            List<MetricResult> allResult = new ArrayList<>();
-            f = new File(fileName+"_"+METHOD+".csv");
+            f = new File(fileName+".csv");
             writer = new FileWriter(f);
             writer.write(MetricResult.printHeader());
             writer.write("\r\n");
 
 
             for(String raceDate: racesDates){
-                allResult.addAll(calGains(raceDate));
+                allResult.addAll(calGains(raceDate,distance,raceClass,course));
             }
 
 
@@ -261,26 +367,37 @@ public class FirstFour {
             }
         }
     }
-    private  List<MetricResult> calGains(String raceDate) throws IOException {
+    private  List<MetricResult> calGains(String raceDate, int distance, int raceClass, String course) throws IOException {
         List<MetricResult> resultList = new ArrayList<>();
         System.out.println("checking "+raceDate);
         int raceNumber = dao.getRaceSeqOfDay(raceDate);
         for (int i = 1; i <= raceNumber; i++) {
-            MetricResult aRace= this.calGains(raceDate, i);
+            List<MetricResult> aRace= this.calGains(raceDate, i, distance, raceClass, course);
             if(aRace!=null){
-                resultList.add(aRace);
+                resultList.addAll(aRace);
             }
         }
         return resultList;
     }
 
-    private MetricResult calGains(String raceDate, int seqOfDay) throws IOException {
+    private List<MetricResult> calGains(String raceDate, int seqOfDay, int distance, int raceClass, String course) throws IOException {
 
         System.out.println(raceDate+":"+seqOfDay);
         /* Get the Race Card Result*/
-        List<RaceCardResult> resultList = dao.queryRaceResult("select * from racecard " +
-                "where racedate = "+ raceDate +" and raceSeqOfDay =" +seqOfDay +
-                " order by winOdds asc");
+        String sql = "select * from racecard " +
+                "where racedate = "+ raceDate +" and raceSeqOfDay =" +seqOfDay ;
+
+                if(distance > 0){
+                    sql = sql + " and distance= "+ distance;
+                }
+                if(raceClass > 0){
+                    sql = sql + " and raceclass= "+ raceClass;
+                }
+                if(course !=null) {
+                    sql = sql + " and upper(course)= '"+course+"'";
+                }
+               sql = sql + " order by winOdds asc";
+        List<RaceCardResult> resultList = dao.queryRaceResult(sql);
 
         if(resultList.isEmpty()){
             System.err.println("Empty Result:"+ raceDate +":"+seqOfDay);
@@ -295,13 +412,13 @@ public class FirstFour {
             horseNums.add(aRaceCard.getHorseNo());
             odds.add(String.valueOf(aRaceCard.getWinOdds()));
         }
+        int totalNum = resultList.size();
         String joined_horseNums = String.join("-",horseNums);
         String joined_odds = String.join("-",odds);
 
 
 
-        /* decide the Bet*/
-        List<String> bets = decideBets(resultList);
+
 
         /* Get the dividend*/
         List<Dividend> dividends=dao.queryDividend("Select * from dividend where raceDate = "+ raceDate
@@ -309,10 +426,29 @@ public class FirstFour {
 
         BigDecimal first4_Dividend =null;
         String first4_horseNum=null;
+        String first4_odds = null;
+        String first4_odds_seq = null;
        for(Dividend div: dividends){
            if("FIRST 4".equals(div.getPool())){
                first4_Dividend=div.getDividend();
                first4_horseNum = div.getWinning();
+               /*Get the winning ones' odd */
+               String[] first4_horses= first4_horseNum.split(",");
+               List<String> first4_horses_odds = new ArrayList<>();
+               List<String> first4_horses_oddSeq = new ArrayList<>();
+
+               for(String aHorse : first4_horses){
+                   int i =0;
+                   for(RaceCardResult aRaceCard: resultList){
+                       i++;
+                       if(aHorse.equals(aRaceCard.getHorseNo())) { //if is the horse no, get the winodd
+                           first4_horses_odds.add(String.valueOf(aRaceCard.getWinOdds()));
+                           first4_horses_oddSeq.add(Integer.toString(i));
+                       }
+                   }
+               }
+               first4_odds = String.join("-",first4_horses_odds);
+               first4_odds_seq=String.join("~",first4_horses_oddSeq);
                break;
            }
        }
@@ -323,58 +459,98 @@ public class FirstFour {
         System.out.println("first4_horseNum : " +first4_horseNum);
         StringBuilder sb = new StringBuilder(8);
 
-        BigDecimal paid=new BigDecimal(10).multiply(new BigDecimal(bets.size()));
-        BigDecimal gained =BigDecimal.ZERO;
 
-        for(String aBet: bets){
-//            System.out.println("aBet : " +aBet);
-            if(aBet.equals(first4_horseNum)){
-                gained = first4_Dividend;
+
+        List<MetricResult> allResult = new ArrayList<>();
+        /* decide the Bet*/
+
+        for(Strategy strategy : allStrategy) {
+            List<String> bets = decideBets(resultList,strategy);
+            BigDecimal paid=new BigDecimal(10).multiply(new BigDecimal(bets.size()));
+            BigDecimal gained =BigDecimal.ZERO;
+
+            Set<String> pickedNumer = new HashSet<>();
+            for (String aBet : bets) {
+                pickedNumer.addAll(Arrays.asList(aBet.split(",")));
+                if (aBet.equals(first4_horseNum)) {
+                    gained = first4_Dividend;
+                }
             }
+
+
+
+            List<String> pickedNumerList = new ArrayList<>(pickedNumer);
+            Collections.sort(pickedNumerList, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    return Integer.parseInt(o1) -Integer.parseInt(o2) ;
+                }
+            });
+            System.out.println("final pickedNumer : " +pickedNumerList.toString());
+
+            MetricResult result = new MetricResult();
+            result.setMethod(strategy.getName());
+            result.setPickedHorseNum(String.join("-",pickedNumerList));
+            result.setTtlCntHorse(totalNum);
+
+            result.setRaceMeeting(resultList.get(0).getRacePlace());
+            result.setCourse(resultList.get(0).getCourse());
+            result.setRaceDate(raceDate);
+            result.setRaceSeq(seqOfDay);
+            result.setDistance(resultList.get(0).getDistance());
+            result.setRaceClass(resultList.get(0).getRaceClass());
+            result.setGoing(resultList.get(0).getGoing());
+            result.setHorseNum(joined_horseNums);
+            result.setOdds(joined_odds);
+            result.setFirst4_Dividend(first4_Dividend);
+            result.setFirst4_horseNum(first4_horseNum.replace(",", "-"));
+            result.setFirst4_odds(first4_odds);
+            result.setFirst4_odds_seq(first4_odds_seq);
+            result.setFirst4_Dividend_Gained(gained);
+            result.setFirst4_Dividend_Paid(paid);
+            allResult.add(result);
         }
-
-        MetricResult result = new MetricResult();
-        result.setRaceMeeting(resultList.get(0).getRacePlace());
-        result.setCourse(resultList.get(0).getCourse());
-        result.setRaceDate(raceDate);
-        result.setRaceSeq(seqOfDay);
-        result.setDistance(resultList.get(0).getDistance());
-        result.setRaceClass(resultList.get(0).getRaceClass());
-        result.setGoing(resultList.get(0).getGoing());
-        result.setHorseNum(joined_horseNums);
-        result.setOdds(joined_odds);
-        result.setFirst4_Dividend(first4_Dividend);
-        result.setFirst4_horseNum(first4_horseNum.replace(",","-"));
-
-        result.setFirst4_Dividend_Gained(gained);
-        result.setFirst4_Dividend_Paid(paid);
-        return result;
+        return allResult;
 
     }
 
 
     private static class MetricResult{
+        private String method;
+        private String pickedHorseNum;
         private String raceMeeting;
         private String course;
-      private String raceDate;
-      private int raceSeq;
-      private int distance;
-      private int raceClass;
-      private String going;
-      private String horseNum;
-      private String odds;
-      private BigDecimal  first4_Dividend;
-      private String  first4_horseNum;
-      private BigDecimal first4_Dividend_Paid = BigDecimal.ZERO;
-      private BigDecimal first4_Dividend_Gained = BigDecimal.ZERO;
+        private int ttlCntHorse;
+          private String raceDate;
+          private int raceSeq;
+          private int distance;
+          private int raceClass;
+          private String going;
+          private String horseNum;
+          private String odds;
+          private BigDecimal  first4_Dividend;
+          private String  first4_horseNum;
+          private String  first4_odds;
+          private String  first4_odds_seq;
+          private BigDecimal first4_Dividend_Paid = BigDecimal.ZERO;
+          private BigDecimal first4_Dividend_Gained = BigDecimal.ZERO;
 
+        public void setFirst4_odds_seq(String first4_odds_seq) {
+            this.first4_odds_seq = first4_odds_seq;
+        }
+
+        public void setTtlCntHorse(int ttlCntHorse) {
+            this.ttlCntHorse = ttlCntHorse;
+        }
 
         public void setOdds(String odds) {
             this.odds = odds;
         }
 
         static String printHeader(){
-          String header = "RaceMeeting,RaceDate,SeqOfDay,Distance,Course,Class,Going,HorseNum, Odds,First4-HorseNum," +
+          String header = "RaceMeeting,RaceDate,SeqOfDay,Distance,Course,Class,Going,HorseNum, Odds,TotalCnt," +
+                  "Method,PickedHorse," +
+                  "First4-HorseNum,First4-Odds,First4-OddsSeq," +
                   "First4-Dividend,First4-Pay,First4-Gain";
           return header;
       }
@@ -384,12 +560,24 @@ public class FirstFour {
           String result = String.join(",",raceMeeting,raceDate,Integer.toString(raceSeq),
                   Integer.toString(distance),course,Integer.toString(raceClass),going,
                   horseNum,odds,
-                  first4_horseNum,first4_Dividend.toString(),
+                  Integer.toString(ttlCntHorse),
+                  method,pickedHorseNum,
+                  first4_horseNum,first4_odds,first4_odds_seq,first4_Dividend.toString(),
                   first4_Dividend_Paid.toString(),first4_Dividend_Gained.toString());
           return result;
       }
 
+        public void setFirst4_odds(String first4_odds) {
+            this.first4_odds = first4_odds;
+        }
 
+        public void setMethod(String method) {
+            this.method = method;
+        }
+
+        public void setPickedHorseNum(String pickedHorseNum) {
+            this.pickedHorseNum = pickedHorseNum;
+        }
 
         public void setHorseNum(String horseNum) {
             this.horseNum = horseNum;
