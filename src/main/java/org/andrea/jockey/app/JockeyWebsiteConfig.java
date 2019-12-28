@@ -13,7 +13,7 @@ public class JockeyWebsiteConfig {
 
     private final String URL="http://racing.hkjc.com/racing/Info/meeting/Results/English/Local/";
     private final String HOMEURL="http://racing.hkjc.com";
-    private final String DATE_AFTER="20181110";
+    private final String DATE_AFTER="20191110";
     private final String DATE_BEFORE=SDF.format(new Date());
     //，20181018
     public String getUrlForNewRace(){
