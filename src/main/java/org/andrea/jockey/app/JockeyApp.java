@@ -3,6 +3,7 @@ package org.andrea.jockey.app;
 
 
 import org.andrea.jockey.predict.FirstFour;
+import org.andrea.jockey.predict.FirstFourStrategy;
 import org.andrea.jockey.predict.Metric;
 import org.andrea.jockey.predict.Predictor_SurvivalAnalysis;
 import org.andrea.jockey.statistics.Statistic_SurvivalAnalysis;
@@ -13,7 +14,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @ComponentScan
@@ -102,12 +105,66 @@ public class JockeyApp {
     }
     private static void calculateFirs4(String fromDate,String toDate){
         FirstFour first4 = context.getBean(FirstFour.class);
-        int distance =1800;
+        int distance =1650;
         int raceClass=4;
-        String course= null; //"TURF - \"C\" COURSE";
+        String place="HV";
+        String course= "TURF - \"C+3\" COURSE";
         String fileName = String.join("-","FirstFour",String.valueOf(distance),
         String.valueOf(raceClass),course,fromDate,toDate, SDF.format(new Date()));
-        first4.calGains(fromDate,toDate,fileName,distance,raceClass,course);
+        first4.calGains(fromDate,toDate,fileName,place, distance,raceClass,course);
+    }
+
+    public static class Strategy{
+
+    }
+
+    private static FirstFourStrategy odds_123459A = new FirstFourStrategy(new int[]{0,1,2,3,4,8,9});
+    private static FirstFourStrategy odds_1234589 = new FirstFourStrategy(new int[]{0,1,2,3,4,7,8});
+    private static FirstFourStrategy odds_123489A = new FirstFourStrategy(new int[]{0,1,2,3,7,8,9});
+
+    private static FirstFourStrategy odds_1234589_twoPart = new FirstFourStrategy(
+            new int[]{0,1,2,3,4},new int[]{7,8},3);
+
+    private static FirstFourStrategy odds_123489A_twoPart = new FirstFourStrategy(
+            new int[]{0,1,2,3,4},new int[]{6,7,8},3);
+
+    private static FirstFourStrategy odds_234589A_twoPart = new FirstFourStrategy(
+            new int[]{1,2,3,4},new int[]{7,8,9},3);
+
+    private static FirstFourStrategy odds_123456789A_twoPart = new FirstFourStrategy(
+            new int[]{1,2,3,4},new int[]{5,6,7,8,9},1);
+    private static FirstFourStrategy odds_123456789A_twoPart_Fixed = new FirstFourStrategy(
+            new int[]{2,3,4},new int[]{5,6,7,8,9}, new int[]{0,1},1);
+    private static FirstFourStrategy odds_123456789A_twoPart_NoFixed= new FirstFourStrategy(
+            new int[]{2,3,4},new int[]{5,6,7,8,9},1);
+
+    private static FirstFourStrategy odds_123456789A_twoPart_NoFixed_1600_3= new FirstFourStrategy(
+            new int[]{0,1,2,3,4},new int[]{5,6,7,8,9},3);
+
+    private static FirstFourStrategy odds_123456789A_twoPart_NoFixed_1000_4_C3= new FirstFourStrategy(
+            new int[]{0,1,2,3},new int[]{4,5,6,7},3);
+
+    private static FirstFourStrategy odds_123456789A_twoPart_NoFixed_1200_3_HV_C3= new FirstFourStrategy(
+            new int[]{0,1,2,3},new int[]{4,5,6,7,8},2);
+
+    private static FirstFourStrategy odds_twoPart_1= new FirstFourStrategy(
+            new int[]{0,1,2,3,4},new int[]{5,6,7,8,9},3);
+    private static FirstFourStrategy odds_twoPart_2= new FirstFourStrategy(
+            new int[]{0,1,2,3,4},new int[]{5,6,7,8,9},2);
+    private static FirstFourStrategy odds_twoPart_3= new FirstFourStrategy(
+            new int[]{0,1,2,3,4},new int[]{5,6,7,8,9,10},2);
+    private static FirstFourStrategy odds_twoPart_4= new FirstFourStrategy(
+            new int[]{0,1,2,3},new int[]{4,5,6,7,8,9,10},2);
+
+    public static List<FirstFourStrategy> allStrategy = new ArrayList<>();
+    static {
+//        allStrategy.add(odds_123459A);
+//        allStrategy.add(odds_1234589);
+//        allStrategy.add(odds_123489A);
+        allStrategy.add(odds_twoPart_1);
+//        allStrategy.add(odds_123456789A_twoPart_NoFixed);
+
+
     }
 
 }
