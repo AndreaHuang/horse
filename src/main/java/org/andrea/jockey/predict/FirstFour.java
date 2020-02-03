@@ -20,12 +20,19 @@ public class FirstFour {
     @Autowired
     RecordCardDAO dao;
 
-    private static final int MAX_WINODDS=50;
+    private static final int MAX_WINODDS=70;
+    private static final BigDecimal ODD_A=new BigDecimal(5);
+    private static final BigDecimal ODD_B=new BigDecimal(20);
+
 
 
 
     private List<String> decideBets(List<RaceCardResult> resultList,FirstFourStrategy strategy){
-        if(strategy.isTwoParts()){
+
+        if(strategy.isThreeParts()){
+            return decideBets_threeParts(resultList,strategy);
+        }
+        else if(strategy.isTwoParts()){
            // return decideBets_twoParts(resultList,strategy);
             return decideBets_twoParts_WithFixed(resultList,strategy);
         } else {
@@ -124,6 +131,54 @@ public class FirstFour {
         return bets;
     }
 
+    private List<String> decideBets_threeParts(List<RaceCardResult> resultList, FirstFourStrategy strategy){
+        /* decide the Bet*/
+        List<String> selected_horseNums_part1 = new ArrayList<>();
+        List<String> selected_horseNums_part2 = new ArrayList<>();
+        List<String> selected_horseNums_part3 = new ArrayList<>();
+
+        boolean hasFixed =false;
+        if(strategy.getFixed()!=null) {
+            hasFixed=true;
+        }
+        List<RaceCardResult> horses_part1 = selectHorse(resultList,strategy.getSeq1());
+        for(RaceCardResult aRaceCard: horses_part1){
+            selected_horseNums_part1.add(aRaceCard.getHorseNo());
+        }
+
+        List<RaceCardResult> horhorses_part2 = selectHorse(resultList,strategy.getSeq2());
+        for(RaceCardResult aRaceCard: horhorses_part2){
+            selected_horseNums_part2.add(aRaceCard.getHorseNo());
+        }
+
+        List<RaceCardResult> horhorses_part3 = selectHorse(resultList,strategy.getSeq3());
+        for(RaceCardResult aRaceCard: horhorses_part3){
+            selected_horseNums_part3.add(aRaceCard.getHorseNo());
+        }
+        System.out.println("selected_horseNums_part1 "+ selected_horseNums_part1.toString());
+        System.out.println("selected_horseNums_part2 "+ selected_horseNums_part2.toString());
+        System.out.println("selected_horseNums_part3 "+ selected_horseNums_part3.toString());
+
+        List<String> bets = iterateTheBets(selected_horseNums_part1,strategy.getCntFromSeq1(),
+                selected_horseNums_part2,strategy.getCntFromSeq2(),
+                selected_horseNums_part3, 4 - strategy.getCntFromSeq1() - strategy.getCntFromSeq2());
+
+
+        List<String> result = new ArrayList<>();
+        Comparator<String> comparator = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return Integer.parseInt(o1) - Integer.parseInt(o2);
+            }
+        };
+
+        int i=0;
+        for (String bet : result) {
+            System.out.println("bet " + i++ + ": " + bet);
+        }
+        return bets;
+    }
+
     private List<String> iterateTheBets(List<String> dataList){
         Collections.sort(dataList, new Comparator<String>() {
             @Override
@@ -194,6 +249,82 @@ public class FirstFour {
                 String thisResult = String.join(",", combinedResult);
                 allResult.add(thisResult);
 
+            }
+        }
+
+        return allResult;
+    }
+
+    private List<String> iterateTheBets(List<String> dataList1,int numFromList1, List<String> dataList2,int numFromList2,
+                                        List<String> dataList3,int numFromList3){
+
+        String[] resultList1 = new String[numFromList1];
+        List<String> allResult1= new ArrayList<>();
+        System.out.println(String.format("C(%d, %d) = %d", dataList1.size(), numFromList1, combination(dataList1.size(), numFromList1)));
+        combinationSelect(dataList1.toArray(new String[dataList1.size()]), 0, resultList1, 0,allResult1);
+
+
+        String[] resultList2 = new String[numFromList2];
+        List<String> allResult2= new ArrayList<>();
+        System.out.println(String.format("C(%d, %d) = %d", dataList2.size(), numFromList2, combination(dataList2.size(), numFromList2)));
+        combinationSelect(dataList2.toArray(new String[dataList2.size()]), 0, resultList2, 0,allResult2);
+
+        String[] resultList3 = new String[numFromList3];
+        List<String> allResult3= new ArrayList<>();
+        System.out.println(String.format("C(%d, %d) = %d", dataList2.size(), numFromList3, combination(dataList3.size(), numFromList3)));
+        combinationSelect(dataList3.toArray(new String[dataList3.size()]), 0, resultList3, 0,allResult3);
+
+
+        int i=1;
+//        for(String fromList1: allResult1){
+//            System.out.println("From Result 1 : "+ i++ +": "+fromList1);
+//        }
+//        for(String fromList2: allResult2){
+//            System.out.println("From Result 2 : "+ i++ +": "+fromList2);
+//        }
+
+        List<String> allResult= new ArrayList<>();
+
+        for(String fromList1: allResult1){
+//            System.out.println("fromList1: "+ fromList1);
+            List<String> combinedResult_part1 = new ArrayList<>();
+            String[] arr_part1 =  fromList1.split(",");
+            for(String a: arr_part1){
+                combinedResult_part1.add(a);
+            }
+
+            for(String fromList2: allResult2){
+//                System.out.println("fromList2: "+ fromList2);
+                List<String> combinedResult_part2 = new ArrayList<>();
+                String[] arr_part2 =  fromList2.split(",");
+                for(String a: arr_part2){
+                    combinedResult_part2.add(a);
+                }
+
+                for(String fromList3: allResult3){
+                    List<String> combinedResult_part3 = new ArrayList<>();
+                    String[] arr_part3 =  fromList3.split(",");
+
+                    for(String a: arr_part3){
+                        combinedResult_part3.add(a);
+                    }
+
+                    List<String> combinedResult = new ArrayList<>();
+                    combinedResult.addAll(combinedResult_part1);
+                    combinedResult.addAll(combinedResult_part2);
+                    combinedResult.addAll(combinedResult_part3);
+
+                    Collections.sort(combinedResult, new Comparator<String>() {
+                        @Override
+                        public int compare(String o1, String o2) {
+                            return Integer.parseInt(o1) -Integer.parseInt(o2) ;
+                        }
+                    });
+
+                    String thisResult = String.join(",", combinedResult);
+                    allResult.add(thisResult);
+
+                }
             }
         }
 
@@ -340,6 +471,7 @@ public class FirstFour {
                 if(course !=null) {
                     sql = sql + " and upper(course)= '"+course+"'";
                 }
+                sql = sql + " and winOdds <= " +   MAX_WINODDS ;
                sql = sql + " order by winOdds asc";
         List<RaceCardResult> resultList = dao.queryRaceResult(sql);
 
@@ -356,9 +488,24 @@ public class FirstFour {
             horseNums.add(aRaceCard.getHorseNo());
             odds.add(String.valueOf(aRaceCard.getWinOdds()));
         }
+
         int totalNum = resultList.size();
         String joined_horseNums = String.join("-",horseNums);
         String joined_odds = String.join("-",odds);
+        List<String> oddsSections_all = new ArrayList<>();
+        for(String aOdd: odds){
+            BigDecimal odd= new BigDecimal(aOdd);
+            if(ODD_A.compareTo(odd) >=0){
+                oddsSections_all.add("A");
+            } else if(ODD_B.compareTo(odd)>=0){
+                oddsSections_all.add("B");
+            } else {
+                oddsSections_all.add("C");
+            }
+        }
+        Collections.sort(oddsSections_all);
+        String joined_oddsSections_all = String.join("",oddsSections_all);
+
 
 
 
@@ -372,6 +519,7 @@ public class FirstFour {
         String first4_horseNum=null;
         String first4_odds = null;
         String first4_odds_seq = null;
+        String joined_oddsSections =null;
        for(Dividend div: dividends){
            if("FIRST 4".equals(div.getPool())){
                first4_Dividend=div.getDividend();
@@ -393,12 +541,27 @@ public class FirstFour {
                }
                first4_odds = String.join("-",first4_horses_odds);
                first4_odds_seq=String.join("~",first4_horses_oddSeq);
+               List<String> oddsSections = new ArrayList<>();
+               for(String aOdd: first4_horses_odds){
+                   BigDecimal odd= new BigDecimal(aOdd);
+                   if(ODD_A.compareTo(odd) >=0){
+                       oddsSections.add("A");
+                   } else if(ODD_B.compareTo(odd)>=0){
+                       oddsSections.add("B");
+                   } else {
+                       oddsSections.add("C");
+                   }
+               }
+               Collections.sort(oddsSections);
+               joined_oddsSections = String.join("",oddsSections);
                break;
            }
        }
        if(first4_horseNum ==null){
            return null;
        }
+
+
 
         System.out.println("first4_horseNum : " +first4_horseNum);
         StringBuilder sb = new StringBuilder(8);
@@ -421,20 +584,12 @@ public class FirstFour {
                 }
             }
 
-
-
             List<String> pickedNumerList = new ArrayList<>(pickedNumer);
-            Collections.sort(pickedNumerList, new Comparator<String>() {
-                @Override
-                public int compare(String o1, String o2) {
-                    return Integer.parseInt(o1) -Integer.parseInt(o2) ;
-                }
-            });
-            System.out.println("final pickedNumer : " +pickedNumerList.toString());
+
 
             MetricResult result = new MetricResult();
             result.setMethod(strategy.getName());
-            result.setPickedHorseNum(String.join("-",pickedNumerList));
+
             result.setTtlCntHorse(totalNum);
 
             result.setRaceMeeting(resultList.get(0).getRacePlace());
@@ -446,12 +601,14 @@ public class FirstFour {
             result.setGoing(resultList.get(0).getGoing());
             result.setHorseNum(joined_horseNums);
             result.setOdds(joined_odds);
+            result.setJoined_oddsSections(joined_oddsSections);
             result.setFirst4_Dividend(first4_Dividend);
             result.setFirst4_horseNum(first4_horseNum.replace(",", "-"));
             result.setFirst4_odds(first4_odds);
             result.setFirst4_odds_seq(first4_odds_seq);
             result.setFirst4_Dividend_Gained(gained);
             result.setFirst4_Dividend_Paid(paid);
+            result.setJoined_oddsSections_all(joined_oddsSections_all);
             allResult.add(result);
         }
         return allResult;
@@ -461,7 +618,8 @@ public class FirstFour {
 
     private static class MetricResult{
         private String method;
-        private String pickedHorseNum;
+        private String joined_oddsSections;
+        private String  joined_oddsSections_all;
         private String raceMeeting;
         private String course;
         private int ttlCntHorse;
@@ -479,6 +637,10 @@ public class FirstFour {
           private BigDecimal first4_Dividend_Paid = BigDecimal.ZERO;
           private BigDecimal first4_Dividend_Gained = BigDecimal.ZERO;
 
+        public void setJoined_oddsSections_all(String joined_oddsSections_all) {
+            this.joined_oddsSections_all = joined_oddsSections_all;
+        }
+
         public void setFirst4_odds_seq(String first4_odds_seq) {
             this.first4_odds_seq = first4_odds_seq;
         }
@@ -493,7 +655,7 @@ public class FirstFour {
 
         static String printHeader(){
           String header = "RaceMeeting,RaceDate,SeqOfDay,Distance,Course,Class,Going,HorseNum, Odds,TotalCnt," +
-                  "Method,PickedHorse," +
+                  "Method,OddsSection_all,OddsSection," +
                   "First4-HorseNum,First4-Odds,First4-OddsSeq," +
                   "First4-Dividend,First4-Pay,First4-Gain";
           return header;
@@ -505,7 +667,7 @@ public class FirstFour {
                   Integer.toString(distance),course,Integer.toString(raceClass),going,
                   horseNum,odds,
                   Integer.toString(ttlCntHorse),
-                  method,pickedHorseNum,
+                  method,joined_oddsSections_all,joined_oddsSections,
                   first4_horseNum,first4_odds,first4_odds_seq,first4_Dividend.toString(),
                   first4_Dividend_Paid.toString(),first4_Dividend_Gained.toString());
           return result;
@@ -519,8 +681,8 @@ public class FirstFour {
             this.method = method;
         }
 
-        public void setPickedHorseNum(String pickedHorseNum) {
-            this.pickedHorseNum = pickedHorseNum;
+        public void setJoined_oddsSections(String joined_oddsSections) {
+            this.joined_oddsSections = joined_oddsSections;
         }
 
         public void setHorseNum(String horseNum) {
